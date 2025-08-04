@@ -1,0 +1,26 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio IDE
+.vs/
+
+# Development database files
+*.db
+*.db-shm
+*.db-wal
+
+# NuGet packages
+*.nupkg
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
