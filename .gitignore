@@ -35,3 +35,7 @@ logs/
 
 # Temporary files
 /tmp/
+# Build artifacts
+backend/backend
+backend/trailmarks
+backend/*.db
