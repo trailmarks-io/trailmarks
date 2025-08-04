@@ -71,11 +71,14 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Initialize database
-using (var scope = app.Services.CreateScope())
+// Initialize database only if -DbInit flag is provided
+if (args.Contains("-DbInit"))
 {
-    var databaseService = scope.ServiceProvider.GetRequiredService<DatabaseService>();
-    await databaseService.InitializeAsync();
+    using (var scope = app.Services.CreateScope())
+    {
+        var databaseService = scope.ServiceProvider.GetRequiredService<DatabaseService>();
+        await databaseService.InitializeAsync();
+    }
 }
 
 // Configure the HTTP request pipeline
