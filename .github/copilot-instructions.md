@@ -65,6 +65,45 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
    - Ein PR sollte entweder neue Features ODER Refactoring enthalten, nicht beides
    - Dokumentiere größere Änderungen im Code mit Kommentaren
 
+### Git Branching Strategie
+
+Das Projekt verwendet **Git Flow** als Branching-Strategie:
+
+1. **Main Branch**:
+   - `main` ist der Master Branch
+   - Enthält nur stabilen, produktionsreifen Code
+   - Direkte Commits auf `main` sind nicht erlaubt
+
+2. **Feature Branches**:
+   - Feature Branches werden für neue Features oder Bugfixes erstellt
+   - Naming Convention: `<issue-nummer>-kurze-beschreibung`
+   - Beispiel: `42-add-user-authentication` (für GitHub Issue #42)
+   - Feature Branches werden immer von `main` abgezweigt
+   - Nach Fertigstellung werden Feature Branches via Pull Request in `main` gemergt
+
+3. **Commit Messages**:
+   - Alle Commits folgen dem **Conventional Commits** Standard
+   - Format: `<type>(<scope>): <subject>`
+   - Types: 
+     - `feat`: Neue Features
+     - `fix`: Bugfixes
+     - `docs`: Dokumentationsänderungen
+     - `style`: Code-Formatierung (keine funktionalen Änderungen)
+     - `refactor`: Code-Refactoring
+     - `test`: Tests hinzufügen oder ändern
+     - `chore`: Build-Prozess oder Tool-Änderungen
+   - Beispiele:
+     - `feat(backend): add user authentication endpoint`
+     - `fix(frontend): resolve navigation issue`
+     - `docs: update installation instructions`
+
+4. **Pull Request Workflow**:
+   - Erstelle einen Feature Branch basierend auf der Issue-Nummer
+   - Entwickle das Feature mit kleinen, atomaren Commits
+   - Pushe regelmäßig zum Remote Repository
+   - Erstelle einen Pull Request zum Mergen in `main`
+   - Nach Code Review und erfolgreichen Tests wird der PR gemergt
+
 ### Code-Standards
 
 #### Backend (C#)
