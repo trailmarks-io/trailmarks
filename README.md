@@ -5,16 +5,18 @@ Eine Webanwendung zur Anzeige der zuletzt hinzugefügten Wandersteine.
 ## Architektur
 
 ### Backend
-- **Framework**: Go mit Echo Web Framework
-- **Datenbank**: PostgreSQL mit GORM ORM
+- **Framework**: C# ASP.NET Core 8.0
+- **Datenbank**: PostgreSQL mit Entity Framework Core (SQLite Fallback für Entwicklung)
 - **API Dokumentation**: OpenAPI (Swagger)
 - **Features**: 
   - REST API für Wandersteine
   - Automatische Datenbankmigrationen
   - Beispieldaten für Entwicklung
+  - CORS-Unterstützung
+  - SQLite Fallback für lokale Entwicklung
 
 ### Frontend
-- **Framework**: Angular 19
+- **Framework**: Angular 20.1.0
 - **Styling**: CSS Grid Layout mit responsivem Design
 - **HTTP Client**: Angular HttpClient für API-Kommunikation
 - **Features**:
@@ -27,82 +29,130 @@ Eine Webanwendung zur Anzeige der zuletzt hinzugefügten Wandersteine.
 - `GET /api/wandersteine/recent` - Die 5 zuletzt hinzugefügten Wandersteine
 - `GET /api/wandersteine` - Alle Wandersteine
 - `GET /health` - Health Check
-- `GET /swagger/*` - API Dokumentation
+- `GET /swagger` - API Dokumentation (interaktive Swagger UI)
 
 ## Installation und Start
 
 ### Voraussetzungen
-- Go 1.24+
+- .NET 8.0 SDK
 - Node.js 20+
-- PostgreSQL (optional, nutzt Standardwerte wenn nicht konfiguriert)
+- PostgreSQL (optional, SQLite wird für Entwicklung automatisch verwendet)
 
 ### Backend
 ```bash
 cd backend
-go mod download
-go run main.go
+dotnet run
 ```
 
-Der Backend-Server läuft auf Port 8080.
+Der Backend-Server läuft auf Port 8080. Beim ersten Start wird automatisch eine SQLite-Datenbank erstellt und mit Beispieldaten gefüllt.
+
+Für die Initialisierung der Datenbank mit Beispieldaten:
+```bash
+cd backend
+dotnet run -- -DbInit
+```
 
 ### Frontend
 ```bash
 cd frontend
 npm install
-npm start
+npx ng serve
 ```
 
-Der Frontend-Server läuft auf Port 4200.
+Der Frontend-Server läuft auf Port 4200. Alternativ kann auch `npm start` verwendet werden.
 
-## Umgebungsvariablen
+## Konfiguration
 
-Das Backend kann über folgende Umgebungsvariablen konfiguriert werden:
+Das Backend kann über `appsettings.json` oder `appsettings.Development.json` konfiguriert werden:
 
-- `DB_HOST` (default: localhost)
-- `DB_USER` (default: postgres)
-- `DB_PASSWORD` (default: postgres)
-- `DB_NAME` (default: trailmarks)
-- `DB_PORT` (default: 5432)
-- `DB_SSLMODE` (default: disable)
+### Entwicklung (SQLite)
+Standardmäßig wird SQLite für die lokale Entwicklung verwendet:
+```json
+{
+  "UseSqlite": true
+}
+```
+
+### Produktion (PostgreSQL)
+Für die Verwendung von PostgreSQL:
+```json
+{
+  "UseSqlite": false,
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Database=trailmarks;Username=postgres;Password=yourpassword"
+  }
+}
+```
 
 ## Datenmodell
 
-### Wanderstein
+### Wanderstein Entity
+Das vollständige Datenmodell in der Datenbank:
+- `Id` (uint) - Primärschlüssel
+- `Name` (string, max 200) - Name des Wandersteins
+- `UniqueId` (string, max 50) - Eindeutige Kennung (z.B. WS-2024-001)
+- `PreviewUrl` (string, max 500) - URL zum Vorschaubild
+- `Description` (string, max 1000) - Beschreibungstext
+- `Location` (string, max 200) - Standortinformationen
+- `CreatedAt` (DateTime) - Erstellungszeitpunkt
+- `UpdatedAt` (DateTime) - Letzter Änderungszeitpunkt
+
+### API Response Format
+Die API-Endpunkte geben eine vereinfachte Version zurück:
 ```json
 {
   "id": 1,
   "name": "Schwarzwaldstein",
   "unique_id": "WS-2024-001",
-  "preview_url": "https://example.com/image.jpg",
-  "created_at": "2024-01-15T10:30:00Z"
+  "preview_url": "https://picsum.photos/300/200?random=1",
+  "created_at": "2025-08-04T12:00:00Z"
 }
 ```
 
 ## Features
 
-✅ REST API mit Echo Framework  
-✅ PostgreSQL Datenbankintegration  
-✅ OpenAPI Dokumentation  
-✅ Angular Frontend  
+✅ REST API mit C# ASP.NET Core 8.0  
+✅ PostgreSQL Datenbankintegration mit Entity Framework Core  
+✅ SQLite Fallback für lokale Entwicklung  
+✅ OpenAPI/Swagger Dokumentation  
+✅ Angular 20.1.0 Frontend  
 ✅ Responsive Design  
 ✅ Automatische Datenbankmigrationen  
 ✅ Beispieldaten für Entwicklung  
 ✅ CORS-Unterstützung  
-✅ Fehlerbehandlung  
+✅ Umfassende Fehlerbehandlung und Logging  
 
 ## Entwicklung
 
 ### Backend Tests
 ```bash
 cd backend
-go test ./...
+dotnet test
+```
+
+### Backend Build
+```bash
+cd backend
+dotnet build
 ```
 
 ### Frontend Tests
 ```bash
 cd frontend
-npm test
+npx ng test
+```
+
+### Frontend Build
+```bash
+cd frontend
+npx ng build
+```
+
+Alternativ kann Angular CLI global installiert werden:
+```bash
+npm install -g @angular/cli
+ng build
 ```
 
 ### API Dokumentation
-Die interaktive API-Dokumentation ist verfügbar unter: http://localhost:8080/swagger/
+Die interaktive API-Dokumentation ist verfügbar unter: http://localhost:8080/swagger

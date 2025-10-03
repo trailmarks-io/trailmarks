@@ -4,11 +4,13 @@ frontend/node_modules/
 
 # Build outputs
 frontend/dist/
-backend/backend
-backend/trailmarks
+backend/bin/
+backend/obj/
 
-# Go build cache
-backend/go.sum
+# .NET build artifacts
+*.exe
+*.dll
+*.pdb
 
 # IDE files
 .vscode/
@@ -35,7 +37,3 @@ logs/
 
 # Temporary files
 /tmp/
-# Build artifacts
-backend/backend
-backend/trailmarks
-backend/*.db
