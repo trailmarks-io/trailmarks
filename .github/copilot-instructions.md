@@ -2,14 +2,6 @@
 
 Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmarks-Projekts mit GitHub Copilot.
 
-## Architektur Dokumentation
-
-Die Architektur Dokumentation für trailmarks ist unter https://trailmarks-io.github.io/docs/architecture einsehbar.
-
-## Architektur Entscheidungen
-
-Wenn Entscheidungen hinsichtlich der Architektur notwendig sind, erstelle bitte ein Issue im [trailmarks-io/docs Repository](https://github.com/trailmarks-io/docs) auf GitHub.
-
 ## Generelle Architekturvorgaben
 
 ### Repository Struktur
