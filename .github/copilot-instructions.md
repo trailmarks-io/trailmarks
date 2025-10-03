@@ -74,14 +74,20 @@ Das Projekt verwendet **Git Flow** als Branching-Strategie:
    - Enthält nur stabilen, produktionsreifen Code
    - Direkte Commits auf `main` sind nicht erlaubt
 
-2. **Feature Branches**:
+2. **Develop Branch**:
+   - `develop` ist der primäre Entwicklungsbranch
+   - Alle Feature Branches werden von `develop` abgezweigt
+   - Feature Branches werden nach Fertigstellung in `develop` gemergt
+   - Direkte Commits auf `develop` sollten vermieden werden
+
+3. **Feature Branches**:
    - Feature Branches werden für neue Features oder Bugfixes erstellt
    - Naming Convention: `<issue-nummer>-kurze-beschreibung`
-   - Beispiel: `42-add-user-authentication` (für GitHub Issue #42)
-   - Feature Branches werden immer von `main` abgezweigt
-   - Nach Fertigstellung werden Feature Branches via Pull Request in `main` gemergt
+   - Beispiel: `#42-add-user-authentication` (für GitHub Issue #42)
+   - Feature Branches werden immer von `develop` abgezweigt
+   - Nach Fertigstellung werden Feature Branches via Pull Request in `develop` gemergt
 
-3. **Commit Messages**:
+4. **Commit Messages**:
    - Alle Commits folgen dem **Conventional Commits** Standard
    - Format: `<type>(<scope>): <subject>`
    - Types: 
@@ -97,11 +103,11 @@ Das Projekt verwendet **Git Flow** als Branching-Strategie:
      - `fix(frontend): resolve navigation issue`
      - `docs: update installation instructions`
 
-4. **Pull Request Workflow**:
+5. **Pull Request Workflow**:
    - Erstelle einen Feature Branch basierend auf der Issue-Nummer
    - Entwickle das Feature mit kleinen, atomaren Commits
    - Pushe regelmäßig zum Remote Repository
-   - Erstelle einen Pull Request zum Mergen in `main`
+   - Erstelle einen Pull Request zum Mergen in `develop`
    - Nach Code Review und erfolgreichen Tests wird der PR gemergt
 
 ### Code-Standards
