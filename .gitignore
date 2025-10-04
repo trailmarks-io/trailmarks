@@ -37,3 +37,5 @@ logs/
 
 # Temporary files
 /tmp/
+backend.tests/bin/
+backend.tests/obj/

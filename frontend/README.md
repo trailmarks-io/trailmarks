@@ -38,11 +38,24 @@ This will compile your project and store the build artifacts in the `dist/` dire
 
 ## Running unit tests
 
+The frontend has comprehensive Jasmine/Karma tests covering all components, services, and pipes.
+
 To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
 
 ```bash
 ng test
 ```
+
+To run tests in headless mode (e.g., for CI/CD):
+
+```bash
+ng test --watch=false --browsers=ChromeHeadless
+```
+
+Test coverage includes:
+- Component tests (20 tests) - App, LanguageSwitcher, WandersteinOverview
+- Service tests (14 tests) - WandersteinService, LanguageService
+- Pipe tests (7 tests) - TranslatePipe
 
 ## Running end-to-end tests
 
