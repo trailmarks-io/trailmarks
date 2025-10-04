@@ -61,8 +61,8 @@ namespace TrailmarksApi.Services
                     Name = "Schwarzwaldstein",
                     UniqueId = "WS-2024-001",
                     PreviewUrl = "https://picsum.photos/300/200?random=1",
-                    Description = "A historic hiking stone in the heart of the Black Forest",
-                    Location = "Black Forest, Baden-Württemberg",
+                    Description = "Ein historischer Wanderstein im Herzen des Schwarzwaldes",
+                    Location = "Schwarzwald, Baden-Württemberg",
                     CreatedAt = DateTime.UtcNow.AddDays(-6),
                     UpdatedAt = DateTime.UtcNow.AddDays(-6)
                 },
@@ -71,8 +71,8 @@ namespace TrailmarksApi.Services
                     Name = "Alpenblick",
                     UniqueId = "WS-2024-002",
                     PreviewUrl = "https://picsum.photos/300/200?random=2",
-                    Description = "Hiking stone with magnificent view of the Alps",
-                    Location = "Allgäu, Bavaria",
+                    Description = "Wanderstein mit herrlichem Blick auf die Alpen",
+                    Location = "Allgäu, Bayern",
                     CreatedAt = DateTime.UtcNow.AddDays(-5),
                     UpdatedAt = DateTime.UtcNow.AddDays(-5)
                 },
@@ -81,8 +81,8 @@ namespace TrailmarksApi.Services
                     Name = "Rheintalweg",
                     UniqueId = "WS-2024-003",
                     PreviewUrl = "https://picsum.photos/300/200?random=3",
-                    Description = "Distinctive stone on the Rhine Valley Trail",
-                    Location = "Rhine Valley, Baden-Württemberg",
+                    Description = "Markanter Stein am Rheintalweg",
+                    Location = "Rheintal, Baden-Württemberg",
                     CreatedAt = DateTime.UtcNow.AddDays(-4),
                     UpdatedAt = DateTime.UtcNow.AddDays(-4)
                 },
@@ -91,8 +91,8 @@ namespace TrailmarksApi.Services
                     Name = "Berggipfel",
                     UniqueId = "WS-2024-004",
                     PreviewUrl = "https://picsum.photos/300/200?random=4",
-                    Description = "Hiking stone at the highest point of the route",
-                    Location = "Harz, Lower Saxony",
+                    Description = "Wanderstein auf dem höchsten Punkt der Route",
+                    Location = "Harz, Niedersachsen",
                     CreatedAt = DateTime.UtcNow.AddDays(-3),
                     UpdatedAt = DateTime.UtcNow.AddDays(-3)
                 },
@@ -101,8 +101,8 @@ namespace TrailmarksApi.Services
                     Name = "Waldlichtung",
                     UniqueId = "WS-2024-005",
                     PreviewUrl = "https://picsum.photos/300/200?random=5",
-                    Description = "Peaceful hiking stone in a beautiful forest clearing",
-                    Location = "Eifel, North Rhine-Westphalia",
+                    Description = "Ruhiger Wanderstein in einer schönen Waldlichtung",
+                    Location = "Eifel, Nordrhein-Westfalen",
                     CreatedAt = DateTime.UtcNow.AddDays(-2),
                     UpdatedAt = DateTime.UtcNow.AddDays(-2)
                 },
@@ -111,8 +111,8 @@ namespace TrailmarksApi.Services
                     Name = "Seeufer",
                     UniqueId = "WS-2024-006",
                     PreviewUrl = "https://picsum.photos/300/200?random=6",
-                    Description = "Hiking stone directly at the picturesque lakeshore",
-                    Location = "Lake Chiemsee, Bavaria",
+                    Description = "Wanderstein direkt am malerischen Seeufer",
+                    Location = "Chiemsee, Bayern",
                     CreatedAt = DateTime.UtcNow.AddDays(-1),
                     UpdatedAt = DateTime.UtcNow.AddDays(-1)
                 }

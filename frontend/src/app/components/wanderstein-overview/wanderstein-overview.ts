@@ -29,7 +29,7 @@ export class WandersteinOverviewComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Error loading hiking stones: ' + err.message;
+        this.error = 'Fehler beim Laden der Wandersteine: ' + err.message;
         this.loading = false;
       }
     });
@@ -37,7 +37,7 @@ export class WandersteinOverviewComponent implements OnInit {
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('de-DE', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
