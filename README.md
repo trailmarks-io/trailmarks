@@ -17,7 +17,7 @@ A web application for displaying the most recently added hiking stones.
 
 ### Frontend
 - **Framework**: Angular 20.1.0
-- **Styling**: CSS Grid Layout with responsive design
+- **Styling**: Tailwind CSS v3 (Utility-First CSS Framework)
 - **HTTP Client**: Angular HttpClient for API communication
 - **Internationalization**: Multi-language support (German/English)
 - **Features**:
