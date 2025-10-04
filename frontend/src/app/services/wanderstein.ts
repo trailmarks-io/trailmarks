@@ -5,9 +5,9 @@ import { Observable } from 'rxjs';
 export interface WandersteinResponse {
   id: number;
   name: string;
-  unique_id: string;
-  preview_url: string;
-  created_at: string;
+  unique_Id: string;
+  preview_Url: string;
+  created_At: string;
 }
 
 @Injectable({

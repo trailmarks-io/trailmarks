@@ -19,10 +19,13 @@ A web application for displaying the most recently added hiking stones.
 - **Framework**: Angular 20.1.0
 - **Styling**: CSS Grid Layout with responsive design
 - **HTTP Client**: Angular HttpClient for API communication
+- **Internationalization**: Multi-language support (German/English)
 - **Features**:
   - Overview page of the 5 most recent hiking stones
   - Responsive design for mobile devices
   - Error handling and loading status
+  - Language switcher with persistence
+  - Runtime-editable translations (no redeployment needed)
 
 ## API Endpoints
 
@@ -117,6 +120,7 @@ The API endpoints return a simplified version:
 ✅ OpenAPI/Swagger documentation  
 ✅ Angular 20.1.0 Frontend  
 ✅ Responsive Design  
+✅ Multi-language support (German/English)  
 ✅ Automatic database migrations  
 ✅ Sample data for development  
 ✅ CORS support  
@@ -156,3 +160,49 @@ ng build
 
 ### API Documentation
 The interactive API documentation is available at: http://localhost:8080/swagger
+
+## Internationalization (i18n)
+
+The application supports multiple languages with runtime-editable translations.
+
+### Supported Languages
+- 🇩🇪 German (Deutsch) - Default
+- 🇬🇧 English
+
+### Language Switching
+Users can switch languages using the language switcher in the top-right corner of the application. The selected language is persisted in the browser's localStorage and automatically restored on the next visit.
+
+### Adding/Editing Translations
+
+Translation files are located in `/frontend/public/assets/i18n/`:
+- `de.json` - German translations
+- `en.json` - English translations
+
+To modify translations:
+1. Edit the appropriate JSON file
+2. Changes take effect immediately without rebuilding or redeploying the application
+3. Simply refresh the browser to see the changes
+
+Example translation file structure:
+```json
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry"
+  },
+  "wanderstein": {
+    "title": "Latest Hiking Stones",
+    "subtitle": "The 5 most recently added hiking stones",
+    "addedOn": "Added on"
+  }
+}
+```
+
+### Adding New Languages
+
+To add a new language:
+1. Create a new JSON file in `/frontend/public/assets/i18n/` (e.g., `fr.json` for French)
+2. Add the language code to `SupportedLanguage` type in `/frontend/src/app/services/language.ts`
+3. Update the `getSupportedLanguages()` method to include the new language
+4. Update the `getLanguageLabel()` method in the language switcher component

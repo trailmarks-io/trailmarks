@@ -1,0 +1,11 @@
+<div class="language-switcher">
+  <select 
+    class="language-select"
+    [ngModel]="languageService.currentLanguage()"
+    (ngModelChange)="onLanguageChange($event)"
+    aria-label="Select language">
+    <option *ngFor="let language of supportedLanguages" [value]="language">
+      {{ getLanguageLabel(language) }}
+    </option>
+  </select>
+</div>

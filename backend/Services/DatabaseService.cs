@@ -45,10 +45,19 @@ namespace TrailmarksApi.Services
         /// </summary>
         private async Task SeedDataAsync()
         {
+            await SeedWandersteineAsync();
+            await SeedTranslationsAsync();
+        }
+
+        /// <summary>
+        /// Seed Wandersteine data
+        /// </summary>
+        private async Task SeedWandersteineAsync()
+        {
             // Check if data already exists
             if (await _context.Wandersteine.AnyAsync())
             {
-                _logger.LogInformation("Database already contains data, skipping seed");
+                _logger.LogInformation("Database already contains Wandersteine data, skipping seed");
                 return;
             }
 
@@ -122,6 +131,53 @@ namespace TrailmarksApi.Services
             await _context.SaveChangesAsync();
 
             _logger.LogInformation($"Successfully seeded {sampleStones.Count} Wandersteine");
+        }
+
+        /// <summary>
+        /// Seed translation data
+        /// </summary>
+        private async Task SeedTranslationsAsync()
+        {
+            // Check if translations already exist
+            if (await _context.Translations.AnyAsync())
+            {
+                _logger.LogInformation("Database already contains translation data, skipping seed");
+                return;
+            }
+
+            _logger.LogInformation("Seeding database with translations");
+
+            var translations = new List<Translation>
+            {
+                // German translations
+                new Translation { Key = "common.loading", Language = "de", Value = "Lädt..." },
+                new Translation { Key = "common.error", Language = "de", Value = "Fehler" },
+                new Translation { Key = "common.retry", Language = "de", Value = "Erneut versuchen" },
+                new Translation { Key = "common.noData", Language = "de", Value = "Keine Daten gefunden" },
+                new Translation { Key = "wanderstein.title", Language = "de", Value = "Neueste Wandersteine" },
+                new Translation { Key = "wanderstein.subtitle", Language = "de", Value = "Die 5 zuletzt hinzugefügten Wandersteine" },
+                new Translation { Key = "wanderstein.loading", Language = "de", Value = "Lade Wandersteine..." },
+                new Translation { Key = "wanderstein.error", Language = "de", Value = "Fehler beim Laden der Wandersteine" },
+                new Translation { Key = "wanderstein.noData", Language = "de", Value = "Keine Wandersteine gefunden." },
+                new Translation { Key = "wanderstein.addedOn", Language = "de", Value = "Hinzugefügt" },
+
+                // English translations
+                new Translation { Key = "common.loading", Language = "en", Value = "Loading..." },
+                new Translation { Key = "common.error", Language = "en", Value = "Error" },
+                new Translation { Key = "common.retry", Language = "en", Value = "Retry" },
+                new Translation { Key = "common.noData", Language = "en", Value = "No data found" },
+                new Translation { Key = "wanderstein.title", Language = "en", Value = "Latest Hiking Stones" },
+                new Translation { Key = "wanderstein.subtitle", Language = "en", Value = "The 5 most recently added hiking stones" },
+                new Translation { Key = "wanderstein.loading", Language = "en", Value = "Loading hiking stones..." },
+                new Translation { Key = "wanderstein.error", Language = "en", Value = "Error loading hiking stones" },
+                new Translation { Key = "wanderstein.noData", Language = "en", Value = "No hiking stones found." },
+                new Translation { Key = "wanderstein.addedOn", Language = "en", Value = "Added on" }
+            };
+
+            _context.Translations.AddRange(translations);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation($"Successfully seeded {translations.Count} translations");
         }
     }
 }
