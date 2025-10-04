@@ -17,6 +17,11 @@ namespace TrailmarksApi.Data
         /// </summary>
         public DbSet<Wanderstein> Wandersteine { get; set; }
 
+        /// <summary>
+        /// Translations dataset
+        /// </summary>
+        public DbSet<Translation> Translations { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -31,6 +36,16 @@ namespace TrailmarksApi.Data
                 entity.Property(e => e.PreviewUrl).HasMaxLength(500);
                 entity.Property(e => e.Description).HasMaxLength(1000);
                 entity.Property(e => e.Location).HasMaxLength(200);
+            });
+
+            // Configure Translation entity
+            modelBuilder.Entity<Translation>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => new { e.Key, e.Language }).IsUnique();
+                entity.Property(e => e.Key).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Language).IsRequired().HasMaxLength(10);
+                entity.Property(e => e.Value).IsRequired().HasMaxLength(500);
             });
         }
     }

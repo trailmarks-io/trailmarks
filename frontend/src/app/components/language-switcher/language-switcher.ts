@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { LanguageService, SupportedLanguage } from '../../services/language';
 
 @Component({
   selector: 'app-language-switcher',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './language-switcher.html',
   styleUrl: './language-switcher.css'
 })
@@ -16,18 +17,14 @@ export class LanguageSwitcherComponent {
     this.supportedLanguages = this.languageService.getSupportedLanguages();
   }
 
-  switchLanguage(language: SupportedLanguage): void {
+  onLanguageChange(language: SupportedLanguage): void {
     this.languageService.setLanguage(language);
-  }
-
-  isCurrentLanguage(language: SupportedLanguage): boolean {
-    return this.languageService.getLanguage() === language;
   }
 
   getLanguageLabel(language: SupportedLanguage): string {
     const labels: { [key in SupportedLanguage]: string } = {
-      'de': 'DE',
-      'en': 'EN'
+      'de': 'Deutsch',
+      'en': 'English'
     };
     return labels[language];
   }

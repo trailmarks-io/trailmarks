@@ -1,10 +1,11 @@
 <div class="language-switcher">
-  <button 
-    *ngFor="let language of supportedLanguages"
-    class="language-button"
-    [class.active]="isCurrentLanguage(language)"
-    (click)="switchLanguage(language)"
-    [attr.aria-label]="'Switch to ' + getLanguageLabel(language)">
-    {{ getLanguageLabel(language) }}
-  </button>
+  <select 
+    class="language-select"
+    [ngModel]="languageService.currentLanguage()"
+    (ngModelChange)="onLanguageChange($event)"
+    aria-label="Select language">
+    <option *ngFor="let language of supportedLanguages" [value]="language">
+      {{ getLanguageLabel(language) }}
+    </option>
+  </select>
 </div>

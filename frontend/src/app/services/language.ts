@@ -43,7 +43,7 @@ export class LanguageService {
   }
 
   private loadTranslations(language: SupportedLanguage): Observable<{ [key: string]: Translation }> {
-    return this.http.get<{ [key: string]: Translation }>(`/assets/i18n/${language}.json`).pipe(
+    return this.http.get<{ [key: string]: Translation }>(`http://localhost:8080/api/translations/${language}`).pipe(
       map((translations) => {
         this.translations = translations;
         return translations;
