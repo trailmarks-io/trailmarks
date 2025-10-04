@@ -1,42 +1,42 @@
-# Trailmarks - Wandersteine Übersicht
+# Trailmarks - Hiking Stones Overview
 
-Eine Webanwendung zur Anzeige der zuletzt hinzugefügten Wandersteine.
+A web application for displaying the most recently added hiking stones.
 
-## Architektur
+## Architecture
 
 ### Backend
 - **Framework**: C# ASP.NET Core 8.0
-- **Datenbank**: PostgreSQL mit Entity Framework Core (SQLite Fallback für Entwicklung)
-- **API Dokumentation**: OpenAPI (Swagger)
+- **Database**: PostgreSQL with Entity Framework Core (SQLite fallback for development)
+- **API Documentation**: OpenAPI (Swagger)
 - **Features**: 
-  - REST API für Wandersteine
-  - Automatische Datenbankmigrationen
-  - Beispieldaten für Entwicklung
-  - CORS-Unterstützung
-  - SQLite Fallback für lokale Entwicklung
+  - REST API for hiking stones
+  - Automatic database migrations
+  - Sample data for development
+  - CORS support
+  - SQLite fallback for local development
 
 ### Frontend
 - **Framework**: Angular 20.1.0
-- **Styling**: CSS Grid Layout mit responsivem Design
-- **HTTP Client**: Angular HttpClient für API-Kommunikation
+- **Styling**: CSS Grid Layout with responsive design
+- **HTTP Client**: Angular HttpClient for API communication
 - **Features**:
-  - Übersichtsseite der 5 neuesten Wandersteine
-  - Responsive Design für mobile Geräte
-  - Fehlerbehandlung und Ladestatus
+  - Overview page of the 5 most recent hiking stones
+  - Responsive design for mobile devices
+  - Error handling and loading status
 
-## API Endpunkte
+## API Endpoints
 
-- `GET /api/wandersteine/recent` - Die 5 zuletzt hinzugefügten Wandersteine
-- `GET /api/wandersteine` - Alle Wandersteine
+- `GET /api/wandersteine/recent` - The 5 most recently added hiking stones
+- `GET /api/wandersteine` - All hiking stones
 - `GET /health` - Health Check
-- `GET /swagger` - API Dokumentation (interaktive Swagger UI)
+- `GET /swagger` - API documentation (interactive Swagger UI)
 
-## Installation und Start
+## Installation and Startup
 
-### Voraussetzungen
+### Prerequisites
 - .NET 8.0 SDK
 - Node.js 20+
-- PostgreSQL (optional, SQLite wird für Entwicklung automatisch verwendet)
+- PostgreSQL (optional, SQLite is automatically used for development)
 
 ### Backend
 ```bash
@@ -44,9 +44,9 @@ cd backend
 dotnet run
 ```
 
-Der Backend-Server läuft auf Port 8080. Beim ersten Start wird automatisch eine SQLite-Datenbank erstellt und mit Beispieldaten gefüllt.
+The backend server runs on port 8080. On first startup, a SQLite database is automatically created and populated with sample data.
 
-Für die Initialisierung der Datenbank mit Beispieldaten:
+To initialize the database with sample data:
 ```bash
 cd backend
 dotnet run -- -DbInit
@@ -59,22 +59,22 @@ npm install
 npx ng serve
 ```
 
-Der Frontend-Server läuft auf Port 4200. Alternativ kann auch `npm start` verwendet werden.
+The frontend server runs on port 4200. Alternatively, you can use `npm start`.
 
-## Konfiguration
+## Configuration
 
-Das Backend kann über `appsettings.json` oder `appsettings.Development.json` konfiguriert werden:
+The backend can be configured via `appsettings.json` or `appsettings.Development.json`:
 
-### Entwicklung (SQLite)
-Standardmäßig wird SQLite für die lokale Entwicklung verwendet:
+### Development (SQLite)
+SQLite is used by default for local development:
 ```json
 {
   "UseSqlite": true
 }
 ```
 
-### Produktion (PostgreSQL)
-Für die Verwendung von PostgreSQL:
+### Production (PostgreSQL)
+For using PostgreSQL:
 ```json
 {
   "UseSqlite": false,
@@ -84,21 +84,21 @@ Für die Verwendung von PostgreSQL:
 }
 ```
 
-## Datenmodell
+## Data Model
 
 ### Wanderstein Entity
-Das vollständige Datenmodell in der Datenbank:
-- `Id` (uint) - Primärschlüssel
-- `Name` (string, max 200) - Name des Wandersteins
-- `UniqueId` (string, max 50) - Eindeutige Kennung (z.B. WS-2024-001)
-- `PreviewUrl` (string, max 500) - URL zum Vorschaubild
-- `Description` (string, max 1000) - Beschreibungstext
-- `Location` (string, max 200) - Standortinformationen
-- `CreatedAt` (DateTime) - Erstellungszeitpunkt
-- `UpdatedAt` (DateTime) - Letzter Änderungszeitpunkt
+The complete data model in the database:
+- `Id` (uint) - Primary key
+- `Name` (string, max 200) - Name of the hiking stone
+- `UniqueId` (string, max 50) - Unique identifier (e.g., WS-2024-001)
+- `PreviewUrl` (string, max 500) - URL to preview image
+- `Description` (string, max 1000) - Description text
+- `Location` (string, max 200) - Location information
+- `CreatedAt` (DateTime) - Creation timestamp
+- `UpdatedAt` (DateTime) - Last update timestamp
 
 ### API Response Format
-Die API-Endpunkte geben eine vereinfachte Version zurück:
+The API endpoints return a simplified version:
 ```json
 {
   "id": 1,
@@ -111,18 +111,18 @@ Die API-Endpunkte geben eine vereinfachte Version zurück:
 
 ## Features
 
-✅ REST API mit C# ASP.NET Core 8.0  
-✅ PostgreSQL Datenbankintegration mit Entity Framework Core  
-✅ SQLite Fallback für lokale Entwicklung  
-✅ OpenAPI/Swagger Dokumentation  
+✅ REST API with C# ASP.NET Core 8.0  
+✅ PostgreSQL database integration with Entity Framework Core  
+✅ SQLite fallback for local development  
+✅ OpenAPI/Swagger documentation  
 ✅ Angular 20.1.0 Frontend  
 ✅ Responsive Design  
-✅ Automatische Datenbankmigrationen  
-✅ Beispieldaten für Entwicklung  
-✅ CORS-Unterstützung  
-✅ Umfassende Fehlerbehandlung und Logging  
+✅ Automatic database migrations  
+✅ Sample data for development  
+✅ CORS support  
+✅ Comprehensive error handling and logging  
 
-## Entwicklung
+## Development
 
 ### Backend Tests
 ```bash
@@ -148,11 +148,11 @@ cd frontend
 npx ng build
 ```
 
-Alternativ kann Angular CLI global installiert werden:
+Alternatively, Angular CLI can be installed globally:
 ```bash
 npm install -g @angular/cli
 ng build
 ```
 
-### API Dokumentation
-Die interaktive API-Dokumentation ist verfügbar unter: http://localhost:8080/swagger
+### API Documentation
+The interactive API documentation is available at: http://localhost:8080/swagger
