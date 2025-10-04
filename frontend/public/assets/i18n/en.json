@@ -1,0 +1,16 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "noData": "No data found"
+  },
+  "wanderstein": {
+    "title": "Latest Hiking Stones",
+    "subtitle": "The 5 most recently added hiking stones",
+    "loading": "Loading hiking stones...",
+    "error": "Error loading hiking stones",
+    "noData": "No hiking stones found.",
+    "addedOn": "Added on"
+  }
+}

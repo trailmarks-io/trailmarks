@@ -1,0 +1,16 @@
+{
+  "common": {
+    "loading": "Lädt...",
+    "error": "Fehler",
+    "retry": "Erneut versuchen",
+    "noData": "Keine Daten gefunden"
+  },
+  "wanderstein": {
+    "title": "Neueste Wandersteine",
+    "subtitle": "Die 5 zuletzt hinzugefügten Wandersteine",
+    "loading": "Lade Wandersteine...",
+    "error": "Fehler beim Laden der Wandersteine",
+    "noData": "Keine Wandersteine gefunden.",
+    "addedOn": "Hinzugefügt"
+  }
+}

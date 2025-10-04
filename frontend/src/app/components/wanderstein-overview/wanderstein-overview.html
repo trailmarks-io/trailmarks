@@ -1,32 +1,37 @@
 <div class="wanderstein-overview">
-  <h1>Neueste Wandersteine</h1>
-  <p class="subtitle">Die 5 zuletzt hinzugefügten Wandersteine</p>
+  <div class="header">
+    <div class="title-section">
+      <h1>{{ 'wanderstein.title' | translate }}</h1>
+      <p class="subtitle">{{ 'wanderstein.subtitle' | translate }}</p>
+    </div>
+    <app-language-switcher></app-language-switcher>
+  </div>
 
   <div *ngIf="loading" class="loading">
-    <p>Lade Wandersteine...</p>
+    <p>{{ 'wanderstein.loading' | translate }}</p>
   </div>
 
   <div *ngIf="error" class="error">
     <p>{{ error }}</p>
-    <button (click)="loadRecentWandersteine()" class="retry-button">Erneut versuchen</button>
+    <button (click)="loadRecentWandersteine()" class="retry-button">{{ 'common.retry' | translate }}</button>
   </div>
 
   <div *ngIf="!loading && !error" class="wandersteine-grid">
     <div *ngFor="let wanderstein of wandersteine" class="wanderstein-card">
       <div class="image-container">
-        <img [src]="wanderstein.preview_url" [alt]="wanderstein.name" class="preview-image">
+        <img [src]="wanderstein.preview_Url" [alt]="wanderstein.name" class="preview-image">
         <div class="overlay">
-          <span class="unique-id">{{ wanderstein.unique_id }}</span>
+          <span class="unique-id">{{ wanderstein.unique_Id }}</span>
         </div>
       </div>
       <div class="card-content">
         <h3 class="wanderstein-name">{{ wanderstein.name }}</h3>
-        <p class="creation-date">Hinzugefügt: {{ formatDate(wanderstein.created_at) }}</p>
+        <p class="creation-date">{{ 'wanderstein.addedOn' | translate }}: {{ formatDate(wanderstein.created_At) }}</p>
       </div>
     </div>
   </div>
 
   <div *ngIf="!loading && !error && wandersteine.length === 0" class="no-data">
-    <p>Keine Wandersteine gefunden.</p>
+    <p>{{ 'wanderstein.noData' | translate }}</p>
   </div>
 </div>

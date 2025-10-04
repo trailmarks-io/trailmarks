@@ -5,6 +5,18 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  gap: 2rem;
+}
+
+.title-section {
+  flex: 1;
+}
+
 h1 {
   color: #2c3e50;
   font-size: 2.5rem;
@@ -16,7 +28,7 @@ h1 {
   text-align: center;
   color: #7f8c8d;
   font-size: 1.1rem;
-  margin-bottom: 2rem;
+  margin: 0;
 }
 
 .loading, .error, .no-data {
@@ -115,6 +127,11 @@ h1 {
 @media (max-width: 768px) {
   .wanderstein-overview {
     padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: center;
   }
   
   h1 {

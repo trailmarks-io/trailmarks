@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WandersteinService, WandersteinResponse } from '../../services/wanderstein';
+import { LanguageService } from '../../services/language';
+import { TranslatePipe } from '../../pipes/translate.pipe';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher';
 
 @Component({
   selector: 'app-wanderstein-overview',
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe, LanguageSwitcherComponent],
   templateUrl: './wanderstein-overview.html',
   styleUrl: './wanderstein-overview.css'
 })
@@ -13,7 +16,10 @@ export class WandersteinOverviewComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
-  constructor(private wandersteinService: WandersteinService) {}
+  constructor(
+    private wandersteinService: WandersteinService,
+    private languageService: LanguageService
+  ) {}
 
   ngOnInit(): void {
     this.loadRecentWandersteine();
@@ -29,7 +35,8 @@ export class WandersteinOverviewComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Fehler beim Laden der Wandersteine: ' + err.message;
+        const errorMsg = this.languageService.translate('wanderstein.error');
+        this.error = `${errorMsg}: ${err.message}`;
         this.loading = false;
       }
     });
@@ -37,7 +44,8 @@ export class WandersteinOverviewComponent implements OnInit {
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);
-    return date.toLocaleDateString('de-DE', {
+    const locale = this.languageService.getLanguage() === 'de' ? 'de-DE' : 'en-US';
+    return date.toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
