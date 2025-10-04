@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container
 builder.Services.AddControllers();
 
+// Configure ProblemDetails for standardized error responses (RFC 7807)
+builder.Services.AddProblemDetails();
+
 // Configure Entity Framework with PostgreSQL or SQLite fallback
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var useSqlite = builder.Configuration.GetValue<bool>("UseSqlite") || string.IsNullOrEmpty(connectionString);
@@ -82,6 +85,10 @@ if (args.Contains("-DbInit"))
 }
 
 // Configure the HTTP request pipeline
+// Use exception handler middleware to convert exceptions to ProblemDetails
+app.UseExceptionHandler();
+app.UseStatusCodePages();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

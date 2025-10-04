@@ -29,7 +29,7 @@ namespace TrailmarksApi.Controllers
         /// <response code="500">If there was an internal server error</response>
         [HttpGet("recent")]
         [ProducesResponseType(typeof(IEnumerable<WandersteinResponse>), 200)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(ProblemDetails), 500)]
         public async Task<IActionResult> GetRecentWandersteine()
         {
             try
@@ -47,7 +47,10 @@ namespace TrailmarksApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while fetching recent Wandersteine");
-                return StatusCode(500, new { error = "Failed to fetch wandersteine" });
+                return Problem(
+                    title: "An error occurred while fetching recent Wandersteine",
+                    statusCode: StatusCodes.Status500InternalServerError
+                );
             }
         }
 
@@ -59,7 +62,7 @@ namespace TrailmarksApi.Controllers
         /// <response code="500">If there was an internal server error</response>
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<WandersteinResponse>), 200)]
-        [ProducesResponseType(500)]
+        [ProducesResponseType(typeof(ProblemDetails), 500)]
         public async Task<IActionResult> GetAllWandersteine()
         {
             try
@@ -76,7 +79,10 @@ namespace TrailmarksApi.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while fetching all Wandersteine");
-                return StatusCode(500, new { error = "Failed to fetch wandersteine" });
+                return Problem(
+                    title: "An error occurred while fetching Wandersteine",
+                    statusCode: StatusCodes.Status500InternalServerError
+                );
             }
         }
     }

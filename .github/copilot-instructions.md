@@ -133,6 +133,11 @@ Das Projekt verwendet **Git Flow** als Branching-Strategie:
 - Verwende RESTful Prinzipien (GET, POST, PUT, DELETE)
 - Implementiere konsistente Fehlerbehandlung und HTTP-Statuscodes
 - Nutze DTOs (Data Transfer Objects) für API-Responses
+- **Fehlerbehandlung**: Verwende den ProblemDetails Standard (RFC 7807) für alle Fehlerantworten
+  - Nutze die `Problem()` Methode von `ControllerBase` für strukturierte Fehlerantworten
+  - ProblemDetails enthält: `type`, `title`, `status`, `detail` und optionale `instance`
+  - Beispiel: `return Problem(title: "Resource not found", statusCode: 404, detail: "The requested Wanderstein was not found")`
+  - Für 500er Fehler: Verwende `Problem()` ohne Details, um keine internen Informationen preiszugeben
 
 ### Testing
 
