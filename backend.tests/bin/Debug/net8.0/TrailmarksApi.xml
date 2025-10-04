@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TrailmarksApi</name>
+    </assembly>
+    <members>
+        <member name="T:TrailmarksApi.Controllers.HealthController">
+            <summary>
+            Health check controller
+            </summary>
+        </member>
+        <member name="M:TrailmarksApi.Controllers.HealthController.GetHealth">
+            <summary>
+            Health check endpoint
+            </summary>
+            <returns>Service health status</returns>
+            <response code="200">Service is healthy</response>
+        </member>
+        <member name="T:TrailmarksApi.Controllers.TranslationsController">
+            <summary>
+            Controller for managing translations
+            </summary>
+        </member>
+        <member name="M:TrailmarksApi.Controllers.TranslationsController.GetTranslations(System.String)">
+            <summary>
+            Get all translations for a specific language
+            </summary>
+            <param name="language">Language code (e.g., "de", "en")</param>
+            <returns>Dictionary of translation keys and values</returns>
+        </member>
+        <member name="M:TrailmarksApi.Controllers.TranslationsController.GetSupportedLanguages">
+            <summary>
+            Get all supported languages
+            </summary>
+            <returns>List of language codes</returns>
+        </member>
+        <member name="M:TrailmarksApi.Controllers.TranslationsController.SetNestedValue(System.Collections.Generic.Dictionary{System.String,System.Object},System.String,System.String)">
+            <summary>
+            Helper method to set nested dictionary values from dot-notation keys
+            </summary>
+        </member>
+        <member name="T:TrailmarksApi.Controllers.WandersteineController">
+            <summary>
+            Controller for managing Wandersteine (hiking stones)
+            </summary>
+        </member>
+        <member name="M:TrailmarksApi.Controllers.WandersteineController.GetRecentWandersteine">
+            <summary>
+            Get the 5 most recently added Wandersteine
+            </summary>
+            <returns>List of the 5 most recent hiking stones</returns>
+            <response code="200">Returns the list of recent Wandersteine</response>
+            <response code="500">If there was an internal server error</response>
+        </member>
+        <member name="M:TrailmarksApi.Controllers.WandersteineController.GetAllWandersteine">
+            <summary>
+            Get all Wandersteine
+            </summary>
+            <returns>List of all hiking stones</returns>
+            <response code="200">Returns the list of all Wandersteine</response>
+            <response code="500">If there was an internal server error</response>
+        </member>
+        <member name="T:TrailmarksApi.Data.ApplicationDbContext">
+            <summary>
+            Database context for the Trailmarks application
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Data.ApplicationDbContext.Wandersteine">
+            <summary>
+            Wandersteine dataset
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Data.ApplicationDbContext.Translations">
+            <summary>
+            Translations dataset
+            </summary>
+        </member>
+        <member name="T:TrailmarksApi.Models.Translation">
+            <summary>
+            Translation entity for storing UI text in multiple languages
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Translation.Id">
+            <summary>
+            Unique identifier for the translation
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Translation.Key">
+            <summary>
+            Translation key (e.g., "wanderstein.title")
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Translation.Language">
+            <summary>
+            Language code (e.g., "de", "en")
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Translation.Value">
+            <summary>
+            Translated text value
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Translation.CreatedAt">
+            <summary>
+            Creation timestamp
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Translation.UpdatedAt">
+            <summary>
+            Last update timestamp
+            </summary>
+        </member>
+        <member name="T:TrailmarksApi.Models.Wanderstein">
+            <summary>
+            Represents a hiking stone with its metadata
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Wanderstein.Id">
+            <summary>
+            Unique identifier for the Wanderstein
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Wanderstein.Name">
+            <summary>
+            Name of the Wanderstein
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Wanderstein.UniqueId">
+            <summary>
+            Unique identifier string (e.g., WS-2024-001)
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Wanderstein.PreviewUrl">
+            <summary>
+            URL to the preview image
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Wanderstein.Description">
+            <summary>
+            Description of the Wanderstein
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Wanderstein.Location">
+            <summary>
+            Location description
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Wanderstein.CreatedAt">
+            <summary>
+            Creation timestamp
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.Wanderstein.UpdatedAt">
+            <summary>
+            Update timestamp
+            </summary>
+        </member>
+        <member name="T:TrailmarksApi.Models.WandersteinResponse">
+            <summary>
+            Response DTO for API endpoints
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.WandersteinResponse.Id">
+            <summary>
+            Unique identifier
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.WandersteinResponse.Name">
+            <summary>
+            Name of the Wanderstein
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.WandersteinResponse.Unique_Id">
+            <summary>
+            Unique identifier string
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.WandersteinResponse.Preview_Url">
+            <summary>
+            URL to the preview image
+            </summary>
+        </member>
+        <member name="P:TrailmarksApi.Models.WandersteinResponse.Created_At">
+            <summary>
+            Creation timestamp in ISO 8601 format
+            </summary>
+        </member>
+        <member name="M:TrailmarksApi.Models.WandersteinResponse.FromEntity(TrailmarksApi.Models.Wanderstein)">
+            <summary>
+            Converts a Wanderstein entity to a response DTO
+            </summary>
+        </member>
+        <member name="T:TrailmarksApi.Services.DatabaseService">
+            <summary>
+            Service for database initialization and seeding
+            </summary>
+        </member>
+        <member name="M:TrailmarksApi.Services.DatabaseService.InitializeAsync">
+            <summary>
+            Initialize the database with migrations and seed data
+            </summary>
+        </member>
+        <member name="M:TrailmarksApi.Services.DatabaseService.SeedDataAsync">
+            <summary>
+            Seed the database with sample Wandersteine if empty
+            </summary>
+        </member>
+        <member name="M:TrailmarksApi.Services.DatabaseService.SeedWandersteineAsync">
+            <summary>
+            Seed Wandersteine data
+            </summary>
+        </member>
+        <member name="M:TrailmarksApi.Services.DatabaseService.SeedTranslationsAsync">
+            <summary>
+            Seed translation data
+            </summary>
+        </member>
+    </members>
+</doc>
