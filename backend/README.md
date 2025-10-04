@@ -100,9 +100,17 @@ dotnet build
 
 ### Running Tests
 
+The backend has comprehensive xUnit tests covering all controllers, services, and models.
+
 ```bash
+cd ../backend.tests
 dotnet test
 ```
+
+Test coverage includes:
+- Controller tests (18 tests) - HealthController, WandersteineController, TranslationsController
+- Service tests (5 tests) - DatabaseService
+- Model tests (4 tests) - WandersteinResponse mapping
 
 ## Documentation
 
