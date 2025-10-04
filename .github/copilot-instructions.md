@@ -32,7 +32,7 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
 ### Frontend
 - **Framework**: Angular 20.1.0 (neueste stabile Version)
 - **Sprache**: TypeScript
-- **Styling**: CSS (Responsive Design)
+- **Styling**: Tailwind CSS v3 (Utility-First CSS Framework)
 - **HTTP Client**: Angular HttpClient für API-Kommunikation
 - **Features**:
   - Responsive Design für mobile Geräte
@@ -125,6 +125,16 @@ Das Projekt verwendet **Git Flow** als Branching-Strategie:
 - Nutze RxJS Observables für asynchrone Operationen
 - Implementiere OnPush Change Detection wo möglich
 - Trenne Präsentations- und Container-Komponenten
+
+#### Styling mit Tailwind CSS
+- **Ausschließliche Verwendung**: Nutze für alle Styles und Layouts ausschließlich Tailwind CSS Utility-Klassen
+- **Keine separaten CSS-Dateien**: Erstelle keine komponentenspezifischen CSS-Dateien (*.css), sondern verwende Tailwind-Klassen direkt in den HTML-Templates
+- **Responsive Design**: Verwende Tailwinds responsive Breakpoints (sm:, md:, lg:, xl:, 2xl:) für mobile-first Design
+- **Utility-First-Ansatz**: Bevorzuge Utility-Klassen gegenüber benutzerdefinierten CSS-Klassen
+- **Konsistenz**: Nutze Tailwinds Designsystem für Farben, Abstände, Schriftgrößen etc., um ein konsistentes Design zu gewährleisten
+- **Hover/Focus States**: Nutze Tailwinds State-Varianten (hover:, focus:, active:) für interaktive Elemente
+- **Transitions**: Verwende Tailwinds Transition-Utilities (transition, duration, ease) für sanfte Animationen
+- **Custom Styles**: Falls unbedingt erforderlich, definiere custom Styles in der globalen styles.css mit @layer-Direktiven
 
 ### API-Entwicklung
 

@@ -1,37 +1,37 @@
-<div class="wanderstein-overview">
-  <div class="header">
-    <div class="title-section">
-      <h1>{{ 'wanderstein.title' | translate }}</h1>
-      <p class="subtitle">{{ 'wanderstein.subtitle' | translate }}</p>
+<div class="max-w-7xl mx-auto p-8 md:p-4 font-sans">
+  <div class="flex justify-between items-start mb-8 gap-8 flex-col md:flex-row md:items-center">
+    <div class="flex-1 w-full">
+      <h1 class="text-gray-800 text-4xl md:text-3xl mb-2 text-center font-normal">{{ 'wanderstein.title' | translate }}</h1>
+      <p class="text-center text-gray-500 text-lg m-0">{{ 'wanderstein.subtitle' | translate }}</p>
     </div>
     <app-language-switcher></app-language-switcher>
   </div>
 
-  <div *ngIf="loading" class="loading">
+  <div *ngIf="loading" class="text-center p-8 text-lg">
     <p>{{ 'wanderstein.loading' | translate }}</p>
   </div>
 
-  <div *ngIf="error" class="error">
+  <div *ngIf="error" class="text-center p-8 text-lg text-red-600">
     <p>{{ error }}</p>
-    <button (click)="loadRecentWandersteine()" class="retry-button">{{ 'common.retry' | translate }}</button>
+    <button (click)="loadRecentWandersteine()" class="bg-blue-500 text-white border-none py-2 px-4 rounded cursor-pointer mt-4 hover:bg-blue-600">{{ 'common.retry' | translate }}</button>
   </div>
 
-  <div *ngIf="!loading && !error" class="wandersteine-grid">
-    <div *ngFor="let wanderstein of wandersteine" class="wanderstein-card">
-      <div class="image-container">
-        <img [src]="wanderstein.preview_Url" [alt]="wanderstein.name" class="preview-image">
-        <div class="overlay">
-          <span class="unique-id">{{ wanderstein.unique_Id }}</span>
+  <div *ngIf="!loading && !error" class="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 mt-8 md:gap-4">
+    <div *ngFor="let wanderstein of wandersteine" class="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-xl group">
+      <div class="relative h-48 overflow-hidden">
+        <img [src]="wanderstein.preview_Url" [alt]="wanderstein.name" class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105">
+        <div class="absolute top-0 right-0 bg-gradient-to-br from-indigo-500 to-purple-600 text-white py-2 px-4 rounded-bl-xl">
+          <span class="font-bold text-sm">{{ wanderstein.unique_Id }}</span>
         </div>
       </div>
-      <div class="card-content">
-        <h3 class="wanderstein-name">{{ wanderstein.name }}</h3>
-        <p class="creation-date">{{ 'wanderstein.addedOn' | translate }}: {{ formatDate(wanderstein.created_At) }}</p>
+      <div class="p-6">
+        <h3 class="text-gray-800 text-xl m-0 mb-2 font-semibold">{{ wanderstein.name }}</h3>
+        <p class="text-gray-500 text-sm m-0">{{ 'wanderstein.addedOn' | translate }}: {{ formatDate(wanderstein.created_At) }}</p>
       </div>
     </div>
   </div>
 
-  <div *ngIf="!loading && !error && wandersteine.length === 0" class="no-data">
+  <div *ngIf="!loading && !error && wandersteine.length === 0" class="text-center p-8 text-lg">
     <p>{{ 'wanderstein.noData' | translate }}</p>
   </div>
 </div>

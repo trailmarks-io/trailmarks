@@ -9,7 +9,7 @@ import { LanguageSwitcherComponent } from '../language-switcher/language-switche
   selector: 'app-wanderstein-overview',
   imports: [CommonModule, TranslatePipe, LanguageSwitcherComponent],
   templateUrl: './wanderstein-overview.html',
-  styleUrl: './wanderstein-overview.css'
+  standalone: true
 })
 export class WandersteinOverviewComponent implements OnInit {
   wandersteine: WandersteinResponse[] = [];

@@ -7,8 +7,7 @@ import { LanguageService, SupportedLanguage } from '../../services/language';
   selector: 'app-language-switcher',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './language-switcher.html',
-  styleUrl: './language-switcher.css'
+  templateUrl: './language-switcher.html'
 })
 export class LanguageSwitcherComponent {
   supportedLanguages: SupportedLanguage[] = [];
