@@ -4,10 +4,11 @@ import { WandersteinService, WandersteinResponse } from '../../services/wanderst
 import { LanguageService } from '../../services/language';
 import { TranslatePipe } from '../../pipes/translate.pipe';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher';
+import { CarouselComponent } from '../carousel/carousel';
 
 @Component({
   selector: 'app-wanderstein-overview',
-  imports: [CommonModule, TranslatePipe, LanguageSwitcherComponent],
+  imports: [CommonModule, TranslatePipe, LanguageSwitcherComponent, CarouselComponent],
   templateUrl: './wanderstein-overview.html',
   standalone: true
 })
