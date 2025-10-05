@@ -144,6 +144,25 @@ For development, you can use Docker Compose while still editing code locally:
    docker-compose up -d --build frontend
    ```
 
+### Alternative: Hybrid Development
+
+For faster iteration during development, you can run services locally and only use Docker for the database:
+
+```bash
+# Start only the database
+docker-compose up -d postgres
+
+# Run backend locally
+cd backend/src
+dotnet run
+
+# Run frontend locally  
+cd frontend
+npm start
+```
+
+This approach provides faster rebuild times during development while still ensuring the database is consistent.
+
 ### Database Management
 
 #### Reinitialize Database
@@ -227,6 +246,25 @@ For production deployment, consider:
    - Set up health checks
 
 ## Troubleshooting
+
+### Docker Build Fails with Network Errors
+
+If you encounter network errors during Docker build (especially with NuGet or npm):
+
+1. **Use host network for build**:
+   ```bash
+   docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1
+   ```
+
+2. **Check Docker network settings**:
+   - Ensure Docker has internet access
+   - Check firewall settings
+   - Try restarting Docker daemon
+
+3. **Build with increased timeout**:
+   ```bash
+   COMPOSE_HTTP_TIMEOUT=300 docker-compose up -d --build
+   ```
 
 ### Frontend Cannot Connect to Backend
 
