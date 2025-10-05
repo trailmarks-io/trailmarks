@@ -35,6 +35,7 @@ This command will:
 - **Frontend**: http://localhost:4200
 - **Backend API**: http://localhost:8080
 - **API Documentation (Swagger)**: http://localhost:8080/swagger
+- **Jaeger UI (Tracing)**: http://localhost:16686
 
 ### 4. Stop All Services
 
@@ -73,6 +74,17 @@ docker-compose down -v
   - User: `postgres`
   - Password: `postgres`
 
+### Observability (Jaeger)
+- **Container Name**: `trailmarks-jaeger`
+- **Port**: 16686 (Jaeger UI), 4318 (OTLP HTTP receiver)
+- **Technology**: Jaeger all-in-one with OpenTelemetry support
+- **Purpose**: Distributed tracing and performance monitoring
+- **Features**:
+  - Trace visualization
+  - Service dependency graph
+  - Performance analysis
+  - Request flow tracking
+
 ## Docker Commands
 
 ### View Running Containers
@@ -91,6 +103,7 @@ docker-compose logs -f
 docker-compose logs -f backend
 docker-compose logs -f frontend
 docker-compose logs -f postgres
+docker-compose logs -f jaeger
 ```
 
 ### Restart Services
@@ -357,6 +370,64 @@ docker volume inspect trailmarks_postgres-data
 docker volume rm trailmarks_postgres-data
 ```
 
+## OpenTelemetry and Observability
+
+The Trailmarks application includes OpenTelemetry instrumentation for distributed tracing and performance monitoring.
+
+### Jaeger UI
+
+Access the Jaeger UI to visualize traces:
+
+**URL**: http://localhost:16686
+
+### Features
+
+- **Distributed Tracing**: Track requests across frontend, backend, and database
+- **Performance Analysis**: Identify slow operations and bottlenecks
+- **Service Dependencies**: Visualize how services interact
+- **Error Tracking**: Find and diagnose errors in the request flow
+
+### Using Jaeger
+
+1. **View Services**: Select "trailmarks-frontend" or "TrailmarksApi" from the service dropdown
+2. **Search Traces**: Use filters to find specific traces or operations
+3. **Analyze Traces**: Click on a trace to see detailed timing information
+4. **Service Graph**: View the "System Architecture" tab to see service dependencies
+
+### Instrumented Components
+
+**Backend (TrailmarksApi):**
+- ASP.NET Core HTTP requests
+- HttpClient calls
+- Entity Framework Core database queries
+
+**Frontend (trailmarks-frontend):**
+- HTTP requests (Fetch API and XMLHttpRequest)
+- Document load performance
+- User interactions
+
+### Configuration
+
+The OpenTelemetry endpoint is configured via environment variables:
+
+**Backend:**
+```yaml
+environment:
+  OpenTelemetry__OtlpEndpoint: "http://jaeger:4318"
+```
+
+**Frontend:**
+See `frontend/src/environments/environment.ts` for OTLP endpoint configuration.
+
+### Troubleshooting
+
+If traces are not appearing in Jaeger:
+
+1. Check that Jaeger is running: `docker-compose ps jaeger`
+2. View Jaeger logs: `docker-compose logs jaeger`
+3. Verify backend can reach Jaeger: `docker-compose exec backend ping jaeger`
+4. Check browser console for frontend tracing errors
+
 ## Additional Resources
 
 - [Docker Documentation](https://docs.docker.com/)
@@ -364,3 +435,5 @@ docker volume rm trailmarks_postgres-data
 - [PostgreSQL Docker Image](https://hub.docker.com/_/postgres)
 - [.NET Docker Images](https://hub.docker.com/_/microsoft-dotnet)
 - [nginx Docker Image](https://hub.docker.com/_/nginx)
+- [Jaeger Documentation](https://www.jaegertracing.io/docs/)
+- [OpenTelemetry Documentation](https://opentelemetry.io/docs/)
