@@ -82,6 +82,28 @@ dotnet test --verbosity normal
 
 ## Test Patterns
 
+### TestContext Base Class
+
+Tests that require database access inherit from `TestContext`, which provides a shared `GetInMemoryContext()` method:
+
+```csharp
+public class MyControllerTests : TestContext
+{
+    [Fact]
+    public async Task MyTest()
+    {
+        // Arrange
+        var context = GetInMemoryContext();
+        var service = new MyService(context);
+        
+        // Act & Assert
+        // ...
+    }
+}
+```
+
+This eliminates code duplication across test classes.
+
 ### Arrange-Act-Assert
 
 All tests follow the AAA pattern:
@@ -104,18 +126,7 @@ public async Task MethodName_Scenario_ExpectedBehavior()
 
 ### In-Memory Database
 
-Tests use Entity Framework's in-memory database provider:
-
-```csharp
-private ApplicationDbContext GetInMemoryContext()
-{
-    var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-        .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-        .Options;
-
-    return new ApplicationDbContext(options);
-}
-```
+The `TestContext` base class provides access to Entity Framework's in-memory database provider. Each test gets a fresh database instance with a unique name to ensure test isolation.
 
 ### Mocking with Moq
 

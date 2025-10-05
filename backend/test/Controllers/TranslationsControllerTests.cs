@@ -1,23 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using TrailmarksApi.Controllers;
-using TrailmarksApi.Data;
 using TrailmarksApi.Models;
 
 namespace TrailmarksApi.Tests.Controllers
 {
-    public class TranslationsControllerTests
+    public class TranslationsControllerTests : TestContext
     {
-        private ApplicationDbContext GetInMemoryContext()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-            return new ApplicationDbContext(options);
-        }
 
         [Fact]
         public async Task GetTranslations_ReturnsOkResultWithTranslations()

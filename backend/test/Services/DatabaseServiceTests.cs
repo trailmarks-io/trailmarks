@@ -1,21 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using TrailmarksApi.Data;
 using TrailmarksApi.Services;
 
 namespace TrailmarksApi.Tests.Services
 {
-    public class DatabaseServiceTests
+    public class DatabaseServiceTests : TestContext
     {
-        private ApplicationDbContext GetInMemoryContext()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
-
-            return new ApplicationDbContext(options);
-        }
 
         [Fact]
         public async Task InitializeAsync_ExecutesSuccessfully()
