@@ -1,4 +1,17 @@
 services:
+  # Jaeger - OpenTelemetry Tracing Backend
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: trailmarks-jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"  # Jaeger UI
+      - "4318:4318"    # OTLP HTTP receiver
+    networks:
+      - trailmarks-network
+    restart: unless-stopped
+
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
@@ -30,6 +43,7 @@ services:
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=trailmarks;Username=postgres;Password=postgres;SSL Mode=Disable;Timezone=Europe/Berlin"
       UseSqlite: "false"
+      OpenTelemetry__OtlpEndpoint: "http://jaeger:4318"
     ports:
       - "8080:8080"
     networks:
@@ -37,6 +51,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      jaeger:
+        condition: service_started
     restart: unless-stopped
     command: sh -c "dotnet TrailmarksApi.dll -DbInit"
 
