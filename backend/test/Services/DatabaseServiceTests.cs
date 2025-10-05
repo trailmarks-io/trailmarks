@@ -5,14 +5,13 @@ using TrailmarksApi.Services;
 
 namespace TrailmarksApi.Tests.Services
 {
-    public class DatabaseServiceTests : TestContext
+    public class DatabaseServiceTests
     {
-
         [Fact]
         public async Task InitializeAsync_ExecutesSuccessfully()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
@@ -28,7 +27,7 @@ namespace TrailmarksApi.Tests.Services
         public async Task InitializeAsync_SeedsWandersteine()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
@@ -49,7 +48,7 @@ namespace TrailmarksApi.Tests.Services
         public async Task InitializeAsync_SeedsTranslations()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
@@ -71,7 +70,7 @@ namespace TrailmarksApi.Tests.Services
         public async Task InitializeAsync_SeedsMultipleLanguages()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
@@ -92,7 +91,7 @@ namespace TrailmarksApi.Tests.Services
         public async Task InitializeAsync_DoesNotDuplicateDataOnMultipleCalls()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 

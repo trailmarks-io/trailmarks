@@ -6,14 +6,13 @@ using TrailmarksApi.Models;
 
 namespace TrailmarksApi.Tests.Controllers
 {
-    public class TranslationsControllerTests : TestContext
+    public class TranslationsControllerTests
     {
-
         [Fact]
         public async Task GetTranslations_ReturnsOkResultWithTranslations()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             context.Translations.Add(new Translation
             {
                 Key = "app.title",
@@ -37,7 +36,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetTranslations_ReturnsNotFoundForInvalidLanguage()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<TranslationsController>>();
             var controller = new TranslationsController(context, logger.Object);
 
@@ -52,7 +51,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetTranslations_BuildsNestedDictionary()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             context.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "app.title", Language = "en", Value = "Trailmarks" },
@@ -78,7 +77,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetTranslations_IsCaseInsensitive()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             context.Translations.Add(new Translation
             {
                 Key = "test.key",
@@ -101,7 +100,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetSupportedLanguages_ReturnsOkResult()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<TranslationsController>>();
             var controller = new TranslationsController(context, logger.Object);
 
@@ -116,7 +115,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetSupportedLanguages_ReturnsDistinctLanguages()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             context.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "key1", Language = "de", Value = "Wert1" },
@@ -145,7 +144,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetSupportedLanguages_ReturnsEmptyListWhenNoTranslations()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<TranslationsController>>();
             var controller = new TranslationsController(context, logger.Object);
 
@@ -162,7 +161,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetSupportedLanguages_ReturnsLanguagesInOrder()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             context.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "key1", Language = "fr", Value = "Val" },

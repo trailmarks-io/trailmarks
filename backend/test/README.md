@@ -82,18 +82,18 @@ dotnet test --verbosity normal
 
 ## Test Patterns
 
-### TestContext Base Class
+### DatabaseFixture Helper (Composition over Inheritance)
 
-Tests that require database access inherit from `TestContext`, which provides a shared `GetInMemoryContext()` method:
+Tests that require database access use the `DatabaseFixture` static helper class, which provides a `CreateInMemoryContext()` method:
 
 ```csharp
-public class MyControllerTests : TestContext
+public class MyControllerTests
 {
     [Fact]
     public async Task MyTest()
     {
         // Arrange
-        var context = GetInMemoryContext();
+        var context = DatabaseFixture.CreateInMemoryContext();
         var service = new MyService(context);
         
         // Act & Assert
@@ -102,7 +102,7 @@ public class MyControllerTests : TestContext
 }
 ```
 
-This eliminates code duplication across test classes.
+This follows the "Composition over Inheritance" principle and eliminates code duplication across test classes.
 
 ### Arrange-Act-Assert
 
@@ -126,7 +126,7 @@ public async Task MethodName_Scenario_ExpectedBehavior()
 
 ### In-Memory Database
 
-The `TestContext` base class provides access to Entity Framework's in-memory database provider. Each test gets a fresh database instance with a unique name to ensure test isolation.
+The `DatabaseFixture` helper provides access to Entity Framework's in-memory database provider. Each test gets a fresh database instance with a unique name to ensure test isolation.
 
 ### Mocking with Moq
 

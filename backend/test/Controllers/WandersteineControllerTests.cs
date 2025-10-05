@@ -6,14 +6,13 @@ using TrailmarksApi.Models;
 
 namespace TrailmarksApi.Tests.Controllers
 {
-    public class WandersteineControllerTests : TestContext
+    public class WandersteineControllerTests
     {
-
         [Fact]
         public async Task GetRecentWandersteine_ReturnsOkResult()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<WandersteineController>>();
             var controller = new WandersteineController(context, logger.Object);
 
@@ -28,7 +27,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetRecentWandersteine_ReturnsMaximumFiveItems()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             
             // Add 7 test items
             for (int i = 1; i <= 7; i++)
@@ -59,7 +58,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetRecentWandersteine_ReturnsItemsOrderedByCreatedAtDescending()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             
             context.Wandersteine.Add(new Wanderstein
             {
@@ -94,7 +93,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetAllWandersteine_ReturnsOkResult()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<WandersteineController>>();
             var controller = new WandersteineController(context, logger.Object);
 
@@ -109,7 +108,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetAllWandersteine_ReturnsAllItems()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             
             for (int i = 1; i <= 10; i++)
             {
@@ -139,7 +138,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetAllWandersteine_ReturnsEmptyListWhenNoData()
         {
             // Arrange
-            var context = GetInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<WandersteineController>>();
             var controller = new WandersteineController(context, logger.Object);
 

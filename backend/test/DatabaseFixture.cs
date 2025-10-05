@@ -4,15 +4,15 @@ using TrailmarksApi.Data;
 namespace TrailmarksApi.Tests
 {
     /// <summary>
-    /// Base class for tests that require database context
+    /// Helper class for creating test database contexts (Composition over Inheritance)
     /// </summary>
-    public abstract class TestContext
+    public static class DatabaseFixture
     {
         /// <summary>
         /// Creates an in-memory database context for testing
         /// </summary>
         /// <returns>A new ApplicationDbContext configured with in-memory database</returns>
-        protected ApplicationDbContext GetInMemoryContext()
+        public static ApplicationDbContext CreateInMemoryContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())

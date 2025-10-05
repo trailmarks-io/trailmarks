@@ -67,7 +67,13 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
    - Ein PR sollte entweder neue Features ODER Refactoring enthalten, nicht beides
    - Dokumentiere größere Änderungen im Code mit Kommentaren
 
-4. **Testing**:
+4. **Design-Prinzipien**:
+   - **Composition over Inheritance**: Bevorzuge Komposition gegenüber Vererbung
+   - Verwende statische Helper-Klassen oder Dependency Injection statt Vererbungshierarchien
+   - Halte Klassen fokussiert und folge dem Single Responsibility Principle
+   - Vermeide tiefe Vererbungshierarchien, die schwer zu testen und zu warten sind
+
+5. **Testing**:
    - Schreibe Unit Tests für alle neuen Komponenten, Services und API-Endpunkte
    - Tests müssen vor dem Mergen eines PRs alle erfolgreich durchlaufen
    - Backend: Verwende xUnit mit Moq und In-Memory Database
@@ -128,6 +134,7 @@ Das Projekt verwendet **Git Flow** als Branching-Strategie:
 - Implementiere umfassende Fehlerbehandlung
 - Verwende async/await für asynchrone Operationen
 - Folge dem Repository-Pattern für Datenzugriff
+- **Composition over Inheritance**: Bevorzuge Komposition gegenüber Vererbung, um lose Kopplung und bessere Testbarkeit zu erreichen
 
 #### Frontend (Angular/TypeScript)
 - Verwende Angular Style Guide Konventionen
