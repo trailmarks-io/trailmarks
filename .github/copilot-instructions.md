@@ -11,7 +11,9 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
 
 ### Verzeichnisstruktur
 ```
-/backend    - C# ASP.NET Core Backend
+/backend
+  /src      - C# ASP.NET Core Backend (Produktivcode)
+  /test     - xUnit Tests für Backend
 /frontend   - Angular Frontend
 ```
 
@@ -164,7 +166,8 @@ Das Projekt verfolgt einen testgetriebenen Ansatz mit umfassenden Unit Tests fü
 #### Backend (xUnit)
 
 - **Framework**: xUnit als primäres Test-Framework
-- **Test-Projekt**: `backend.tests/` (auf gleicher Ebene wie `backend/`)
+- **Test-Projekt**: `backend/test/` (innerhalb des backend Verzeichnisses)
+- **Produktivcode**: `backend/src/` (enthält Controller, Services, Models, etc.)
 - **Struktur**: Tests spiegeln die Struktur des Hauptprojekts wider
   - `Controllers/` - Controller-Tests
   - `Services/` - Service-Tests
@@ -184,7 +187,7 @@ Das Projekt verfolgt einen testgetriebenen Ansatz mit umfassenden Unit Tests fü
 
 **Tests ausführen**:
 ```bash
-cd backend.tests
+cd backend/test
 dotnet test
 ```
 
@@ -221,7 +224,7 @@ npx ng test --watch=false --browsers=ChromeHeadless
 
 #### Backend Build
 ```bash
-cd backend
+cd backend/src
 dotnet build
 ```
 
@@ -235,13 +238,13 @@ npx ng build
 
 ### Datenbank Initialisierung
 ```bash
-cd backend
+cd backend/src
 dotnet run -- -DbInit
 ```
 
 ### Backend starten
 ```bash
-cd backend
+cd backend/src
 dotnet run
 ```
 Server läuft auf: http://localhost:8080

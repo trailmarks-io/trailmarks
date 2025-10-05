@@ -12,7 +12,7 @@ This directory contains comprehensive unit tests for the Trailmarks backend API.
 ## Project Structure
 
 ```
-backend.tests/
+backend/test/
 ├── Controllers/          # Controller tests
 │   ├── HealthControllerTests.cs
 │   ├── WandersteineControllerTests.cs
@@ -26,7 +26,7 @@ backend.tests/
 
 ## Running Tests
 
-From the `backend.tests` directory:
+From the `backend/test` directory:
 
 ```bash
 dotnet test
