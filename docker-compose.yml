@@ -1,0 +1,65 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: trailmarks-postgres
+    environment:
+      POSTGRES_DB: trailmarks
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: Europe/Berlin
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - trailmarks-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: trailmarks-backend
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=trailmarks;Username=postgres;Password=postgres;SSL Mode=Disable;Timezone=Europe/Berlin"
+      UseSqlite: "false"
+    ports:
+      - "8080:8080"
+    networks:
+      - trailmarks-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    command: sh -c "dotnet TrailmarksApi.dll -DbInit"
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - API_URL=http://localhost:8080
+    container_name: trailmarks-frontend
+    ports:
+      - "4200:80"
+    networks:
+      - trailmarks-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+    driver: local
+
+networks:
+  trailmarks-network:
+    driver: bridge

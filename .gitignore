@@ -9,6 +9,9 @@ backend/src/obj/
 backend/test/bin/
 backend/test/obj/
 
+# Docker
+docker-compose.override.yml
+
 # .NET build artifacts
 *.exe
 *.dll

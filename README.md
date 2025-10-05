@@ -36,12 +36,31 @@ A web application for displaying the most recently added hiking stones.
 
 ## Installation and Startup
 
-### Prerequisites
+### Docker Deployment (Recommended)
+
+The easiest way to run the entire application without installing any dependencies:
+
+```bash
+docker-compose up -d
+```
+
+This will start:
+- PostgreSQL database
+- Backend API (http://localhost:8080)
+- Frontend application (http://localhost:4200)
+
+For detailed Docker instructions, see [DOCKER.md](DOCKER.md).
+
+**No local installation of .NET, Node.js, or PostgreSQL required!**
+
+### Local Development
+
+#### Prerequisites
 - .NET 8.0 SDK
 - Node.js 20+
 - PostgreSQL (optional, SQLite is automatically used for development)
 
-### Backend
+#### Backend
 ```bash
 cd backend
 dotnet run
@@ -125,6 +144,9 @@ The API endpoints return a simplified version:
 ✅ Sample data for development  
 ✅ CORS support  
 ✅ Comprehensive error handling and logging  
+✅ **Docker deployment with Docker Compose**  
+✅ **Multi-stage Docker builds for optimized images**  
+✅ **No local dependencies required for deployment**  
 
 ## Development
 

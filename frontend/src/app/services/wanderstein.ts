@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface WandersteinResponse {
   id: number;
@@ -14,7 +15,7 @@ export interface WandersteinResponse {
   providedIn: 'root'
 })
 export class WandersteinService {
-  private apiUrl = 'http://localhost:8080/api/wandersteine';
+  private apiUrl = `${environment.apiUrl}/api/wandersteine`;
 
   constructor(private http: HttpClient) { }
 

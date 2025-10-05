@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export type SupportedLanguage = 'de' | 'en';
 
@@ -43,7 +44,7 @@ export class LanguageService {
   }
 
   private loadTranslations(language: SupportedLanguage): Observable<{ [key: string]: Translation }> {
-    return this.http.get<{ [key: string]: Translation }>(`http://localhost:8080/api/translations/${language}`).pipe(
+    return this.http.get<{ [key: string]: Translation }>(`${environment.apiUrl}/api/translations/${language}`).pipe(
       map((translations) => {
         this.translations = translations;
         return translations;
