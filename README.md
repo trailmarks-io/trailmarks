@@ -27,6 +27,24 @@ A web application for displaying the most recently added hiking stones.
   - Language switcher with persistence
   - Runtime-editable translations (no redeployment needed)
 
+### Docker Architecture
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Docker Compose                       │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  ┌──────────────┐      ┌──────────────┐      ┌───────┐│
+│  │   Frontend   │      │   Backend    │      │ Post- ││
+│  │   (nginx)    │─────▶│  (ASP.NET)   │─────▶│ greSQL││
+│  │   Port 4200  │      │   Port 8080  │      │       ││
+│  └──────────────┘      └──────────────┘      └───────┘│
+│        │                      │                   │    │
+│   Angular 20.1.0         .NET 8.0          PostgreSQL │
+│   Tailwind CSS          Entity Framework      16      │
+│                         + Swagger UI                   │
+└─────────────────────────────────────────────────────────┘
+```
+
 ## API Endpoints
 
 - `GET /api/wandersteine/recent` - The 5 most recently added hiking stones
