@@ -1,0 +1,49 @@
+<div class="relative">
+  <!-- Navigation Button - Previous -->
+  <button 
+    *ngIf="canGoPrevious"
+    (click)="goToPrevious()"
+    class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-300 ease-in-out hover:scale-110 -ml-4 md:-ml-6"
+    aria-label="Previous">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+  </button>
+
+  <!-- Carousel Content -->
+  <div class="overflow-hidden px-2 md:px-0">
+    <div class="grid gap-6 md:gap-4" 
+         [ngClass]="{
+           'grid-cols-1': maxVisibleItems === 1,
+           'grid-cols-1 md:grid-cols-2': maxVisibleItems === 2,
+           'grid-cols-1 md:grid-cols-3': maxVisibleItems === 3
+         }">
+      <ng-container *ngFor="let item of visibleItems; let i = index">
+        <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item, index: currentIndex + i }"></ng-container>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Navigation Button - Next -->
+  <button 
+    *ngIf="canGoNext"
+    (click)="goToNext()"
+    class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white text-gray-800 rounded-full p-3 shadow-lg transition-all duration-300 ease-in-out hover:scale-110 -mr-4 md:-mr-6"
+    aria-label="Next">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+
+  <!-- Pagination Indicators -->
+  <div class="flex justify-center gap-2 mt-6" *ngIf="items.length > maxVisibleItems">
+    <div 
+      *ngFor="let item of items; let i = index"
+      [ngClass]="{
+        'bg-indigo-600': i >= currentIndex && i < currentIndex + maxVisibleItems,
+        'bg-gray-300': i < currentIndex || i >= currentIndex + maxVisibleItems
+      }"
+      class="w-2 h-2 rounded-full transition-all duration-300">
+    </div>
+  </div>
+</div>
