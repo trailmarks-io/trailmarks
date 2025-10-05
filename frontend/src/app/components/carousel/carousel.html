@@ -36,12 +36,12 @@
   </button>
 
   <!-- Pagination Indicators -->
-  <div class="flex justify-center gap-2 mt-6" *ngIf="items.length > maxVisibleItems">
+  <div class="flex justify-center gap-2 mt-6" *ngIf="items.length > effectiveMaxVisibleItems">
     <div 
       *ngFor="let item of items; let i = index"
       [ngClass]="{
-        'bg-indigo-600': i >= currentIndex && i < currentIndex + maxVisibleItems,
-        'bg-gray-300': i < currentIndex || i >= currentIndex + maxVisibleItems
+        'bg-indigo-600': i >= currentIndex && i < currentIndex + effectiveMaxVisibleItems,
+        'bg-gray-300': i < currentIndex || i >= currentIndex + effectiveMaxVisibleItems
       }"
       class="w-2 h-2 rounded-full transition-all duration-300">
     </div>

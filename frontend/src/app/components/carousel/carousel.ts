@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, TemplateRef, ContentChild } from '@angular/core';
+import { Component, Input, HostListener, TemplateRef, ContentChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './carousel.html'
 })
-export class CarouselComponent {
+export class CarouselComponent implements OnInit {
   @Input() items: any[] = [];
   @Input() maxVisibleItems = 3;
   @ContentChild(TemplateRef) itemTemplate!: TemplateRef<any>;
@@ -15,10 +15,28 @@ export class CarouselComponent {
   currentIndex = 0;
   private touchStartX = 0;
   private touchEndX = 0;
+  private isMobile = false;
+
+  ngOnInit(): void {
+    this.checkScreenSize();
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize(): void {
+    this.isMobile = window.innerWidth < 768; // md breakpoint in Tailwind
+  }
+
+  get effectiveMaxVisibleItems(): number {
+    return this.isMobile ? 1 : this.maxVisibleItems;
+  }
 
   get visibleItems(): any[] {
     const start = this.currentIndex;
-    const end = Math.min(start + this.maxVisibleItems, this.items.length);
+    const end = Math.min(start + this.effectiveMaxVisibleItems, this.items.length);
     return this.items.slice(start, end);
   }
 
@@ -27,7 +45,7 @@ export class CarouselComponent {
   }
 
   get canGoNext(): boolean {
-    return this.currentIndex + this.maxVisibleItems < this.items.length;
+    return this.currentIndex + this.effectiveMaxVisibleItems < this.items.length;
   }
 
   goToPrevious(): void {
