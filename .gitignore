@@ -4,8 +4,10 @@ frontend/node_modules/
 
 # Build outputs
 frontend/dist/
-backend/bin/
-backend/obj/
+backend/src/bin/
+backend/src/obj/
+backend/test/bin/
+backend/test/obj/
 
 # .NET build artifacts
 *.exe

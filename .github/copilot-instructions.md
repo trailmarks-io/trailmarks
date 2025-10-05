@@ -11,7 +11,9 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
 
 ### Verzeichnisstruktur
 ```
-/backend    - C# ASP.NET Core Backend
+/backend
+  /src      - C# ASP.NET Core Backend (Produktivcode)
+  /test     - xUnit Tests für Backend
 /frontend   - Angular Frontend
 ```
 
@@ -64,6 +66,20 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
    - Halte Pull Requests klein und fokussiert
    - Ein PR sollte entweder neue Features ODER Refactoring enthalten, nicht beides
    - Dokumentiere größere Änderungen im Code mit Kommentaren
+
+4. **Design-Prinzipien**:
+   - **Composition over Inheritance**: Bevorzuge Komposition gegenüber Vererbung
+   - Verwende statische Helper-Klassen oder Dependency Injection statt Vererbungshierarchien
+   - Halte Klassen fokussiert und folge dem Single Responsibility Principle
+   - Vermeide tiefe Vererbungshierarchien, die schwer zu testen und zu warten sind
+
+5. **Testing**:
+   - Schreibe Unit Tests für alle neuen Komponenten, Services und API-Endpunkte
+   - Tests müssen vor dem Mergen eines PRs alle erfolgreich durchlaufen
+   - Backend: Verwende xUnit mit Moq und In-Memory Database
+   - Frontend: Verwende Jasmine/Karma mit TestBed und Spies
+   - Teste sowohl Success- als auch Error-Szenarien
+   - Halte Tests einfach, lesbar und wartbar
 
 ### Git Branching Strategie
 
@@ -118,6 +134,7 @@ Das Projekt verwendet **Git Flow** als Branching-Strategie:
 - Implementiere umfassende Fehlerbehandlung
 - Verwende async/await für asynchrone Operationen
 - Folge dem Repository-Pattern für Datenzugriff
+- **Composition over Inheritance**: Bevorzuge Komposition gegenüber Vererbung, um lose Kopplung und bessere Testbarkeit zu erreichen
 
 #### Frontend (Angular/TypeScript)
 - Verwende Angular Style Guide Konventionen
@@ -151,23 +168,70 @@ Das Projekt verwendet **Git Flow** als Branching-Strategie:
 
 ### Testing
 
-#### Backend
+Das Projekt verfolgt einen testgetriebenen Ansatz mit umfassenden Unit Tests für alle Komponenten.
+
+#### Backend (xUnit)
+
+- **Framework**: xUnit als primäres Test-Framework
+- **Test-Projekt**: `backend/test/` (innerhalb des backend Verzeichnisses)
+- **Produktivcode**: `backend/src/` (enthält Controller, Services, Models, etc.)
+- **Struktur**: Tests spiegeln die Struktur des Hauptprojekts wider
+  - `Controllers/` - Controller-Tests
+  - `Services/` - Service-Tests
+  - `Models/` - Model-Tests
+- **Dependencies**: 
+  - xUnit für Test-Framework
+  - Moq für Mocking
+  - Microsoft.EntityFrameworkCore.InMemory für Datenbanktest
+  - Microsoft.AspNetCore.Mvc.Testing für Integration Tests
+
+**Test-Richtlinien**:
+- Jeder Controller, Service und jede Model-Klasse benötigt Unit Tests
+- Verwende In-Memory Datenbank für Datenbank-abhängige Tests
+- Teste alle öffentlichen Methoden und API-Endpunkte
+- Teste Edge Cases und Fehlerbehandlung
+- Verwende Arrange-Act-Assert Pattern
+
+**Tests ausführen**:
 ```bash
-cd backend
+cd backend/test
 dotnet test
 ```
 
-#### Frontend
+#### Frontend (Jasmine/Karma)
+
+- **Framework**: Jasmine mit Karma Test Runner
+- **Test-Dateien**: `*.spec.ts` Dateien neben den zu testenden Dateien
+- **Struktur**: 
+  - Component Tests
+  - Service Tests
+  - Pipe Tests
+
+**Test-Richtlinien**:
+- Jede Component, jeder Service und jede Pipe benötigt Unit Tests
+- Verwende TestBed für Angular Dependency Injection
+- Verwende HttpTestingController für HTTP-Mock
+- Teste alle öffentlichen Methoden und Event Handler
+- Teste User Interactions und Lifecycle Hooks
+- Verwende Jasmine Spies für Mocking
+
+**Tests ausführen**:
 ```bash
 cd frontend
 npx ng test
+```
+
+**Tests im Headless Mode ausführen**:
+```bash
+cd frontend
+npx ng test --watch=false --browsers=ChromeHeadless
 ```
 
 ### Build-Prozesse
 
 #### Backend Build
 ```bash
-cd backend
+cd backend/src
 dotnet build
 ```
 
@@ -181,13 +245,13 @@ npx ng build
 
 ### Datenbank Initialisierung
 ```bash
-cd backend
+cd backend/src
 dotnet run -- -DbInit
 ```
 
 ### Backend starten
 ```bash
-cd backend
+cd backend/src
 dotnet run
 ```
 Server läuft auf: http://localhost:8080

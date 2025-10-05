@@ -43,7 +43,7 @@ The application can be configured via `appsettings.json`:
 ### Running with SQLite (Development)
 
 ```bash
-cd backend
+cd backend/src
 dotnet run
 ```
 
@@ -57,7 +57,7 @@ The application starts on `http://localhost:8080` and uses SQLite by default for
 4. Run the application:
 
 ```bash
-cd backend
+cd backend/src
 dotnet run
 ```
 
@@ -95,14 +95,23 @@ All Wandersteine endpoints return data in the following format:
 ### Building
 
 ```bash
+cd backend/src
 dotnet build
 ```
 
 ### Running Tests
 
+The backend has comprehensive xUnit tests covering all controllers, services, and models.
+
 ```bash
+cd backend/test
 dotnet test
 ```
+
+Test coverage includes:
+- Controller tests (18 tests) - HealthController, WandersteineController, TranslationsController
+- Service tests (5 tests) - DatabaseService
+- Model tests (4 tests) - WandersteinResponse mapping
 
 ## Documentation
 
