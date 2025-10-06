@@ -89,15 +89,13 @@ if (args.Contains("-DbInit"))
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
-if (app.Environment.IsDevelopment())
+// Enable Swagger in all environments for API testing
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Trailmarks API v1");
-        c.RoutePrefix = "swagger";
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Trailmarks API v1");
+    c.RoutePrefix = "swagger";
+});
 
 app.UseCors();
 
@@ -105,5 +103,7 @@ app.UseRouting();
 
 app.MapControllers();
 
-Console.WriteLine("Starting server on http://localhost:8080");
-app.Run("http://localhost:8080");
+// Get the configured URLs from environment or use default
+var urls = builder.Configuration["ASPNETCORE_URLS"] ?? "http://+:8080";
+Console.WriteLine($"Starting server on {urls}");
+app.Run();
