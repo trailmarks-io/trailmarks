@@ -49,14 +49,22 @@ builder.Services.AddOpenTelemetry()
         })
         .AddOtlpExporter(options =>
         {
-            options.Endpoint = new Uri(builder.Configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://localhost:4318");
+            var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://localhost:4318";
+            options.Endpoint = new Uri(otlpEndpoint);
+            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
+            
+            Console.WriteLine($"OpenTelemetry Tracing Endpoint: {otlpEndpoint}");
         }))
     .WithMetrics(metrics => metrics
         .AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation()
         .AddOtlpExporter(options =>
         {
-            options.Endpoint = new Uri(builder.Configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://localhost:4318");
+            var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://localhost:4318";
+            options.Endpoint = new Uri(otlpEndpoint);
+            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
+            
+            Console.WriteLine($"OpenTelemetry Metrics Endpoint: {otlpEndpoint}");
         }));
 
 // Configure CORS

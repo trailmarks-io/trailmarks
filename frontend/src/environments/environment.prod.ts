@@ -4,5 +4,5 @@
 export const environment = {
   production: true,
   apiUrl: 'http://localhost:8080',
-  otlpEndpoint: 'http://localhost:4318/v1/traces'
+  otlpEndpoint: 'http://jaeger:6060/v1/traces'
 };
