@@ -175,11 +175,31 @@ jaeger:
     - COLLECTOR_OTLP_ENABLED=true
   ports:
     - "16686:16686"  # Jaeger UI
-    - "4318:4318"    # OTLP HTTP receiver
   networks:
     - trailmarks-network
   restart: unless-stopped
 ```
+
+#### NGINX OTLP Proxy
+
+To enable CORS support for frontend browser requests to the OTLP endpoint, an NGINX proxy is used:
+
+```yaml
+nginx-otlp:
+  image: nginx:alpine
+  container_name: trailmarks-nginx-otlp
+  volumes:
+    - ./nginx-otlp.conf:/etc/nginx/conf.d/default.conf:ro
+  ports:
+    - "4318:4318"    # OTLP HTTP proxy with CORS
+  networks:
+    - trailmarks-network
+  depends_on:
+    - jaeger
+  restart: unless-stopped
+```
+
+The NGINX configuration (`nginx-otlp.conf`) adds CORS headers and forwards requests 1:1 to Jaeger's OTLP endpoint.
 
 #### Service Dependencies
 
@@ -188,8 +208,10 @@ backend:
   depends_on:
     postgres:
       condition: service_healthy
-    jaeger:
+    nginx-otlp:
       condition: service_started
+  environment:
+    OpenTelemetry__OtlpEndpoint: "http://nginx-otlp:4318"
 ```
 
 ## Testing

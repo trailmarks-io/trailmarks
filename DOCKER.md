@@ -76,7 +76,7 @@ docker-compose down -v
 
 ### Observability (Jaeger)
 - **Container Name**: `trailmarks-jaeger`
-- **Port**: 16686 (Jaeger UI), 4318 (OTLP HTTP receiver)
+- **Port**: 16686 (Jaeger UI), 4318 (internal OTLP receiver)
 - **Technology**: Jaeger all-in-one with OpenTelemetry support
 - **Purpose**: Distributed tracing and performance monitoring
 - **Features**:
@@ -84,6 +84,16 @@ docker-compose down -v
   - Service dependency graph
   - Performance analysis
   - Request flow tracking
+
+### OTLP Proxy (NGINX)
+- **Container Name**: `trailmarks-nginx-otlp`
+- **Port**: 4318 (OTLP HTTP proxy with CORS)
+- **Technology**: NGINX Alpine
+- **Purpose**: Proxy OTLP requests from frontend to Jaeger with CORS support
+- **Features**:
+  - 1:1 forwarding to Jaeger OTLP endpoint
+  - CORS headers for browser requests
+  - Support for OPTIONS preflight requests
 
 ## Docker Commands
 
@@ -104,6 +114,7 @@ docker-compose logs -f backend
 docker-compose logs -f frontend
 docker-compose logs -f postgres
 docker-compose logs -f jaeger
+docker-compose logs -f nginx-otlp
 ```
 
 ### Restart Services
