@@ -2,6 +2,18 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Carousel Component', () => {
   test.beforeEach(async ({ page }) => {
+    // Mock translations API
+    await page.route('**/api/translations/**', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          'wanderstein.title': 'Wandersteine',
+          'wanderstein.addedOn': 'Hinzugefügt am'
+        })
+      });
+    });
+
     // Mock successful API response with multiple items
     await page.route('**/api/wandersteine/recent', route => {
       const items = Array.from({ length: 6 }, (_, i) => ({
