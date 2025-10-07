@@ -29,20 +29,21 @@ A web application for displaying the most recently added hiking stones.
 
 ### Docker Architecture
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Docker Compose                       │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  ┌──────────────┐      ┌──────────────┐      ┌───────┐│
-│  │   Frontend   │      │   Backend    │      │ Post- ││
-│  │   (nginx)    │─────▶│  (ASP.NET)   │─────▶│ greSQL││
-│  │   Port 4200  │      │   Port 8080  │      │       ││
-│  └──────────────┘      └──────────────┘      └───────┘│
-│        │                      │                   │    │
-│   Angular 20.1.0         .NET 8.0          PostgreSQL │
-│   Tailwind CSS          Entity Framework      16      │
-│                         + Swagger UI                   │
-└─────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────┐
+│                         Docker Compose                             │
+├────────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌──────────┐  ┌──────────┐  ┌─────────┐  ┌────────┐  ┌────────┐ │
+│  │ Frontend │─▶│ Backend  │─▶│PostgreS │  │ NGINX  │─▶│ Jaeger │ │
+│  │ (nginx)  │  │(ASP.NET) │  │   QL    │  │  OTLP  │  │ (OTLP) │ │
+│  │Port 4200 │  │Port 8080 │  │         │  │Pt 4318 │  │Pt16686 │ │
+│  └────┬─────┘  └────┬─────┘  └─────────┘  └───▲────┘  └────────┘ │
+│       │             │                          │                   │
+│       └─────────────┴──────────────────────────┘                   │
+│   Angular 20.1    .NET 8.0    PostgreSQL 16    CORS      Tracing  │
+│   Tailwind CSS    EF Core     + OpenTelemetry  Proxy              │
+│   + OpenTelemetry + Swagger                                        │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
 ## API Endpoints
@@ -66,6 +67,7 @@ This will start:
 - PostgreSQL database
 - Backend API (http://localhost:8080)
 - Frontend application (http://localhost:4200)
+- Jaeger tracing UI (http://localhost:16686)
 
 For detailed Docker instructions, see [DOCKER.md](DOCKER.md).
 
@@ -165,6 +167,8 @@ The API endpoints return a simplified version:
 ✅ **Docker deployment with Docker Compose**  
 ✅ **Multi-stage Docker builds for optimized images**  
 ✅ **No local dependencies required for deployment**  
+✅ **OpenTelemetry instrumentation with Jaeger tracing**  
+✅ **Distributed tracing for performance monitoring**  
 
 ## Development
 
