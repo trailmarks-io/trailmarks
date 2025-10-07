@@ -268,6 +268,46 @@ cd frontend
 npx ng test --watch=false --browsers=ChromeHeadless
 ```
 
+#### Frontend End-to-End Tests (Playwright)
+
+- **Framework**: Playwright für End-to-End Testing
+- **Test-Verzeichnis**: `frontend/e2e/` (enthält alle E2E-Tests)
+- **Konfiguration**: `frontend/playwright.config.ts`
+- **Browser**: Chromium (kann auf andere Browser erweitert werden)
+
+**Test-Kategorien**:
+- Homepage Tests - Grundlegende Seitenstruktur und Layout
+- Language Switcher Tests - Sprachumschaltung und Übersetzungen
+- Wanderstein Overview Tests - Datenladung, Fehlerbehandlung, API-Mocking
+- Carousel Tests - Navigation, Item-Darstellung, Interaktionen
+
+**Test-Richtlinien**:
+- Teste vollständige User Journeys und Interaktionen
+- Verwende API-Mocking für konsistente und isolierte Tests
+- Teste sowohl Success- als auch Error-Szenarien
+- Verifiziere responsive Layouts (Desktop und Mobile)
+- Teste Barrierefreiheit und wichtige UI-Elemente
+- Halte Tests wartbar und nachvollziehbar
+
+**Tests ausführen**:
+```bash
+cd frontend
+npm run e2e                 # Run all E2E tests
+npm run e2e:ui              # Run with Playwright UI
+npm run e2e:headed          # Run in headed mode (visible browser)
+npm run e2e:debug           # Run in debug mode
+```
+
+**Wichtig**: E2E-Tests starten automatisch den Development Server auf Port 4200. Der Server muss nicht manuell gestartet werden.
+
+### Dokumentation
+
+**Dokumentationsrichtlinien**:
+- **Keine zusätzlichen Markdown-Dateien**: Erstelle keine neuen Markdown-Dokumentationsdateien (*.md), außer sie werden explizit angefordert
+- **Code-Dokumentation**: Bevorzuge Code-Kommentare und inline Dokumentation für technische Details
+- **README-Dateien**: Aktualisiere bestehende README-Dateien bei Bedarf, aber erstelle keine neuen
+- **API-Dokumentation**: Nutze OpenAPI/Swagger für API-Dokumentation statt separate Markdown-Dateien
+
 ### Build-Prozesse
 
 #### Backend Build
