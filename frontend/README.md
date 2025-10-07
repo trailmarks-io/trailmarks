@@ -59,13 +59,43 @@ Test coverage includes:
 
 ## Running end-to-end tests
 
-For end-to-end (e2e) testing, run:
+This project uses [Playwright](https://playwright.dev/) for end-to-end testing. The E2E tests cover complete user flows and interactions, ensuring that all components work together correctly.
+
+### E2E Test Coverage
+
+The E2E test suite includes:
+- **Homepage Tests** (4 tests) - Page loading, responsive layout, basic structure
+- **Language Switcher Tests** (3 tests) - Language selection and switching functionality
+- **Wanderstein Overview Tests** (6 tests) - Data loading, error handling, API mocking, empty states
+- **Carousel Tests** (6 tests) - Navigation, item display, hover effects, image loading
+
+### Running E2E Tests
+
+To execute all E2E tests in headless mode:
 
 ```bash
-ng e2e
+npm run e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+To run tests with the Playwright UI (interactive mode):
+
+```bash
+npm run e2e:ui
+```
+
+To run tests in headed mode (visible browser):
+
+```bash
+npm run e2e:headed
+```
+
+To debug tests step-by-step:
+
+```bash
+npm run e2e:debug
+```
+
+**Note**: The E2E tests automatically start the development server on port 4200. You don't need to start the server manually.
 
 ## Additional Resources
 
