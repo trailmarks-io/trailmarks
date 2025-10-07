@@ -51,7 +51,7 @@ builder.Services.AddOpenTelemetry()
         {
             var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://localhost:4318";
             options.Endpoint = new Uri(otlpEndpoint);
-            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
+            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
             
             Console.WriteLine($"OpenTelemetry Tracing Endpoint: {otlpEndpoint}");
         }))
@@ -62,7 +62,7 @@ builder.Services.AddOpenTelemetry()
         {
             var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://localhost:4318";
             options.Endpoint = new Uri(otlpEndpoint);
-            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
+            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
             
             Console.WriteLine($"OpenTelemetry Metrics Endpoint: {otlpEndpoint}");
         }));

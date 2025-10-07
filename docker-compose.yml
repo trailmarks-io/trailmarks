@@ -61,7 +61,7 @@ services:
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=trailmarks;Username=postgres;Password=postgres;SSL Mode=Disable;Timezone=Europe/Berlin"
       UseSqlite: "false"
-      OpenTelemetry__OtlpEndpoint: "http://localhost:4318"
+      OpenTelemetry__OtlpEndpoint: "http://jaeger:4317"
     ports:
       - "8080:8080"
     networks:
