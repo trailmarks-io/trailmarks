@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LanguageService, SupportedLanguage } from '../../services/language';
+import { LanguageService, SupportedLanguage } from '../services/language';
 
 @Component({
   selector: 'app-language-switcher',

@@ -1,12 +1,12 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { WandersteinOverviewComponent } from './wanderstein-overview';
+import { WandersteinOverviewPage } from './wanderstein-overview';
 import { WandersteinService, WandersteinResponse } from '../../services/wanderstein';
-import { LanguageService } from '../../services/language';
+import { LanguageService } from '../../../core';
 
-describe('WandersteinOverviewComponent', () => {
-  let component: WandersteinOverviewComponent;
-  let fixture: ComponentFixture<WandersteinOverviewComponent>;
+describe('WandersteinOverviewPage', () => {
+  let component: WandersteinOverviewPage;
+  let fixture: ComponentFixture<WandersteinOverviewPage>;
   let wandersteinServiceSpy: jasmine.SpyObj<WandersteinService>;
   let languageServiceSpy: jasmine.SpyObj<LanguageService>;
 
@@ -28,14 +28,14 @@ describe('WandersteinOverviewComponent', () => {
     languageServiceSpy.getSupportedLanguages.and.returnValue(['de', 'en']);
 
     await TestBed.configureTestingModule({
-      imports: [WandersteinOverviewComponent],
+      imports: [WandersteinOverviewPage],
       providers: [
         { provide: WandersteinService, useValue: wandersteinServiceSpy },
         { provide: LanguageService, useValue: languageServiceSpy }
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(WandersteinOverviewComponent);
+    fixture = TestBed.createComponent(WandersteinOverviewPage);
     component = fixture.componentInstance;
   });
 
