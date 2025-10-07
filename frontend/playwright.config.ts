@@ -22,10 +22,15 @@ export default defineConfig({
     },
   ],
 
-  webServer: {
+  webServer: process.env.CI ? {
+    command: 'npx http-server dist/trailmarks-frontend -p 4200 -s',
+    url: 'http://localhost:4200',
+    reuseExistingServer: false,
+    timeout: 30000,
+  } : {
     command: 'npm run start',
     url: 'http://localhost:4200',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true,
     timeout: 120000,
   },
 });

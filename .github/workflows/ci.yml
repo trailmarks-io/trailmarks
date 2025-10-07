@@ -33,7 +33,7 @@ jobs:
       - name: Run backend tests
         run: |
           cd backend/test
-          dotnet test --no-build --verbosity normal --configuration Release
+          dotnet test --verbosity normal --configuration Release
 
   frontend-build-and-test:
     name: Frontend Build & Test
@@ -84,6 +84,11 @@ jobs:
         run: |
           cd frontend
           npm ci
+      
+      - name: Build frontend for E2E tests
+        run: |
+          cd frontend
+          npm run build -- --configuration development
       
       - name: Install Playwright browsers
         run: |
