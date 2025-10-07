@@ -143,6 +143,47 @@ Das Projekt verwendet **Git Flow** als Branching-Strategie:
 - Implementiere OnPush Change Detection wo möglich
 - Trenne Präsentations- und Container-Komponenten
 
+##### Angular Module-Struktur
+
+Das Angular Frontend verwendet eine modulare Struktur mit Standalone Components, organisiert nach fachlichen und technischen Bereichen:
+
+**Verzeichnisstruktur**:
+```
+/frontend/src/app
+  /modules
+    /core              - Infrastruktur-Module (Übersetzungen, Telemetry, etc.)
+      /services        - Services für Sprachen, Telemetrie
+      /components      - Infrastruktur-Komponenten (z.B. LanguageSwitcher)
+      /initializers    - App-Initialisierer (Sprache, Telemetrie)
+      index.ts         - Barrel Export
+    /shared            - Wiederverwendbare UI-Komponenten
+      /components      - Allgemeine UI-Komponenten (z.B. Carousel)
+      index.ts         - Barrel Export
+    /hiking-stones     - Feature-Module für fachliche Domäne (Wandersteine)
+      /services        - Domänen-spezifische Services
+      /pages           - Seiten-Komponenten (für Routing)
+      index.ts         - Barrel Export
+```
+
+**Namenskonventionen**:
+- **Page Components**: Komponenten, die direkt in Routes verwendet werden
+  - Enden mit `Page` statt `Component` (z.B. `WandersteinOverviewPage`)
+  - Befinden sich im `pages` Unterordner des Feature-Moduls
+  - Export-Name: `export class WandersteinOverviewPage`
+- **Reguläre Components**: Wiederverwendbare Komponenten
+  - Enden mit `Component` (z.B. `CarouselComponent`)
+  - Befinden sich im `components` Ordner
+
+**Barrel Exports**:
+- Jedes Modul und Untermodul hat eine `index.ts` Datei für Barrel Exports
+- Ermöglicht saubere Imports: `import { LanguageService } from './modules/core'`
+- Vereinfacht die Wartung und Refactoring
+
+**Module-Kategorien**:
+1. **Core**: Infrastruktur-Services (Übersetzungen, OpenTelemetry, etc.)
+2. **Shared**: Wiederverwendbare UI-Komponenten ohne fachliche Logik
+3. **Feature Modules**: Fachspezifische Module (z.B. hiking-stones für Wandersteine)
+
 #### Styling mit Tailwind CSS
 - **Ausschließliche Verwendung**: Nutze für alle Styles und Layouts ausschließlich Tailwind CSS Utility-Klassen
 - **Keine separaten CSS-Dateien**: Erstelle keine komponentenspezifischen CSS-Dateien (*.css), sondern verwende Tailwind-Klassen direkt in den HTML-Templates

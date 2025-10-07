@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WandersteinService, WandersteinResponse } from '../../services/wanderstein';
-import { LanguageService } from '../../services/language';
-import { TranslatePipe } from '../../pipes/translate.pipe';
-import { LanguageSwitcherComponent } from '../language-switcher/language-switcher';
-import { CarouselComponent } from '../carousel/carousel';
+import { LanguageService, TranslatePipe, LanguageSwitcherComponent } from '../../../core';
+import { CarouselComponent } from '../../../shared';
 
 @Component({
   selector: 'app-wanderstein-overview',
@@ -12,7 +10,7 @@ import { CarouselComponent } from '../carousel/carousel';
   templateUrl: './wanderstein-overview.html',
   standalone: true
 })
-export class WandersteinOverviewComponent implements OnInit {
+export class WandersteinOverviewPage implements OnInit {
   wandersteine: WandersteinResponse[] = [];
   loading = true;
   error: string | null = null;
