@@ -85,11 +85,6 @@ jobs:
           cd frontend
           npm ci
       
-      - name: Build frontend for E2E tests
-        run: |
-          cd frontend
-          npm run build -- --configuration development
-      
       - name: Install Playwright browsers
         run: |
           cd frontend
