@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { WandersteinOverviewComponent } from './components/wanderstein-overview/wanderstein-overview';
+import { WandersteinOverviewPage } from './modules/hiking-stones';
 
 export const routes: Routes = [
-  { path: '', component: WandersteinOverviewComponent },
-  { path: 'wandersteine', component: WandersteinOverviewComponent },
+  { path: '', component: WandersteinOverviewPage },
+  { path: 'wandersteine', component: WandersteinOverviewPage },
   { path: '**', redirectTo: '' }
 ];

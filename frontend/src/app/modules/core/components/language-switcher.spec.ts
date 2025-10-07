@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { LanguageSwitcherComponent } from './language-switcher';
-import { LanguageService, SupportedLanguage } from '../../services/language';
+import { LanguageService, SupportedLanguage } from '../services/language';
 
 describe('LanguageSwitcherComponent', () => {
   let component: LanguageSwitcherComponent;
