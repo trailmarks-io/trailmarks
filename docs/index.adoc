@@ -1,0 +1,86 @@
+= Trailmarks Documentation
+:toc: left
+:toclevels: 2
+:icons: font
+
+== Welcome
+
+Welcome to the Trailmarks documentation. This documentation provides comprehensive information about the Trailmarks application - a web application for displaying and managing hiking stones (Wandersteine).
+
+== Documentation Structure
+
+This documentation is organized into three main sections:
+
+=== link:architecture/index.html[Architecture Documentation]
+
+Technical architecture documentation following the ARC42 template. This section is intended for:
+
+* Software architects
+* Developers
+* Technical stakeholders
+
+**Contents:**
+
+* System overview and context
+* Architecture decisions and constraints
+* Building blocks and components
+* Deployment and runtime views
+* Cross-cutting concepts
+* Quality requirements and risks
+
+=== link:user-guide/index.html[User Guide]
+
+Documentation for end users of the Trailmarks application. This section covers:
+
+* Getting started
+* Using the application
+* Viewing hiking stones
+* Changing languages
+* Mobile usage
+* Troubleshooting
+* FAQs
+
+=== link:admin-guide/index.html[Administrator & Moderator Guide]
+
+Documentation for system administrators and content moderators. This section includes:
+
+* Installation and setup
+* Configuration
+* Content management
+* Managing translations
+* Monitoring and maintenance
+* Security best practices
+* Troubleshooting
+
+== Quick Links
+
+* **GitHub Repository**: https://github.com/trailmarks-io/trailmarks
+* **Application**: http://localhost:4200 (local development)
+* **API Documentation**: http://localhost:8080/swagger
+* **Issue Tracker**: https://github.com/trailmarks-io/trailmarks/issues
+
+== Technology Stack
+
+* **Backend**: C# ASP.NET Core 8.0
+* **Frontend**: Angular 20.1.0
+* **Database**: PostgreSQL 16
+* **Styling**: Tailwind CSS v3
+* **Containerization**: Docker & Docker Compose
+* **Observability**: OpenTelemetry & Jaeger
+
+== Getting Help
+
+If you need assistance:
+
+1. Check the appropriate documentation section
+2. Review the FAQ sections
+3. Check the issue tracker for known issues
+4. Create a new issue on GitHub if needed
+
+== Contributing
+
+Contributions to the documentation are welcome! Please see the main repository for contribution guidelines.
+
+== License
+
+The Trailmarks project and documentation are released under the MIT License.

@@ -1,0 +1,152 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+      
+      - name: Install Asciidoctor
+        run: |
+          gem install asciidoctor
+          gem install asciidoctor-diagram
+          gem install rouge
+      
+      - name: Install PlantUML dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz default-jre
+      
+      - name: Download PlantUML
+        run: |
+          mkdir -p /tmp/plantuml
+          wget -O /tmp/plantuml/plantuml.jar https://github.com/plantuml/plantuml/releases/download/v1.2024.3/plantuml-1.2024.3.jar
+          echo "PLANTUML_JAR=/tmp/plantuml/plantuml.jar" >> $GITHUB_ENV
+      
+      - name: Create output directory
+        run: mkdir -p _site
+      
+      - name: Convert AsciiDoc to HTML
+        run: |
+          # Set PlantUML diagram path
+          export DIAGRAM_CACHEDIR=./.asciidoctor
+          
+          # Convert main index
+          asciidoctor -r asciidoctor-diagram \
+            -a source-highlighter=rouge \
+            -a icons=font \
+            -a toc=left \
+            -a toclevels=3 \
+            -a sectanchors \
+            -a sectlinks \
+            -D _site \
+            docs/index.adoc
+          
+          # Convert architecture docs
+          asciidoctor -r asciidoctor-diagram \
+            -a source-highlighter=rouge \
+            -a icons=font \
+            -a toc=left \
+            -a toclevels=3 \
+            -a sectanchors \
+            -a sectlinks \
+            -D _site/architecture \
+            docs/architecture/index.adoc
+          
+          # Convert user guide
+          asciidoctor -r asciidoctor-diagram \
+            -a source-highlighter=rouge \
+            -a icons=font \
+            -a toc=left \
+            -a toclevels=3 \
+            -a sectanchors \
+            -a sectlinks \
+            -D _site/user-guide \
+            docs/user-guide/index.adoc
+          
+          # Convert admin guide
+          asciidoctor -r asciidoctor-diagram \
+            -a source-highlighter=rouge \
+            -a icons=font \
+            -a toc=left \
+            -a toclevels=3 \
+            -a sectanchors \
+            -a sectlinks \
+            -D _site/admin-guide \
+            docs/admin-guide/index.adoc
+      
+      - name: Copy diagram images
+        run: |
+          if [ -d ".asciidoctor" ]; then
+            mkdir -p _site/images
+            find .asciidoctor -type f \( -name "*.png" -o -name "*.svg" \) -exec cp {} _site/images/ \;
+          fi
+      
+      - name: Create index redirect
+        run: |
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <title>Trailmarks Documentation</title>
+            <meta http-equiv="refresh" content="0; url=./index.html">
+          </head>
+          <body>
+            <p>Redirecting to documentation...</p>
+          </body>
+          </html>
+          EOF
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

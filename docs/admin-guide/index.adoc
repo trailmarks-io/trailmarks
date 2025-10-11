@@ -1,0 +1,884 @@
+= Trailmarks - Administrator & Moderator Guide
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: highlightjs
+
+== Introduction
+
+This guide is for system administrators and content moderators who manage and maintain the Trailmarks application. It covers installation, configuration, maintenance, and content management.
+
+=== Target Audience
+
+* **System Administrators**: Responsible for deployment, monitoring, and system maintenance
+* **Content Moderators**: Responsible for managing hiking stone data and translations
+
+=== Prerequisites
+
+* Basic understanding of Docker and Docker Compose
+* Familiarity with REST APIs
+* Basic command-line knowledge
+* Text editor experience
+
+== System Requirements
+
+=== Hardware Requirements
+
+[cols="1,1,1"]
+|===
+|Component |Minimum |Recommended
+
+|CPU
+|2 cores
+|4 cores
+
+|RAM
+|4 GB
+|8 GB
+
+|Disk Space
+|10 GB
+|20 GB
+
+|Network
+|10 Mbps
+|100 Mbps
+|===
+
+=== Software Requirements
+
+[cols="1,1"]
+|===
+|Software |Version
+
+|Docker
+|20.10+
+
+|Docker Compose
+|2.0+
+
+|Git
+|2.30+
+|===
+
+== Installation
+
+=== Docker Deployment (Recommended)
+
+==== Quick Start
+
+1. Clone the repository:
++
+[source,bash]
+----
+git clone https://github.com/trailmarks-io/trailmarks.git
+cd trailmarks
+----
+
+2. Start all services:
++
+[source,bash]
+----
+docker-compose up -d
+----
+
+3. Verify services are running:
++
+[source,bash]
+----
+docker-compose ps
+----
+
+==== Service URLs
+
+After successful deployment:
+
+* **Frontend**: http://localhost:4200
+* **Backend API**: http://localhost:8080
+* **Swagger API Documentation**: http://localhost:8080/swagger
+* **Jaeger Tracing UI**: http://localhost:16686
+* **Health Check**: http://localhost:8080/health
+
+=== Local Development Setup
+
+==== Backend Setup
+
+1. Prerequisites:
++
+[source,bash]
+----
+# Check .NET SDK version
+dotnet --version  # Should be 8.0+
+----
+
+2. Navigate to backend directory:
++
+[source,bash]
+----
+cd backend
+----
+
+3. Restore dependencies:
++
+[source,bash]
+----
+dotnet restore
+----
+
+4. Run the backend:
++
+[source,bash]
+----
+dotnet run
+----
+
+5. Initialize database with sample data:
++
+[source,bash]
+----
+dotnet run -- -DbInit
+----
+
+==== Frontend Setup
+
+1. Prerequisites:
++
+[source,bash]
+----
+# Check Node.js version
+node --version  # Should be 20+
+----
+
+2. Navigate to frontend directory:
++
+[source,bash]
+----
+cd frontend
+----
+
+3. Install dependencies:
++
+[source,bash]
+----
+npm install
+----
+
+4. Run the frontend:
++
+[source,bash]
+----
+npx ng serve
+----
+
+== Configuration
+
+=== Environment Variables
+
+==== Backend Configuration
+
+Create or modify `.env` file:
+
+[source,bash]
+----
+# Database Configuration
+ConnectionStrings__DefaultConnection=Host=postgres;Database=trailmarks;Username=postgres;Password=yourpassword
+UseSqlite=false
+
+# OpenTelemetry Configuration
+OTEL_EXPORTER_OTLP_ENDPOINT=http://nginx-otlp:4318
+
+# Server Configuration
+ASPNETCORE_URLS=http://+:8080
+ASPNETCORE_ENVIRONMENT=Production
+----
+
+==== Frontend Configuration
+
+Environment-specific configurations in `frontend/src/environments/`:
+
+[source,typescript]
+----
+export const environment = {
+  production: true,
+  apiUrl: 'http://localhost:8080',
+  otlpEndpoint: 'http://localhost:4318'
+};
+----
+
+=== Database Configuration
+
+==== PostgreSQL (Production)
+
+Edit `docker-compose.yml`:
+
+[source,yaml]
+----
+postgres:
+  image: postgres:16-alpine
+  environment:
+    POSTGRES_DB: trailmarks
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: your_secure_password
+  volumes:
+    - postgres_data:/var/lib/postgresql/data
+----
+
+==== SQLite (Development)
+
+For local development, SQLite is used automatically. Database file: `backend/trailmarks.db`
+
+=== CORS Configuration
+
+CORS is configured in `backend/src/Program.cs`:
+
+[source,csharp]
+----
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+----
+
+[CAUTION]
+====
+In production, restrict CORS to specific origins for security.
+====
+
+== Content Management
+
+=== Managing Hiking Stones
+
+==== Via API
+
+Use the REST API to manage hiking stone data:
+
+[source,bash]
+----
+# Get all hiking stones
+curl http://localhost:8080/api/wandersteine
+
+# Get recent hiking stones
+curl http://localhost:8080/api/wandersteine/recent
+----
+
+==== Via Database
+
+Direct database access for administrators:
+
+[source,bash]
+----
+# Connect to PostgreSQL
+docker-compose exec postgres psql -U postgres -d trailmarks
+
+# List hiking stones
+SELECT * FROM "Wandersteine";
+----
+
+==== Adding New Hiking Stones
+
+[source,sql]
+----
+INSERT INTO "Wandersteine" ("Name", "UniqueId", "PreviewUrl", "Description", "Location", "CreatedAt", "UpdatedAt")
+VALUES (
+    'Schwarzwaldstein',
+    'WS-2024-001',
+    'https://example.com/image.jpg',
+    'Beautiful hiking stone in the Black Forest',
+    'Black Forest, Germany',
+    NOW(),
+    NOW()
+);
+----
+
+=== Managing Translations
+
+==== Translation File Structure
+
+Translation files are located in `frontend/public/assets/i18n/`:
+
+* `de.json` - German translations
+* `en.json` - English translations
+
+==== Editing Translations
+
+1. Open the translation file in a text editor:
++
+[source,bash]
+----
+nano frontend/public/assets/i18n/de.json
+----
+
+2. Modify the JSON structure:
++
+[source,json]
+----
+{
+  "common": {
+    "loading": "Laden...",
+    "error": "Fehler",
+    "retry": "Erneut versuchen"
+  },
+  "wanderstein": {
+    "title": "Neueste Wandersteine",
+    "subtitle": "Die 5 zuletzt hinzugefügten Wandersteine",
+    "addedOn": "Hinzugefügt am"
+  }
+}
+----
+
+3. Save and close the file
+
+4. Changes take effect immediately - no redeployment needed!
+
+[TIP]
+====
+Always validate JSON syntax before saving. Use an online JSON validator if needed.
+====
+
+==== Adding New Translation Keys
+
+1. Add the key to all language files
+2. Use nested structure for organization
+3. Use descriptive key names
+4. Maintain consistency across languages
+
+Example:
+
+[source,json]
+----
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact"
+  }
+}
+----
+
+==== Adding New Languages
+
+1. Create new translation file (e.g., `fr.json` for French)
+2. Copy structure from existing language file
+3. Translate all keys
+4. Update `language.ts` to include the new language
+5. Test thoroughly
+
+=== Via Translation API
+
+Backend provides an API for retrieving translations:
+
+[source,bash]
+----
+# Get German translations
+curl http://localhost:8080/api/translations/de
+
+# Get English translations
+curl http://localhost:8080/api/translations/en
+
+# Get available languages
+curl http://localhost:8080/api/translations/languages
+----
+
+== Monitoring and Maintenance
+
+=== Health Checks
+
+==== Application Health
+
+Check application health:
+
+[source,bash]
+----
+curl http://localhost:8080/health
+----
+
+Expected response:
+
+[source,json]
+----
+{
+  "status": "Healthy",
+  "serviceName": "TrailmarksApi"
+}
+----
+
+==== Service Status
+
+Check Docker services:
+
+[source,bash]
+----
+docker-compose ps
+----
+
+All services should show "Up" status.
+
+=== Distributed Tracing
+
+==== Accessing Jaeger UI
+
+1. Open browser: http://localhost:16686
+2. Select "TrailmarksApi" or "TrailmarksFrontend" from service dropdown
+3. Click "Find Traces" to view recent traces
+
+==== Analyzing Traces
+
+Use Jaeger to:
+
+* Identify performance bottlenecks
+* Debug API call flows
+* Monitor error rates
+* Analyze request patterns
+
+=== Log Management
+
+==== Backend Logs
+
+View backend logs:
+
+[source,bash]
+----
+# Follow logs in real-time
+docker-compose logs -f backend
+
+# View last 100 lines
+docker-compose logs --tail=100 backend
+----
+
+==== Frontend Logs
+
+View frontend logs:
+
+[source,bash]
+----
+docker-compose logs -f frontend
+----
+
+==== Database Logs
+
+View database logs:
+
+[source,bash]
+----
+docker-compose logs -f postgres
+----
+
+=== Database Maintenance
+
+==== Backup Database
+
+[source,bash]
+----
+# Create backup
+docker-compose exec postgres pg_dump -U postgres trailmarks > backup_$(date +%Y%m%d).sql
+
+# With Docker Compose
+docker-compose exec -T postgres pg_dump -U postgres trailmarks > backup_$(date +%Y%m%d).sql
+----
+
+==== Restore Database
+
+[source,bash]
+----
+# Restore from backup
+docker-compose exec -T postgres psql -U postgres trailmarks < backup_20240101.sql
+----
+
+==== Database Migrations
+
+Migrations are handled automatically by Entity Framework Core:
+
+[source,bash]
+----
+# Create new migration (development)
+cd backend
+dotnet ef migrations add MigrationName
+
+# Apply migrations
+dotnet ef database update
+----
+
+=== Performance Optimization
+
+==== Database Optimization
+
+[source,sql]
+----
+-- Analyze query performance
+EXPLAIN ANALYZE SELECT * FROM "Wandersteine" ORDER BY "CreatedAt" DESC LIMIT 5;
+
+-- Rebuild indexes
+REINDEX TABLE "Wandersteine";
+
+-- Update statistics
+ANALYZE "Wandersteine";
+----
+
+==== Cache Management
+
+Consider implementing caching for:
+
+* Frequently accessed hiking stones
+* Translation data
+* API responses
+
+=== Scaling Considerations
+
+==== Horizontal Scaling
+
+To scale the application:
+
+1. **Frontend**: Add more frontend containers behind a load balancer
+2. **Backend**: Scale backend API containers
+3. **Database**: Consider PostgreSQL replication for read-heavy workloads
+
+[source,bash]
+----
+# Scale backend to 3 instances
+docker-compose up -d --scale backend=3
+----
+
+==== Vertical Scaling
+
+Adjust resource limits in `docker-compose.yml`:
+
+[source,yaml]
+----
+backend:
+  deploy:
+    resources:
+      limits:
+        cpus: '2'
+        memory: 2G
+      reservations:
+        cpus: '1'
+        memory: 1G
+----
+
+== Security
+
+=== Best Practices
+
+==== Environment Variables
+
+* Never commit sensitive data to version control
+* Use `.env` files for local development
+* Use secrets management in production (e.g., Docker Secrets, Kubernetes Secrets)
+
+==== Database Security
+
+* Use strong passwords
+* Limit database access to application only
+* Regular security updates
+* Enable SSL/TLS for database connections in production
+
+==== API Security
+
+* Implement rate limiting
+* Add authentication/authorization for sensitive endpoints
+* Validate all input data
+* Use HTTPS in production
+
+=== Updating Dependencies
+
+==== Backend Dependencies
+
+[source,bash]
+----
+# Update NuGet packages
+cd backend
+dotnet list package --outdated
+dotnet add package PackageName
+----
+
+==== Frontend Dependencies
+
+[source,bash]
+----
+# Check for updates
+cd frontend
+npm outdated
+
+# Update packages
+npm update
+
+# Update to latest versions
+npm install package@latest
+----
+
+[CAUTION]
+====
+Always test thoroughly after updating dependencies, especially major version updates.
+====
+
+== Troubleshooting
+
+=== Common Issues
+
+==== Docker Services Won't Start
+
+**Problem**: Services fail to start with `docker-compose up`
+
+**Solutions**:
+
+1. Check if ports are already in use:
++
+[source,bash]
+----
+netstat -an | grep -E "4200|8080|5432|16686"
+----
+
+2. Check Docker logs:
++
+[source,bash]
+----
+docker-compose logs
+----
+
+3. Remove old containers and volumes:
++
+[source,bash]
+----
+docker-compose down -v
+docker-compose up -d
+----
+
+==== Database Connection Failed
+
+**Problem**: Backend cannot connect to PostgreSQL
+
+**Solutions**:
+
+1. Verify PostgreSQL is running:
++
+[source,bash]
+----
+docker-compose ps postgres
+----
+
+2. Check connection string in `.env` file
+3. Verify network connectivity:
++
+[source,bash]
+----
+docker-compose exec backend ping postgres
+----
+
+==== Migration Errors
+
+**Problem**: Database migrations fail
+
+**Solutions**:
+
+1. Check migration history:
++
+[source,bash]
+----
+docker-compose exec postgres psql -U postgres -d trailmarks -c "SELECT * FROM \"__EFMigrationsHistory\";"
+----
+
+2. Reset database (development only):
++
+[source,bash]
+----
+docker-compose down -v
+docker-compose up -d
+----
+
+==== Frontend Build Failures
+
+**Problem**: Frontend fails to build
+
+**Solutions**:
+
+1. Clear node_modules and reinstall:
++
+[source,bash]
+----
+cd frontend
+rm -rf node_modules package-lock.json
+npm install
+----
+
+2. Check Node.js version compatibility
+3. Review build errors in console
+
+=== Performance Issues
+
+==== Slow API Responses
+
+1. Check Jaeger traces for bottlenecks
+2. Analyze database query performance
+3. Check system resources (CPU, memory, disk I/O)
+4. Consider adding database indexes
+
+==== High Memory Usage
+
+1. Check container resource usage:
++
+[source,bash]
+----
+docker stats
+----
+
+2. Adjust memory limits in `docker-compose.yml`
+3. Investigate memory leaks in logs
+
+=== Getting Help
+
+* **Documentation**: https://docs.trailmarks.io
+* **Issue Tracker**: https://github.com/trailmarks-io/trailmarks/issues
+* **API Documentation**: http://localhost:8080/swagger
+
+== Appendix
+
+=== Useful Commands
+
+[cols="2,3"]
+|===
+|Command |Description
+
+|`docker-compose up -d`
+|Start all services in detached mode
+
+|`docker-compose down`
+|Stop and remove containers
+
+|`docker-compose logs -f`
+|Follow logs from all services
+
+|`docker-compose ps`
+|List running services
+
+|`docker-compose restart`
+|Restart all services
+
+|`dotnet test`
+|Run backend tests
+
+|`npx ng test`
+|Run frontend tests
+|===
+
+=== Configuration Files
+
+[cols="2,3"]
+|===
+|File |Purpose
+
+|`docker-compose.yml`
+|Docker services configuration
+
+|`.env`
+|Environment variables
+
+|`backend/appsettings.json`
+|Backend configuration
+
+|`frontend/src/environments/`
+|Frontend environment configs
+
+|`frontend/public/assets/i18n/`
+|Translation files
+|===
+
+=== API Endpoints
+
+[cols="1,1,2"]
+|===
+|Method |Endpoint |Description
+
+|GET
+|`/health`
+|Health check
+
+|GET
+|`/api/wandersteine`
+|Get all hiking stones
+
+|GET
+|`/api/wandersteine/recent`
+|Get 5 most recent hiking stones
+
+|GET
+|`/api/translations/{language}`
+|Get translations for language
+
+|GET
+|`/api/translations/languages`
+|Get available languages
+
+|GET
+|`/swagger`
+|API documentation
+|===
+
+=== Database Schema
+
+==== Wandersteine Table
+
+[cols="1,1,2"]
+|===
+|Column |Type |Description
+
+|Id
+|uint
+|Primary key
+
+|Name
+|string(200)
+|Name of hiking stone
+
+|UniqueId
+|string(50)
+|Unique identifier
+
+|PreviewUrl
+|string(500)
+|Image URL
+
+|Description
+|string(1000)
+|Description text
+
+|Location
+|string(200)
+|Location information
+
+|CreatedAt
+|DateTime
+|Creation timestamp
+
+|UpdatedAt
+|DateTime
+|Last update timestamp
+|===
+
+==== Translations Table
+
+[cols="1,1,2"]
+|===
+|Column |Type |Description
+
+|Id
+|int
+|Primary key
+
+|Language
+|string
+|Language code (e.g., "de", "en")
+
+|Key
+|string
+|Translation key
+
+|Value
+|string
+|Translated text
+|===

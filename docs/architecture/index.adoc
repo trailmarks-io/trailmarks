@@ -1,0 +1,689 @@
+= Trailmarks - Architecture Documentation
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:source-highlighter: highlightjs
+
+[NOTE]
+====
+This architecture documentation follows the ARC42 template.
+====
+
+== Introduction and Goals
+
+=== Requirements Overview
+
+Trailmarks is a web application for displaying and managing hiking stones (Wandersteine). The application provides:
+
+* A REST API for managing hiking stone data
+* A responsive web frontend for viewing hiking stones
+* Multi-language support (German/English)
+* Distributed tracing and monitoring capabilities
+
+=== Quality Goals
+
+[cols="1,2,2"]
+|===
+|Priority |Quality Goal |Scenario
+
+|1
+|Maintainability
+|Clear separation between frontend and backend, modular architecture
+
+|2
+|Usability
+|Responsive design, multi-language support, intuitive user interface
+
+|3
+|Reliability
+|Comprehensive error handling, automatic database migrations, health checks
+
+|4
+|Performance
+|Efficient database queries, caching strategies, optimized frontend bundle
+
+|5
+|Observability
+|OpenTelemetry integration, distributed tracing, comprehensive logging
+|===
+
+=== Stakeholders
+
+[cols="1,2,2"]
+|===
+|Role |Contact |Expectations
+
+|End Users
+|Hikers, outdoor enthusiasts
+|Easy to use interface, mobile-friendly, reliable access to hiking stone information
+
+|Administrators
+|System administrators
+|Easy deployment, monitoring capabilities, maintainable system
+
+|Developers
+|Development team
+|Clear architecture, good documentation, testable code, modern technology stack
+
+|Moderators
+|Content moderators
+|Easy content management, translation editing capabilities
+|===
+
+== Architecture Constraints
+
+=== Technical Constraints
+
+[cols="1,2"]
+|===
+|Constraint |Description
+
+|Backend Technology
+|.NET 8.0 with ASP.NET Core
+
+|Frontend Technology
+|Angular 20.1.0 with TypeScript
+
+|Database
+|PostgreSQL (primary), SQLite (development fallback)
+
+|API Standard
+|OpenAPI 3.0 (Swagger)
+
+|Styling Framework
+|Tailwind CSS v3
+
+|Containerization
+|Docker and Docker Compose
+|===
+
+=== Organizational Constraints
+
+[cols="1,2"]
+|===
+|Constraint |Description
+
+|Repository Structure
+|Monorepo with separate backend and frontend directories
+
+|Testing Requirements
+|Comprehensive unit tests for all components (xUnit for backend, Jasmine/Karma for frontend)
+
+|Documentation
+|AsciiDoc format with PlantUML diagrams
+
+|Version Control
+|Git with Git Flow branching strategy
+
+|Commit Convention
+|Conventional Commits standard
+|===
+
+=== Conventions
+
+* **Composition over Inheritance**: Prefer composition to inheritance for better testability
+* **RESTful API Design**: Follow REST principles for all API endpoints
+* **Error Handling**: Use RFC 7807 ProblemDetails standard for API errors
+* **Code Style**: Follow language-specific conventions (C# naming for backend, Angular style guide for frontend)
+
+== System Scope and Context
+
+=== Business Context
+
+[plantuml,business-context,svg]
+----
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(user, "User", "Hiker or outdoor enthusiast")
+Person(admin, "Administrator", "System administrator")
+Person(moderator, "Moderator", "Content moderator")
+
+System(trailmarks, "Trailmarks", "Web application for hiking stones")
+
+System_Ext(jaeger, "Jaeger", "Distributed tracing system")
+SystemDb_Ext(postgres, "PostgreSQL", "Database system")
+
+Rel(user, trailmarks, "Views hiking stones", "HTTPS")
+Rel(admin, trailmarks, "Manages system", "HTTPS")
+Rel(moderator, trailmarks, "Edits content", "HTTPS")
+
+Rel(trailmarks, postgres, "Reads/writes data", "TCP")
+Rel(trailmarks, jaeger, "Sends traces", "OTLP")
+
+@enduml
+----
+
+=== Technical Context
+
+[plantuml,technical-context,svg]
+----
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "Application user")
+
+Container(frontend, "Frontend", "Angular 20.1, Nginx", "Provides UI for users")
+Container(backend, "Backend API", ".NET 8.0, ASP.NET Core", "Provides REST API")
+ContainerDb(database, "Database", "PostgreSQL", "Stores hiking stone data")
+Container(jaeger, "Jaeger", "OpenTelemetry", "Collects and visualizes traces")
+
+Rel(user, frontend, "Uses", "HTTPS")
+Rel(frontend, backend, "Makes API calls", "JSON/HTTPS")
+Rel(backend, database, "Reads/writes", "SQL")
+Rel(frontend, jaeger, "Sends traces", "OTLP/HTTP")
+Rel(backend, jaeger, "Sends traces", "OTLP/HTTP")
+
+@enduml
+----
+
+== Solution Strategy
+
+=== Technology Decisions
+
+[cols="1,2,2"]
+|===
+|Decision |Technology |Rationale
+
+|Backend Framework
+|.NET 8.0 / ASP.NET Core
+|Modern, performant, cross-platform, excellent tooling
+
+|Frontend Framework
+|Angular 20.1
+|Mature SPA framework, strong TypeScript support, comprehensive ecosystem
+
+|Database
+|PostgreSQL
+|Robust, open-source, excellent performance, full-featured
+
+|ORM
+|Entity Framework Core
+|Seamless .NET integration, code-first approach, migration support
+
+|API Documentation
+|OpenAPI 3.0 / Swagger
+|Industry standard, interactive documentation, code generation support
+
+|Styling
+|Tailwind CSS
+|Utility-first, rapid development, consistent design system
+
+|Containerization
+|Docker
+|Consistent deployment, isolation, reproducible environments
+
+|Observability
+|OpenTelemetry
+|Vendor-neutral, comprehensive tracing, industry standard
+|===
+
+=== Architectural Patterns
+
+* **Layered Architecture**: Clear separation between presentation, business logic, and data access layers
+* **REST API**: Stateless communication between frontend and backend
+* **Repository Pattern**: Abstraction of data access logic
+* **Dependency Injection**: Loose coupling and testability
+* **Standalone Components**: Modern Angular architecture with standalone components
+
+== Building Block View
+
+=== Level 1: System Overview
+
+[plantuml,system-overview,svg]
+----
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+System_Boundary(trailmarks, "Trailmarks Application") {
+    Container(frontend, "Frontend", "Angular, Nginx", "User interface")
+    Container(backend, "Backend API", "ASP.NET Core", "REST API")
+    ContainerDb(database, "Database", "PostgreSQL", "Data storage")
+}
+
+Container_Ext(nginx_proxy, "NGINX Proxy", "Nginx", "CORS proxy for OTLP")
+Container_Ext(jaeger, "Jaeger", "OpenTelemetry", "Tracing backend")
+
+Rel(frontend, backend, "API calls", "HTTPS/JSON")
+Rel(backend, database, "Queries", "SQL")
+Rel(frontend, nginx_proxy, "Traces", "OTLP")
+Rel(backend, nginx_proxy, "Traces", "OTLP")
+Rel(nginx_proxy, jaeger, "Forwards", "OTLP")
+
+@enduml
+----
+
+=== Level 2: Backend Structure
+
+[plantuml,backend-structure,svg]
+----
+@startuml
+package "Backend API" {
+    package "Controllers" {
+        [HealthController]
+        [WandersteineController]
+        [TranslationsController]
+    }
+    
+    package "Services" {
+        [DatabaseService]
+    }
+    
+    package "Data" {
+        [ApplicationDbContext]
+    }
+    
+    package "Models" {
+        [Wanderstein]
+        [Translation]
+        [WandersteinResponse]
+    }
+    
+    [WandersteineController] --> [ApplicationDbContext]
+    [TranslationsController] --> [ApplicationDbContext]
+    [DatabaseService] --> [ApplicationDbContext]
+    [ApplicationDbContext] --> [Wanderstein]
+    [ApplicationDbContext] --> [Translation]
+    [WandersteineController] --> [WandersteinResponse]
+}
+
+database "PostgreSQL" {
+    [Wandersteine Table]
+    [Translations Table]
+}
+
+[ApplicationDbContext] --> [Wandersteine Table]
+[ApplicationDbContext] --> [Translations Table]
+@enduml
+----
+
+=== Level 2: Frontend Structure
+
+[plantuml,frontend-structure,svg]
+----
+@startuml
+package "Frontend Application" {
+    package "Core Module" {
+        package "Services" {
+            [LanguageService]
+            [TelemetryService]
+        }
+        package "Components" {
+            [LanguageSwitcher]
+        }
+        [TranslatePipe]
+    }
+    
+    package "Shared Module" {
+        [CarouselComponent]
+    }
+    
+    package "Hiking Stones Module" {
+        package "Services" {
+            [WandersteinService]
+        }
+        package "Pages" {
+            [WandersteinOverviewPage]
+        }
+    }
+    
+    [WandersteinOverviewPage] --> [WandersteinService]
+    [WandersteinOverviewPage] --> [CarouselComponent]
+    [WandersteinOverviewPage] --> [LanguageService]
+    [WandersteinOverviewPage] --> [TelemetryService]
+    [LanguageSwitcher] --> [LanguageService]
+}
+
+cloud "Backend API" {
+    [REST Endpoints]
+}
+
+[WandersteinService] --> [REST Endpoints]
+@enduml
+----
+
+== Runtime View
+
+=== Startup Sequence
+
+[plantuml,startup-sequence,svg]
+----
+@startuml
+participant "Docker Compose" as docker
+participant "PostgreSQL" as db
+participant "Backend API" as backend
+participant "Frontend" as frontend
+participant "Jaeger" as jaeger
+
+docker -> db: Start database
+activate db
+
+docker -> jaeger: Start tracing
+activate jaeger
+
+docker -> backend: Start API
+activate backend
+backend -> db: Check connection
+db --> backend: Connection OK
+backend -> db: Run migrations
+db --> backend: Migrations complete
+backend -> db: Seed sample data (if empty)
+db --> backend: Data ready
+
+docker -> frontend: Start web server
+activate frontend
+frontend --> docker: Ready on port 4200
+
+backend --> docker: Ready on port 8080
+@enduml
+----
+
+=== API Request Flow
+
+[plantuml,api-request-flow,svg]
+----
+@startuml
+actor User
+participant "Frontend" as frontend
+participant "Backend API" as backend
+participant "Database" as db
+participant "Jaeger" as jaeger
+
+User -> frontend: Request hiking stones
+activate frontend
+frontend -> frontend: Create trace span
+frontend -> jaeger: Send trace
+frontend -> backend: GET /api/wandersteine/recent
+activate backend
+backend -> backend: Create trace span
+backend -> db: Query recent items
+activate db
+db --> backend: Return data
+deactivate db
+backend -> backend: Map to response DTO
+backend -> jaeger: Send trace
+backend --> frontend: Return JSON response
+deactivate backend
+frontend -> frontend: Update UI
+frontend --> User: Display hiking stones
+deactivate frontend
+@enduml
+----
+
+== Deployment View
+
+=== Docker Compose Deployment
+
+[plantuml,deployment-view,svg]
+----
+@startuml
+node "Docker Host" {
+    node "PostgreSQL Container" as postgres {
+        database "trailmarks_db"
+    }
+    
+    node "Jaeger Container" as jaeger {
+        component "Jaeger UI" as jaeger_ui
+        component "OTLP Receiver" as otlp
+    }
+    
+    node "NGINX OTLP Proxy" as nginx_proxy {
+        component "CORS Handler"
+    }
+    
+    node "Backend Container" as backend {
+        component "ASP.NET Core API" as api
+    }
+    
+    node "Frontend Container" as frontend {
+        component "Nginx" as nginx
+        component "Angular App" as angular
+    }
+    
+    api --> postgres: port 5432
+    api --> nginx_proxy: port 4318
+    angular --> nginx_proxy: port 4318
+    nginx_proxy --> otlp: forward traces
+}
+
+actor "User" as user
+user --> nginx: port 4200
+angular --> api: port 8080
+user --> jaeger_ui: port 16686
+
+@enduml
+----
+
+=== Infrastructure
+
+[cols="1,1,2,1"]
+|===
+|Service |Container |Description |Ports
+
+|Frontend
+|nginx:alpine
+|Serves Angular application
+|4200
+
+|Backend
+|.NET 8.0 runtime
+|REST API service
+|8080
+
+|Database
+|postgres:16-alpine
+|Data persistence
+|5432
+
+|Jaeger
+|jaegertracing/all-in-one
+|Tracing and monitoring
+|16686, 4318
+
+|NGINX Proxy
+|nginx:alpine
+|CORS proxy for OTLP
+|4318
+|===
+
+== Cross-cutting Concepts
+
+=== Error Handling
+
+* **Backend**: All errors follow RFC 7807 ProblemDetails standard
+* **Frontend**: Centralized error handling with user-friendly messages
+* **API**: Consistent HTTP status codes (200, 404, 500, etc.)
+
+=== Internationalization (i18n)
+
+* Runtime-editable translations stored as JSON files
+* No redeployment needed for translation updates
+* Language selection persisted in browser localStorage
+* Supported languages: German (default), English
+
+=== Observability
+
+* **OpenTelemetry**: Distributed tracing across frontend and backend
+* **Jaeger**: Trace visualization and analysis
+* **Health Checks**: `/health` endpoint for monitoring
+* **Logging**: Comprehensive logging in backend
+
+=== Security
+
+* **CORS**: Configured to allow frontend-backend communication
+* **API Documentation**: Swagger UI accessible only in development
+* **Environment Variables**: Sensitive configuration via environment variables
+
+=== Testing Strategy
+
+==== Backend Testing
+* **Framework**: xUnit
+* **Coverage**: Controllers, Services, Models
+* **Approach**: Arrange-Act-Assert pattern
+* **Database**: In-Memory database for testing
+
+==== Frontend Testing
+* **Unit Tests**: Jasmine/Karma for components and services
+* **E2E Tests**: Playwright for end-to-end testing
+* **Coverage**: All components, services, and user journeys
+
+== Architecture Decisions
+
+=== ADR-001: Monorepo Structure
+
+**Status**: Accepted
+
+**Context**: Need to decide on repository organization for frontend and backend.
+
+**Decision**: Use a monorepo with separate directories for frontend and backend.
+
+**Consequences**:
+* Easier to maintain consistency across both parts
+* Simplified dependency management
+* Single CI/CD pipeline
+* Clear separation of concerns
+
+=== ADR-002: Composition over Inheritance
+
+**Status**: Accepted
+
+**Context**: Need to decide on object-oriented design approach.
+
+**Decision**: Prefer composition over inheritance throughout the codebase.
+
+**Consequences**:
+* Better testability with dependency injection
+* More flexible and maintainable code
+* Easier to mock dependencies in tests
+* Reduced coupling between components
+
+=== ADR-003: OpenTelemetry for Observability
+
+**Status**: Accepted
+
+**Context**: Need comprehensive observability solution.
+
+**Decision**: Use OpenTelemetry with Jaeger backend for distributed tracing.
+
+**Consequences**:
+* Vendor-neutral instrumentation
+* Industry-standard approach
+* Comprehensive tracing across frontend and backend
+* Easy integration with other observability tools
+
+=== ADR-004: AsciiDoc for Documentation
+
+**Status**: Accepted
+
+**Context**: Need structured documentation format.
+
+**Decision**: Use AsciiDoc for all documentation with PlantUML for diagrams.
+
+**Consequences**:
+* More powerful than Markdown
+* Better support for technical documentation
+* Native diagram support with PlantUML
+* Can be converted to multiple output formats
+
+== Quality Requirements
+
+=== Quality Scenarios
+
+[cols="1,2,2,2"]
+|===
+|Quality Goal |Scenario |Priority |Solution
+
+|Maintainability
+|Developer adds new API endpoint
+|High
+|Clear separation of concerns, comprehensive tests
+
+|Usability
+|User switches between languages
+|High
+|Language switcher with localStorage persistence
+
+|Performance
+|API responds to requests
+|Medium
+|Efficient database queries, EF Core optimization
+
+|Reliability
+|Database connection fails
+|High
+|SQLite fallback for development
+
+|Observability
+|Debug production issue
+|High
+|OpenTelemetry traces, comprehensive logging
+|===
+
+== Risks and Technical Debt
+
+=== Risks
+
+[cols="1,2,2,1"]
+|===
+|Risk |Description |Mitigation |Priority
+
+|Database Migration
+|Breaking schema changes
+|Careful migration testing, rollback procedures
+|High
+
+|API Breaking Changes
+|Frontend-backend incompatibility
+|API versioning, comprehensive testing
+|High
+
+|Performance Degradation
+|Slow database queries
+|Query optimization, caching strategies
+|Medium
+
+|Security Vulnerabilities
+|Exposed sensitive data
+|Regular dependency updates, security scans
+|High
+|===
+
+=== Technical Debt
+
+* Add comprehensive API integration tests
+* Implement caching layer for frequently accessed data
+* Add automated performance testing
+* Implement API versioning strategy
+* Add more comprehensive E2E tests
+
+== Glossary
+
+[cols="1,3"]
+|===
+|Term |Definition
+
+|Wanderstein
+|Hiking stone - a physical marker or memorial stone found along hiking trails
+
+|ARC42
+|Architecture documentation template
+
+|C4 Model
+|Context, Containers, Components, Code - hierarchical architecture diagram notation
+
+|PlantUML
+|Tool for creating UML diagrams from text descriptions
+
+|OpenTelemetry
+|Vendor-neutral observability framework for distributed systems
+
+|OTLP
+|OpenTelemetry Protocol - protocol for transmitting telemetry data
+
+|ProblemDetails
+|RFC 7807 standard for HTTP API error responses
+
+|DTO
+|Data Transfer Object - object used to transfer data between processes
+|===
