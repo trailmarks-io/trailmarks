@@ -43,3 +43,7 @@ logs/
 
 # Temporary files
 /tmp/
+
+# Documentation build output
+_site/
+.asciidoctor/
