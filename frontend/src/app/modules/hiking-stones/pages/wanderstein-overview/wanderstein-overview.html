@@ -1,10 +1,7 @@
 <div class="max-w-7xl mx-auto p-8 md:p-4 font-sans">
-  <div class="flex justify-between items-start mb-8 gap-8 flex-col md:flex-row md:items-center">
-    <div class="flex-1 w-full">
-      <h1 class="text-gray-800 text-4xl md:text-3xl mb-2 text-center font-normal">{{ 'wanderstein.title' | translate }}</h1>
-      <p class="text-center text-gray-500 text-lg m-0">{{ 'wanderstein.subtitle' | translate }}</p>
-    </div>
-    <app-language-switcher></app-language-switcher>
+  <div class="mb-8">
+    <h1 class="text-gray-800 text-4xl md:text-3xl mb-2 text-center font-normal">{{ 'wanderstein.title' | translate }}</h1>
+    <p class="text-center text-gray-500 text-lg m-0">{{ 'wanderstein.subtitle' | translate }}</p>
   </div>
 
   <div *ngIf="loading" class="text-center p-8 text-lg">
