@@ -81,6 +81,12 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
    - Teste sowohl Success- als auch Error-Szenarien
    - Halte Tests einfach, lesbar und wartbar
 
+6. **Screenshots und Dokumentation**:
+   - Bei UI-Änderungen: Erstelle immer Screenshots, die alle Bestandteile fehlerfrei zeigen
+   - Screenshots müssen sowohl Desktop- als auch Mobile-Ansichten abdecken (falls relevant)
+   - Füge Screenshots in PR-Beschreibungen und Kommentaren hinzu
+   - Screenshots sollten alle implementierten Features vollständig darstellen
+
 ### Git Branching Strategie
 
 Das Projekt verwendet **Git Flow** als Branching-Strategie:
@@ -142,6 +148,11 @@ Das Projekt verwendet **Git Flow** als Branching-Strategie:
 - Nutze RxJS Observables für asynchrone Operationen
 - Implementiere OnPush Change Detection wo möglich
 - Trenne Präsentations- und Container-Komponenten
+- **Übersetzungen**: Alle statischen Texte im Frontend müssen übersetzbar sein
+  - Verwende den `TranslatePipe` (`{{ 'translation.key' | translate }}`) für alle sichtbaren Texte
+  - Keine hartcodierten deutschen oder englischen Texte in Templates
+  - Übersetzungsschlüssel folgen dem Muster `module.context.text` (z.B. `header.language`, `wanderstein.title`)
+  - Übersetzungen werden über die Backend-API `/api/translations/{language}` bereitgestellt
 
 ##### Angular Module-Struktur
 
