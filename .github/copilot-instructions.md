@@ -302,11 +302,28 @@ npm run e2e:debug           # Run in debug mode
 
 ### Dokumentation
 
+**Dokumentationsstruktur**:
+- **Hauptdokumentation**: Alle Dokumentation befindet sich im `/docs` Verzeichnis
+- **Format**: AsciiDoc (`.adoc`) für alle Dokumentationsdateien
+- **Diagramme**: PlantUML für alle Diagramme, bevorzugt C4-Modell für Architekturdiagramme
+- **Struktur**: Drei Hauptbereiche:
+  - `docs/architecture/` - ARC42 Architekturdokumentation
+  - `docs/user-guide/` - Benutzerdokumentation für Endanwender
+  - `docs/admin-guide/` - Administrator- und Moderatorendokumentation
+
 **Dokumentationsrichtlinien**:
-- **Keine zusätzlichen Markdown-Dateien**: Erstelle keine neuen Markdown-Dokumentationsdateien (*.md), außer sie werden explizit angefordert
-- **Code-Dokumentation**: Bevorzuge Code-Kommentare und inline Dokumentation für technische Details
-- **README-Dateien**: Aktualisiere bestehende README-Dateien bei Bedarf, aber erstelle keine neuen
-- **API-Dokumentation**: Nutze OpenAPI/Swagger für API-Dokumentation statt separate Markdown-Dateien
+- **AsciiDoc verwenden**: Alle neue Dokumentation in AsciiDoc Format erstellen
+- **PlantUML für Diagramme**: Verwende PlantUML für alle Diagramme, eingebettet in AsciiDoc
+- **C4-Modell**: Nutze C4-Modell (Context, Container, Component, Code) für Architekturdiagramme
+- **Keine separaten Markdown-Dateien**: Erstelle keine neuen Markdown-Dokumentationsdateien, außer explizit angefordert
+- **Code-Dokumentation**: Bevorzuge Code-Kommentare und XML-Dokumentation für technische Details
+- **API-Dokumentation**: Nutze OpenAPI/Swagger für API-Dokumentation
+- **README-Dateien**: Root README.md bleibt als kurzer Überblick, detaillierte Doku in `/docs`
+
+**Dokumentations-Pipeline**:
+- Automatische Konvertierung von AsciiDoc nach HTML via GitHub Actions
+- Veröffentlichung auf GitHub Pages
+- Workflow: `.github/workflows/docs.yml`
 
 ### Build-Prozesse
 

@@ -1,252 +1,131 @@
 # Trailmarks - Hiking Stones Overview
 
-A web application for displaying the most recently added hiking stones.
+![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)
+![Angular 20.1](https://img.shields.io/badge/Angular-20.1-DD0031?logo=angular)
+![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
 
-## Architecture
+A modern web application for displaying and managing hiking stones (Wandersteine).
 
-### Backend
-- **Framework**: C# ASP.NET Core 8.0
-- **Database**: PostgreSQL with Entity Framework Core (SQLite fallback for development)
-- **API Documentation**: OpenAPI (Swagger)
-- **Features**: 
-  - REST API for hiking stones
-  - Automatic database migrations
-  - Sample data for development
-  - CORS support
-  - SQLite fallback for local development
+## 🚀 Quick Start
 
-### Frontend
-- **Framework**: Angular 20.1.0
-- **Styling**: Tailwind CSS v3 (Utility-First CSS Framework)
-- **HTTP Client**: Angular HttpClient for API communication
-- **Internationalization**: Multi-language support (German/English)
-- **Features**:
-  - Overview page of the 5 most recent hiking stones
-  - Responsive design for mobile devices
-  - Error handling and loading status
-  - Language switcher with persistence
-  - Runtime-editable translations (no redeployment needed)
-
-### Docker Architecture
-```
-┌────────────────────────────────────────────────────────────────────┐
-│                         Docker Compose                             │
-├────────────────────────────────────────────────────────────────────┤
-│                                                                    │
-│  ┌──────────┐  ┌──────────┐  ┌─────────┐  ┌────────┐  ┌────────┐ │
-│  │ Frontend │─▶│ Backend  │─▶│PostgreS │  │ NGINX  │─▶│ Jaeger │ │
-│  │ (nginx)  │  │(ASP.NET) │  │   QL    │  │  OTLP  │  │ (OTLP) │ │
-│  │Port 4200 │  │Port 8080 │  │         │  │Pt 4318 │  │Pt16686 │ │
-│  └────┬─────┘  └────┬─────┘  └─────────┘  └───▲────┘  └────────┘ │
-│       │             │                          │                   │
-│       └─────────────┴──────────────────────────┘                   │
-│   Angular 20.1    .NET 8.0    PostgreSQL 16    CORS      Tracing  │
-│   Tailwind CSS    EF Core     + OpenTelemetry  Proxy              │
-│   + OpenTelemetry + Swagger                                        │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-## API Endpoints
-
-- `GET /api/wandersteine/recent` - The 5 most recently added hiking stones
-- `GET /api/wandersteine` - All hiking stones
-- `GET /health` - Health Check
-- `GET /swagger` - API documentation (interactive Swagger UI)
-
-## Installation and Startup
-
-### Docker Deployment (Recommended)
-
-The easiest way to run the entire application without installing any dependencies:
+### With Docker (Recommended)
 
 ```bash
+git clone https://github.com/trailmarks-io/trailmarks.git
+cd trailmarks
 docker-compose up -d
 ```
 
-This will start:
-- PostgreSQL database
-- Backend API (http://localhost:8080)
-- Frontend application (http://localhost:4200)
-- Jaeger tracing UI (http://localhost:16686)
-
-For detailed Docker instructions, see [DOCKER.md](DOCKER.md).
-
-**No local installation of .NET, Node.js, or PostgreSQL required!**
+**Access the application:**
+- 🌐 Frontend: http://localhost:4200
+- 🔌 Backend API: http://localhost:8080
+- 📚 API Documentation: http://localhost:8080/swagger
+- 📊 Tracing UI: http://localhost:16686
 
 ### Local Development
 
-#### Prerequisites
-- .NET 8.0 SDK
-- Node.js 20+
-- PostgreSQL (optional, SQLite is automatically used for development)
-
-#### Backend
+**Backend:**
 ```bash
 cd backend
 dotnet run
 ```
 
-The backend server runs on port 8080. On first startup, a SQLite database is automatically created and populated with sample data.
-
-To initialize the database with sample data:
-```bash
-cd backend
-dotnet run -- -DbInit
-```
-
-### Frontend
+**Frontend:**
 ```bash
 cd frontend
 npm install
 npx ng serve
 ```
 
-The frontend server runs on port 4200. Alternatively, you can use `npm start`.
-
-## Configuration
-
-The backend can be configured via `appsettings.json` or `appsettings.Development.json`:
-
-### Development (SQLite)
-SQLite is used by default for local development:
-```json
-{
-  "UseSqlite": true
-}
-```
-
-### Production (PostgreSQL)
-For using PostgreSQL:
-```json
-{
-  "UseSqlite": false,
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=trailmarks;Username=postgres;Password=yourpassword"
-  }
-}
-```
-
-## Data Model
-
-### Wanderstein Entity
-The complete data model in the database:
-- `Id` (uint) - Primary key
-- `Name` (string, max 200) - Name of the hiking stone
-- `UniqueId` (string, max 50) - Unique identifier (e.g., WS-2024-001)
-- `PreviewUrl` (string, max 500) - URL to preview image
-- `Description` (string, max 1000) - Description text
-- `Location` (string, max 200) - Location information
-- `CreatedAt` (DateTime) - Creation timestamp
-- `UpdatedAt` (DateTime) - Last update timestamp
-
-### API Response Format
-The API endpoints return a simplified version:
-```json
-{
-  "id": 1,
-  "name": "Schwarzwaldstein",
-  "unique_id": "WS-2024-001",
-  "preview_url": "https://picsum.photos/300/200?random=1",
-  "created_at": "2025-08-04T12:00:00Z"
-}
-```
-
-## Features
+## ✨ Features
 
 ✅ REST API with C# ASP.NET Core 8.0  
-✅ PostgreSQL database integration with Entity Framework Core  
-✅ SQLite fallback for local development  
-✅ OpenAPI/Swagger documentation  
-✅ Angular 20.1.0 Frontend  
-✅ Responsive Design  
+✅ PostgreSQL database with Entity Framework Core  
+✅ Angular 20.1.0 frontend with Tailwind CSS  
 ✅ Multi-language support (German/English)  
-✅ Automatic database migrations  
-✅ Sample data for development  
-✅ CORS support  
-✅ Comprehensive error handling and logging  
-✅ **Docker deployment with Docker Compose**  
-✅ **Multi-stage Docker builds for optimized images**  
-✅ **No local dependencies required for deployment**  
-✅ **OpenTelemetry instrumentation with Jaeger tracing**  
-✅ **Distributed tracing for performance monitoring**  
+✅ Docker deployment with Docker Compose  
+✅ OpenTelemetry instrumentation with Jaeger tracing  
+✅ Responsive design for mobile devices  
+✅ Comprehensive testing (xUnit, Jasmine/Karma, Playwright)
 
-## Development
+## 📚 Documentation
 
-### Backend Tests
+Comprehensive documentation is available in the **[docs/](docs/)** folder:
+
+- **[Architecture Documentation](docs/architecture/index.adoc)** - Technical architecture following ARC42 template
+- **[User Guide](docs/user-guide/index.adoc)** - End user documentation
+- **[Admin Guide](docs/admin-guide/index.adoc)** - System administration and content management
+
+> **Note:** The documentation is written in AsciiDoc format and can be converted to HTML/Markdown for viewing.
+
+## 🛠️ Technology Stack
+
+- **Backend**: .NET 8.0, ASP.NET Core, Entity Framework Core
+- **Frontend**: Angular 20.1.0, TypeScript, Tailwind CSS
+- **Database**: PostgreSQL 16 (SQLite for development)
+- **API Documentation**: OpenAPI 3.0 / Swagger
+- **Observability**: OpenTelemetry, Jaeger
+- **Containerization**: Docker, Docker Compose
+
+## 📁 Project Structure
+
+```
+trailmarks/
+├── backend/              # .NET 8.0 Backend API
+│   ├── src/             # Application source code
+│   └── test/            # xUnit tests
+├── frontend/            # Angular 20.1 Frontend
+│   ├── src/             # Application source code
+│   ├── e2e/             # Playwright E2E tests
+│   └── public/          # Static assets
+├── docs/                # Documentation (AsciiDoc)
+│   ├── architecture/    # ARC42 architecture docs
+│   ├── user-guide/      # End user guide
+│   └── admin-guide/     # Admin & moderator guide
+└── docker-compose.yml   # Docker deployment
+```
+
+## 🧪 Testing
+
 ```bash
-cd backend
-dotnet test
+# Backend tests
+cd backend && dotnet test
+
+# Frontend unit tests
+cd frontend && npx ng test
+
+# Frontend E2E tests
+cd frontend && npm run e2e
 ```
 
-### Backend Build
+## 🔨 Building
+
 ```bash
-cd backend
-dotnet build
+# Backend
+cd backend && dotnet build
+
+# Frontend
+cd frontend && npx ng build
 ```
 
-### Frontend Tests
-```bash
-cd frontend
-npx ng test
-```
+## 🤝 Contributing
 
-### Frontend Build
-```bash
-cd frontend
-npx ng build
-```
+Contributions are welcome! Please see the [architecture documentation](docs/architecture/index.adoc) for technical details.
 
-Alternatively, Angular CLI can be installed globally:
-```bash
-npm install -g @angular/cli
-ng build
-```
+### Git Workflow
 
-### API Documentation
-The interactive API documentation is available at: http://localhost:8080/swagger
+- **Main branch**: `main` - stable production code
+- **Development branch**: `develop` - active development
+- **Feature branches**: `<issue-number>-description`
+- **Commit convention**: Conventional Commits
 
-## Internationalization (i18n)
+## 📄 License
 
-The application supports multiple languages with runtime-editable translations.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-### Supported Languages
-- 🇩🇪 German (Deutsch) - Default
-- 🇬🇧 English
+## 💬 Support
 
-### Language Switching
-Users can switch languages using the language switcher in the top-right corner of the application. The selected language is persisted in the browser's localStorage and automatically restored on the next visit.
-
-### Adding/Editing Translations
-
-Translation files are located in `/frontend/public/assets/i18n/`:
-- `de.json` - German translations
-- `en.json` - English translations
-
-To modify translations:
-1. Edit the appropriate JSON file
-2. Changes take effect immediately without rebuilding or redeploying the application
-3. Simply refresh the browser to see the changes
-
-Example translation file structure:
-```json
-{
-  "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "retry": "Retry"
-  },
-  "wanderstein": {
-    "title": "Latest Hiking Stones",
-    "subtitle": "The 5 most recently added hiking stones",
-    "addedOn": "Added on"
-  }
-}
-```
-
-### Adding New Languages
-
-To add a new language:
-1. Create a new JSON file in `/frontend/public/assets/i18n/` (e.g., `fr.json` for French)
-2. Add the language code to `SupportedLanguage` type in `/frontend/src/app/services/language.ts`
-3. Update the `getSupportedLanguages()` method to include the new language
-4. Update the `getLanguageLabel()` method in the language switcher component
+- **Documentation**: [Full Documentation](docs/index.adoc)
+- **Issues**: https://github.com/trailmarks-io/trailmarks/issues
+- **API Documentation**: http://localhost:8080/swagger
