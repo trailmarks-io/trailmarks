@@ -8,6 +8,8 @@
 [NOTE]
 ====
 This architecture documentation follows the ARC42 template.
+
+For Architecture Decision Records (ADRs), see link:adr/README.adoc[ADR Directory].
 ====
 
 == Introduction and Goals

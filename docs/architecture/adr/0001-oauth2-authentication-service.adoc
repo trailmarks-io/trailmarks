@@ -1,0 +1,462 @@
+= ADR-0001: OAuth 2 Authentication and Authorization Service
+:toc:
+:toclevels: 3
+:sectnums:
+
+== Status
+
+*PROPOSED* - Awaiting approval
+
+== Context
+
+The Trailmarks application currently has no authentication or authorization mechanism. To secure the application and enable user management, content moderation, and administrative functions, we need to implement OAuth 2 authentication and authorization.
+
+=== Requirements
+
+* *OAuth 2 Standard*: Must implement OAuth 2.0 protocol
+* *Docker Support*: Must be deployable via Docker containers
+* *Self-Hosted*: Prefer self-hosted solutions to maintain control and avoid external dependencies
+* *Easy Integration*: Should integrate well with .NET 8.0 backend and Angular 20 frontend
+* *Role-Based Access Control (RBAC)*: Support for different user roles (User, Moderator, Administrator)
+* *Production Ready*: Mature, actively maintained, and production-grade
+
+== Decision
+
+After evaluating multiple OAuth 2 authentication services, we recommend *Keycloak* as the authentication and authorization provider for the Trailmarks application.
+
+== Options Considered
+
+=== 1. Keycloak
+
+**Website:** https://www.keycloak.org/
+
+**Description:** Enterprise-grade, open-source Identity and Access Management solution
+
+**Pros:**
+
+* ✅ Full OAuth 2.0 and OpenID Connect support
+* ✅ Excellent Docker support with official images
+* ✅ Mature and widely adopted (backed by Red Hat)
+* ✅ Rich admin UI for user and role management
+* ✅ Built-in support for user federation (LDAP, Active Directory)
+* ✅ Social login support (Google, GitHub, Facebook, etc.)
+* ✅ Comprehensive .NET client libraries (Keycloak.AuthServices.*)
+* ✅ Multi-tenancy support (realms)
+* ✅ Token management and session handling
+* ✅ Extensive documentation
+* ✅ Active community and regular updates
+* ✅ Free and open-source (Apache 2.0 license)
+
+**Cons:**
+
+* ⚠️ Higher resource consumption (requires Java runtime)
+* ⚠️ More complex setup compared to simpler solutions
+* ⚠️ Steeper learning curve
+
+**Docker Setup:**
+[source,yaml]
+----
+keycloak:
+  image: quay.io/keycloak/keycloak:23.0
+  command: start-dev
+  environment:
+    KC_DB: postgres
+    KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+    KC_DB_USERNAME: keycloak
+    KC_DB_PASSWORD: keycloak_password
+    KEYCLOAK_ADMIN: admin
+    KEYCLOAK_ADMIN_PASSWORD: admin_password
+  ports:
+    - "8081:8080"
+  depends_on:
+    - postgres
+----
+
+**Estimated Resource Requirements:**
+
+* Memory: ~512MB-1GB RAM
+* CPU: 1-2 cores
+* Storage: Minimal (uses existing PostgreSQL)
+
+=== 2. Authentik
+
+**Website:** https://goauthentik.io/
+
+**Description:** Modern, flexible authentication server with excellent UX
+
+**Pros:**
+
+* ✅ OAuth 2.0 and OpenID Connect support
+* ✅ Official Docker images
+* ✅ Modern, intuitive UI
+* ✅ Built with Python (Django)
+* ✅ Flexible flow system for custom authentication logic
+* ✅ Good documentation
+* ✅ Active development
+* ✅ Lower resource consumption than Keycloak
+
+**Cons:**
+
+* ⚠️ Smaller community compared to Keycloak
+* ⚠️ Less mature ecosystem
+* ⚠️ Fewer .NET integration examples
+
+**Docker Setup:**
+[source,yaml]
+----
+authentik:
+  image: ghcr.io/goauthentik/server:latest
+  command: server
+  environment:
+    AUTHENTIK_SECRET_KEY: your-secret-key
+    AUTHENTIK_POSTGRESQL__HOST: postgres
+    AUTHENTIK_POSTGRESQL__NAME: authentik
+    AUTHENTIK_POSTGRESQL__USER: authentik
+    AUTHENTIK_POSTGRESQL__PASSWORD: authentik_password
+  ports:
+    - "8081:9000"
+----
+
+**Estimated Resource Requirements:**
+
+* Memory: ~256MB-512MB RAM
+* CPU: 1 core
+* Storage: Minimal (uses existing PostgreSQL)
+
+=== 3. Ory Kratos + Ory Hydra
+
+**Website:** https://www.ory.sh/
+
+**Description:** Cloud-native identity and access management
+
+**Pros:**
+
+* ✅ OAuth 2.0 and OpenID Connect support
+* ✅ Excellent Docker support
+* ✅ Built with Go (efficient resource usage)
+* ✅ Modern, API-first design
+* ✅ Good .NET SDK available
+* ✅ Cloud-native architecture
+
+**Cons:**
+
+* ⚠️ Requires multiple services (Kratos for identity, Hydra for OAuth)
+* ⚠️ More complex setup and configuration
+* ⚠️ No built-in admin UI (requires custom development)
+* ⚠️ Steeper learning curve
+
+**Docker Setup:**
+[source,yaml]
+----
+hydra:
+  image: oryd/hydra:v2.2
+  command: serve all --dev
+  environment:
+    DSN: postgres://hydra:password@postgres:5432/hydra?sslmode=disable
+  ports:
+    - "4444:4444" # Public
+    - "4445:4445" # Admin
+
+kratos:
+  image: oryd/kratos:v1.0
+  command: serve --dev
+  environment:
+    DSN: postgres://kratos:password@postgres:5432/kratos?sslmode=disable
+  ports:
+    - "4433:4433"
+----
+
+**Estimated Resource Requirements:**
+
+* Memory: ~256MB-512MB RAM (combined)
+* CPU: 1-2 cores
+* Storage: Minimal (uses existing PostgreSQL)
+
+=== 4. Auth0 by Okta
+
+**Website:** https://auth0.com/
+
+**Description:** Cloud-based identity platform
+
+**Pros:**
+
+* ✅ Full OAuth 2.0 support
+* ✅ Excellent .NET and Angular SDKs
+* ✅ No infrastructure management
+* ✅ Rich feature set
+* ✅ Extensive documentation
+
+**Cons:**
+
+* ❌ Not self-hosted (requires external service)
+* ❌ Paid service (limited free tier)
+* ❌ No Docker deployment (cloud-only)
+* ❌ Data stored externally
+* ❌ Vendor lock-in
+
+**Note:** While Auth0 is excellent, it doesn't meet the Docker/self-hosted requirement.
+
+=== 5. Zitadel
+
+**Website:** https://zitadel.com/
+
+**Description:** Modern identity platform with multi-tenancy
+
+**Pros:**
+
+* ✅ OAuth 2.0 and OpenID Connect support
+* ✅ Docker support
+* ✅ Built with Go (efficient)
+* ✅ Modern architecture
+* ✅ Multi-tenancy support
+* ✅ Good documentation
+
+**Cons:**
+
+* ⚠️ Smaller community
+* ⚠️ Less .NET integration examples
+* ⚠️ Relatively new project
+
+**Docker Setup:**
+[source,yaml]
+----
+zitadel:
+  image: ghcr.io/zitadel/zitadel:latest
+  command: start-from-init --masterykey "MasterKey" --tlsMode disabled
+  environment:
+    ZITADEL_DATABASE_POSTGRES_HOST: postgres
+    ZITADEL_DATABASE_POSTGRES_PORT: 5432
+    ZITADEL_DATABASE_POSTGRES_DATABASE: zitadel
+    ZITADEL_DATABASE_POSTGRES_USER_USERNAME: zitadel
+    ZITADEL_DATABASE_POSTGRES_USER_PASSWORD: zitadel_password
+  ports:
+    - "8081:8080"
+----
+
+**Estimated Resource Requirements:**
+
+* Memory: ~256MB-512MB RAM
+* CPU: 1 core
+* Storage: Minimal (uses existing PostgreSQL)
+
+== Comparison Matrix
+
+[cols="2,1,1,1,1,1"]
+|===
+|Criteria |Keycloak |Authentik |Ory |Auth0 |Zitadel
+
+|OAuth 2.0 Support
+|✅ Full
+|✅ Full
+|✅ Full
+|✅ Full
+|✅ Full
+
+|Docker Support
+|✅ Excellent
+|✅ Excellent
+|✅ Excellent
+|❌ N/A
+|✅ Good
+
+|Self-Hosted
+|✅ Yes
+|✅ Yes
+|✅ Yes
+|❌ No
+|✅ Yes
+
+|Maturity
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐⭐
+|⭐⭐⭐⭐
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐
+
+|.NET Integration
+|✅ Excellent
+|⚠️ Good
+|✅ Good
+|✅ Excellent
+|⚠️ Limited
+
+|Angular Integration
+|✅ Good
+|✅ Good
+|✅ Good
+|✅ Excellent
+|✅ Good
+
+|Admin UI
+|✅ Comprehensive
+|✅ Modern
+|❌ None
+|✅ Cloud UI
+|✅ Modern
+
+|Community Size
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐
+|⭐⭐⭐
+|⭐⭐⭐⭐⭐
+|⭐⭐
+
+|Resource Usage
+|⚠️ Medium-High
+|✅ Low
+|✅ Low
+|N/A
+|✅ Low
+
+|Setup Complexity
+|⚠️ Medium
+|✅ Easy
+|⚠️ Complex
+|✅ Easy
+|✅ Easy
+
+|Documentation
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐⭐
+|⭐⭐⭐⭐
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐
+
+|License
+|Apache 2.0
+|MIT
+|Apache 2.0
+|Proprietary
+|Apache 2.0
+|===
+
+== Recommendation: Keycloak
+
+We recommend *Keycloak* for the following reasons:
+
+=== Technical Justification
+
+1. **Industry Standard:** Keycloak is widely adopted and battle-tested in production environments
+2. **Enterprise Support:** Backed by Red Hat (now part of IBM), ensuring long-term viability
+3. **Complete Feature Set:** Provides everything needed out-of-the-box:
+   - User management with admin UI
+   - Role-based access control (RBAC)
+   - OAuth 2.0 / OpenID Connect
+   - Social login integration
+   - Token management
+   - Session handling
+   - User federation
+4. **Excellent .NET Integration:** Well-documented libraries for ASP.NET Core
+5. **Comprehensive Documentation:** Extensive official documentation and community resources
+6. **Proven Track Record:** Used by major organizations worldwide
+
+=== Alignment with Trailmarks Requirements
+
+1. **Multi-Role Support:** Native support for User, Moderator, and Administrator roles
+2. **Docker Deployment:** Official Docker images with production-ready configurations
+3. **PostgreSQL Integration:** Can use the existing PostgreSQL database
+4. **Scalability:** Proven to scale from small deployments to enterprise levels
+5. **Security:** Regular security updates and vulnerability patches
+
+=== Trade-offs
+
+**Accepted Trade-offs:**
+
+* Higher resource consumption (512MB-1GB RAM) - acceptable for production deployment
+* Java dependency - standard in enterprise environments, Docker image handles this
+* Learning curve - offset by extensive documentation and community support
+
+**Alternatives Considered:**
+
+* *Authentik*: Excellent choice for smaller deployments, but less mature ecosystem
+* *Ory*: Good technical solution but requires multiple services and custom UI development
+* *Zitadel*: Promising but smaller community and fewer integration examples
+
+== Implementation Plan
+
+=== Phase 1: Keycloak Setup (estimated 2-3 days)
+
+1. Add Keycloak to `docker-compose.yml`
+2. Configure Keycloak database in PostgreSQL
+3. Set up initial realm for Trailmarks
+4. Configure client applications (backend API, frontend SPA)
+5. Define roles: `user`, `moderator`, `administrator`
+
+=== Phase 2: Backend Integration (estimated 3-4 days)
+
+1. Add NuGet packages:
+   - `Keycloak.AuthServices.Authentication`
+   - `Keycloak.AuthServices.Authorization`
+   - `Microsoft.AspNetCore.Authentication.JwtBearer`
+2. Configure JWT authentication in `Program.cs`
+3. Add authorization policies for roles
+4. Protect API endpoints with `[Authorize]` attributes
+5. Update Swagger to support OAuth 2.0 authentication
+6. Write integration tests
+
+=== Phase 3: Frontend Integration (estimated 3-4 days)
+
+1. Add npm packages:
+   - `keycloak-angular`
+   - `keycloak-js`
+2. Create authentication service
+3. Add login/logout functionality
+4. Implement route guards for protected pages
+5. Add user profile display
+6. Handle token refresh
+7. Write E2E tests
+
+=== Phase 4: Documentation and Testing (estimated 2 days)
+
+1. Update architecture documentation
+2. Update admin guide with Keycloak setup instructions
+3. Document user authentication flows
+4. Comprehensive testing (unit, integration, E2E)
+5. Security testing
+
+**Total Estimated Effort:** 10-13 days
+
+== Consequences
+
+=== Positive
+
+* ✅ Secure authentication and authorization
+* ✅ Proper user management and role-based access
+* ✅ Industry-standard OAuth 2.0 implementation
+* ✅ Foundation for future features (social login, federation)
+* ✅ Enhanced security posture
+* ✅ Professional user experience
+
+=== Negative
+
+* ⚠️ Additional infrastructure component to maintain
+* ⚠️ Increased resource requirements (~512MB-1GB RAM)
+* ⚠️ More complex deployment and configuration
+* ⚠️ Learning curve for team members unfamiliar with Keycloak
+
+=== Neutral
+
+* 🔄 Requires database schema for Keycloak (separate from Trailmarks tables)
+* 🔄 Additional monitoring and backup requirements
+* 🔄 Token management and refresh logic in frontend
+
+== References
+
+* https://www.keycloak.org/documentation[Keycloak Documentation]
+* https://oauth.net/2/[OAuth 2.0 Specification]
+* https://openid.net/connect/[OpenID Connect Specification]
+* https://github.com/NikiforovAll/keycloak-authorization-services-dotnet[Keycloak .NET Libraries]
+* https://www.npmjs.com/package/keycloak-angular[Keycloak Angular Library]
+
+== Notes
+
+This ADR focuses on the authentication and authorization provider selection. Implementation details will be covered in follow-up technical documentation and implementation tasks.
+
+The recommendation of Keycloak can be revisited if:
+
+* Resource constraints become critical (consider Authentik)
+* Simpler setup is preferred over features (consider Authentik or Zitadel)
+* Custom authentication flows are required (consider Ory)
+* Budget allows for managed services (consider Auth0)
+
+**Next Steps:** Await approval before proceeding with implementation.
