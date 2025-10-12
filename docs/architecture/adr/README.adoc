@@ -1,0 +1,42 @@
+= Architecture Decision Records (ADR)
+
+This directory contains Architecture Decision Records (ADRs) for the Trailmarks project.
+
+== What is an ADR?
+
+An Architecture Decision Record (ADR) is a document that captures an important architectural decision made along with its context and consequences.
+
+== ADR Format
+
+Each ADR follows this structure:
+
+* *Status*: PROPOSED, ACCEPTED, DEPRECATED, or SUPERSEDED
+* *Context*: What is the issue that we're seeing that is motivating this decision?
+* *Decision*: What is the change that we're proposing and/or doing?
+* *Consequences*: What becomes easier or more difficult to do because of this change?
+
+== ADR List
+
+[cols="1,3,2,1"]
+|===
+|Number |Title |Status |Date
+
+|link:0001-oauth2-authentication-service.adoc[ADR-0001]
+|OAuth 2 Authentication and Authorization Service
+|PROPOSED
+|2025-10-12
+|===
+
+== Creating a New ADR
+
+1. Copy the template or an existing ADR
+2. Use the next sequential number (e.g., 0002)
+3. Use descriptive filenames: `XXXX-short-description.adoc`
+4. Fill in all sections
+5. Update this README with the new ADR entry
+6. Submit for review
+
+== References
+
+* https://adr.github.io/[ADR GitHub Organization]
+* https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions[Documenting Architecture Decisions by Michael Nygard]
