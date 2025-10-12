@@ -330,6 +330,11 @@ npm run e2e:debug           # Run in debug mode
 - **Code-Dokumentation**: Bevorzuge Code-Kommentare und XML-Dokumentation für technische Details
 - **API-Dokumentation**: Nutze OpenAPI/Swagger für API-Dokumentation
 - **README-Dateien**: Root README.md bleibt als kurzer Überblick, detaillierte Doku in `/docs`
+- **Architecture Decision Records (ADR)**: 
+  - Erstelle detaillierte ADRs im Verzeichnis `docs/architecture/adr/` für wichtige Architekturentscheidungen
+  - Füge eine Zusammenfassung jedes neuen ADRs zur ARC42 Architekturdokumentation (`docs/architecture/index.adoc`) im Abschnitt "Architecture Decisions" hinzu
+  - ADR-Nummerierung: Verwende fortlaufende Nummern (z.B. 0001, 0002, 0003)
+  - ADR-Format: Status, Context, Decision, Consequences, mit Verweis auf detailliertes ADR-Dokument
 
 **Dokumentations-Pipeline**:
 - Automatische Konvertierung von AsciiDoc nach HTML via GitHub Actions

@@ -588,6 +588,38 @@ user --> jaeger_ui: port 16686
 * Native diagram support with PlantUML
 * Can be converted to multiple output formats
 
+=== ADR-0001: OAuth 2 Authentication and Authorization Service
+
+**Status**: Proposed (Awaiting Approval)
+
+**Context**: The Trailmarks application requires authentication and authorization to secure the application and enable user management, content moderation, and administrative functions. The solution must implement the OAuth 2.0 protocol and be deployable via Docker containers.
+
+**Decision**: Use Keycloak as the authentication and authorization provider.
+
+**Rationale**:
+* Industry-standard, enterprise-grade solution backed by Red Hat/IBM
+* Excellent Docker support with official images
+* Comprehensive .NET integration via Keycloak.AuthServices.* libraries
+* Full OAuth 2.0 / OpenID Connect compliance
+* Complete feature set: admin UI, user management, RBAC, social login
+* Large community and extensive documentation
+
+**Alternatives Considered**:
+* Authentik (lightweight alternative with lower resource usage)
+* Ory (Kratos + Hydra) (maximum flexibility but complex setup)
+* Auth0 by Okta (excellent but cloud-only, doesn't meet self-hosted requirement)
+* Zitadel (modern but smaller community)
+
+**Consequences**:
+* Secure OAuth 2.0 authentication for backend and frontend
+* Role-based access control (User, Moderator, Administrator)
+* Additional infrastructure component (~512MB-1GB RAM)
+* Foundation for future enhancements (social login, federation)
+
+**Implementation Timeline**: 10-13 days across 4 phases
+
+**Full ADR**: See link:adr/0001-oauth2-authentication-service.adoc[ADR-0001 Details]
+
 == Quality Requirements
 
 === Quality Scenarios
