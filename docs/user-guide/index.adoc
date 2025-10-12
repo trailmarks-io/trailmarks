@@ -9,6 +9,11 @@
 
 Welcome to Trailmarks, your digital companion for discovering hiking stones (Wandersteine). This guide will help you get started with using the application.
 
+[NOTE]
+====
+This user guide includes screenshots of the application to help visualize features and make the guide more accessible. Screenshots show both desktop and mobile views of the application.
+====
+
 === What is Trailmarks?
 
 Trailmarks is a web application that allows you to:
@@ -56,11 +61,20 @@ When you first visit Trailmarks, you'll see:
 * A language switcher in the top-right corner
 * A carousel displaying hiking stone preview images
 
+.Homepage on desktop showing header with logo and language switcher, title, and carousel with hiking stones
+image::images/homepage-desktop.png[Desktop homepage view with header, carousel and hiking stone cards, width=800]
+
+.Homepage on mobile device showing responsive single-column layout
+image::images/homepage-mobile.png[Mobile homepage view with burger menu and single-column carousel, width=400]
+
 == Using Trailmarks
 
 === Viewing Recent Hiking Stones
 
 The main page displays the 5 most recently added hiking stones.
+
+.Hiking stone card showing preview image, name, unique ID, and date added
+image::images/hiking-stone-cards-desktop.png[Hiking stone card with all details visible, width=300]
 
 ==== Information Displayed
 
@@ -79,6 +93,9 @@ Navigate through hiking stones using the carousel:
 * **Swipe Gestures**: On mobile devices, swipe left or right
 * **Automatic Scrolling**: The carousel will automatically advance every few seconds
 
+.Carousel with navigation arrows and pagination indicators
+image::images/carousel-navigation-desktop.png[Carousel showing multiple hiking stones with next/previous buttons and pagination dots, width=800]
+
 === Changing Language
 
 Trailmarks supports multiple languages for your convenience.
@@ -94,6 +111,12 @@ Trailmarks supports multiple languages for your convenience.
 2. Click on the language dropdown
 3. Select your preferred language
 4. The page will immediately update to show content in the selected language
+
+.Language switcher dropdown in desktop header
+image::images/language-switcher-desktop.png[Language selection dropdown showing Deutsch option, width=200]
+
+.Language switcher in mobile side navigation
+image::images/language-switcher-mobile.png[Language selector in mobile menu, width=200]
 
 [TIP]
 ====
@@ -145,6 +168,15 @@ On mobile devices, you can:
 * **Swipe**: Navigate through the carousel
 * **Tap**: Select hiking stones for more details
 * **Pinch to Zoom**: View images in detail (browser feature)
+
+.Mobile burger menu button
+image::images/mobile-menu-closed.png[Hamburger menu icon in mobile header, width=100]
+
+.Mobile side navigation panel open
+image::images/mobile-menu-open.png[Side navigation drawer showing language options, width=400]
+
+.Mobile carousel view
+image::images/carousel-mobile.png[Single-column carousel on mobile device, width=400]
 
 === Offline Considerations
 
