@@ -330,6 +330,16 @@ npm run e2e:debug           # Run in debug mode
 - **Code-Dokumentation**: Bevorzuge Code-Kommentare und XML-Dokumentation für technische Details
 - **API-Dokumentation**: Nutze OpenAPI/Swagger für API-Dokumentation
 - **README-Dateien**: Root README.md bleibt als kurzer Überblick, detaillierte Doku in `/docs`
+- **Screenshots in Dokumentation**:
+  - Füge Screenshots für alle Benutzer-sichtbaren Funktionen in der Benutzerdokumentation hinzu
+  - Screenshots müssen sowohl Desktop- als auch Mobile-Ansichten zeigen (wo relevant)
+  - Speichere Screenshots im Verzeichnis `docs/user-guide/images/`
+  - Benenne Screenshots beschreibend: `feature-name-desktop.png`, `feature-name-mobile.png`
+  - Verwende PNG-Format für Screenshots mit guter Qualität
+  - Binde Screenshots in AsciiDoc mit `image::images/filename.png[Alt-Text, width=800]` ein
+  - Füge aussagekräftige Alt-Texte und optional Bildunterschriften hinzu
+  - Screenshots sollten die tatsächliche Anwendung zeigen, keine Mockups
+  - Aktualisiere Screenshots bei UI-Änderungen, um Konsistenz zu gewährleisten
 
 **Dokumentations-Pipeline**:
 - Automatische Konvertierung von AsciiDoc nach HTML via GitHub Actions

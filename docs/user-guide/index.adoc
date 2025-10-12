@@ -9,6 +9,11 @@
 
 Welcome to Trailmarks, your digital companion for discovering hiking stones (Wandersteine). This guide will help you get started with using the application.
 
+[IMPORTANT]
+====
+This user guide includes placeholder notes indicating where screenshots of the application functionality should be added. Screenshots help visualize the features and make the guide more accessible. See `docs/user-guide/images/README.md` for guidelines on creating and adding screenshots.
+====
+
 === What is Trailmarks?
 
 Trailmarks is a web application that allows you to:
@@ -56,11 +61,26 @@ When you first visit Trailmarks, you'll see:
 * A language switcher in the top-right corner
 * A carousel displaying hiking stone preview images
 
+[NOTE]
+====
+Screenshot needed: Homepage overview showing the main page with header, title, and carousel (Desktop view)
+====
+
+[NOTE]
+====
+Screenshot needed: Homepage overview on mobile device showing responsive layout (Mobile view)
+====
+
 == Using Trailmarks
 
 === Viewing Recent Hiking Stones
 
 The main page displays the 5 most recently added hiking stones.
+
+[NOTE]
+====
+Screenshot needed: Hiking stone cards showing preview images, names, unique IDs, and dates
+====
 
 ==== Information Displayed
 
@@ -79,6 +99,11 @@ Navigate through hiking stones using the carousel:
 * **Swipe Gestures**: On mobile devices, swipe left or right
 * **Automatic Scrolling**: The carousel will automatically advance every few seconds
 
+[NOTE]
+====
+Screenshot needed: Carousel with navigation buttons (left/right arrows) and pagination indicators
+====
+
 === Changing Language
 
 Trailmarks supports multiple languages for your convenience.
@@ -94,6 +119,16 @@ Trailmarks supports multiple languages for your convenience.
 2. Click on the language dropdown
 3. Select your preferred language
 4. The page will immediately update to show content in the selected language
+
+[NOTE]
+====
+Screenshot needed: Language switcher in the header (Desktop view)
+====
+
+[NOTE]
+====
+Screenshot needed: Language switcher in the mobile side navigation menu (Mobile view)
+====
 
 [TIP]
 ====
@@ -145,6 +180,16 @@ On mobile devices, you can:
 * **Swipe**: Navigate through the carousel
 * **Tap**: Select hiking stones for more details
 * **Pinch to Zoom**: View images in detail (browser feature)
+
+[NOTE]
+====
+Screenshot needed: Mobile burger menu button in the header (Mobile view)
+====
+
+[NOTE]
+====
+Screenshot needed: Mobile side navigation panel open showing language options (Mobile view)
+====
 
 === Offline Considerations
 
