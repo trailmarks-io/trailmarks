@@ -9,9 +9,9 @@
 
 Welcome to Trailmarks, your digital companion for discovering hiking stones (Wandersteine). This guide will help you get started with using the application.
 
-[IMPORTANT]
+[NOTE]
 ====
-This user guide includes placeholder notes indicating where screenshots of the application functionality should be added. Screenshots help visualize the features and make the guide more accessible. See `docs/user-guide/images/README.md` for guidelines on creating and adding screenshots.
+This user guide includes screenshots of the application to help visualize features and make the guide more accessible. Screenshots show both desktop and mobile views of the application.
 ====
 
 === What is Trailmarks?
@@ -61,15 +61,11 @@ When you first visit Trailmarks, you'll see:
 * A language switcher in the top-right corner
 * A carousel displaying hiking stone preview images
 
-[NOTE]
-====
-Screenshot needed: Homepage overview showing the main page with header, title, and carousel (Desktop view)
-====
+.Homepage on desktop showing header with logo and language switcher, title, and carousel with hiking stones
+image::images/homepage-desktop.png[Desktop homepage view with header, carousel and hiking stone cards, width=800]
 
-[NOTE]
-====
-Screenshot needed: Homepage overview on mobile device showing responsive layout (Mobile view)
-====
+.Homepage on mobile device showing responsive single-column layout
+image::images/homepage-mobile.png[Mobile homepage view with burger menu and single-column carousel, width=400]
 
 == Using Trailmarks
 
@@ -77,10 +73,8 @@ Screenshot needed: Homepage overview on mobile device showing responsive layout 
 
 The main page displays the 5 most recently added hiking stones.
 
-[NOTE]
-====
-Screenshot needed: Hiking stone cards showing preview images, names, unique IDs, and dates
-====
+.Hiking stone card showing preview image, name, unique ID, and date added
+image::images/hiking-stone-cards-desktop.png[Hiking stone card with all details visible, width=300]
 
 ==== Information Displayed
 
@@ -99,10 +93,8 @@ Navigate through hiking stones using the carousel:
 * **Swipe Gestures**: On mobile devices, swipe left or right
 * **Automatic Scrolling**: The carousel will automatically advance every few seconds
 
-[NOTE]
-====
-Screenshot needed: Carousel with navigation buttons (left/right arrows) and pagination indicators
-====
+.Carousel with navigation arrows and pagination indicators
+image::images/carousel-navigation-desktop.png[Carousel showing multiple hiking stones with next/previous buttons and pagination dots, width=800]
 
 === Changing Language
 
@@ -120,15 +112,11 @@ Trailmarks supports multiple languages for your convenience.
 3. Select your preferred language
 4. The page will immediately update to show content in the selected language
 
-[NOTE]
-====
-Screenshot needed: Language switcher in the header (Desktop view)
-====
+.Language switcher dropdown in desktop header
+image::images/language-switcher-desktop.png[Language selection dropdown showing Deutsch option, width=200]
 
-[NOTE]
-====
-Screenshot needed: Language switcher in the mobile side navigation menu (Mobile view)
-====
+.Language switcher in mobile side navigation
+image::images/language-switcher-mobile.png[Language selector in mobile menu, width=200]
 
 [TIP]
 ====
@@ -181,15 +169,14 @@ On mobile devices, you can:
 * **Tap**: Select hiking stones for more details
 * **Pinch to Zoom**: View images in detail (browser feature)
 
-[NOTE]
-====
-Screenshot needed: Mobile burger menu button in the header (Mobile view)
-====
+.Mobile burger menu button
+image::images/mobile-menu-closed.png[Hamburger menu icon in mobile header, width=100]
 
-[NOTE]
-====
-Screenshot needed: Mobile side navigation panel open showing language options (Mobile view)
-====
+.Mobile side navigation panel open
+image::images/mobile-menu-open.png[Side navigation drawer showing language options, width=400]
+
+.Mobile carousel view
+image::images/carousel-mobile.png[Single-column carousel on mobile device, width=400]
 
 === Offline Considerations
 
