@@ -1,0 +1,357 @@
+= OAuth 2 Service Comparison Chart
+:toc:
+
+This document provides a visual comparison of the OAuth 2 authentication services evaluated in ADR-0001.
+
+== Quick Comparison
+
+[cols="1,1,1,1,1,1"]
+|===
+| |Keycloak ⭐ |Authentik |Ory |Auth0 |Zitadel
+
+|*Docker Support*
+|✅ Excellent
+|✅ Excellent
+|✅ Excellent
+|❌ N/A
+|✅ Good
+
+|*Self-Hosted*
+|✅ Yes
+|✅ Yes
+|✅ Yes
+|❌ No (Cloud)
+|✅ Yes
+
+|*Maturity*
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐⭐
+|⭐⭐⭐⭐
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐
+
+|*Admin UI*
+|✅ Comprehensive
+|✅ Modern
+|❌ None
+|✅ Cloud UI
+|✅ Modern
+
+|*Community*
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐
+|⭐⭐⭐
+|⭐⭐⭐⭐⭐
+|⭐⭐
+
+|*Resource Usage*
+|Medium-High
+|Low
+|Low
+|N/A
+|Low
+
+|*Setup Complexity*
+|Medium
+|Easy
+|Complex
+|Easy
+|Easy
+
+|*.NET Integration*
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐
+|⭐⭐⭐⭐
+|⭐⭐⭐⭐⭐
+|⭐⭐
+
+|*Documentation*
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐⭐
+|⭐⭐⭐⭐
+|⭐⭐⭐⭐⭐
+|⭐⭐⭐
+
+|*License*
+|Apache 2.0
+|MIT
+|Apache 2.0
+|Proprietary
+|Apache 2.0
+|===
+
+== Feature Comparison
+
+[cols="2,1,1,1,1,1"]
+|===
+|Feature |Keycloak |Authentik |Ory |Auth0 |Zitadel
+
+|OAuth 2.0
+|✅
+|✅
+|✅
+|✅
+|✅
+
+|OpenID Connect
+|✅
+|✅
+|✅
+|✅
+|✅
+
+|User Management UI
+|✅
+|✅
+|❌
+|✅
+|✅
+
+|Social Login
+|✅
+|✅
+|⚠️ Limited
+|✅
+|✅
+
+|LDAP/AD Integration
+|✅
+|✅
+|⚠️ Limited
+|✅
+|✅
+
+|Multi-tenancy
+|✅ (Realms)
+|✅
+|✅
+|✅
+|✅
+
+|Session Management
+|✅
+|✅
+|✅
+|✅
+|✅
+
+|Token Management
+|✅
+|✅
+|✅
+|✅
+|✅
+
+|Role-Based Access
+|✅
+|✅
+|✅
+|✅
+|✅
+
+|API-First Design
+|⚠️ Mixed
+|✅
+|✅
+|✅
+|✅
+
+|Built-in Themes
+|✅
+|✅
+|❌
+|✅
+|✅
+
+|Backup/Export
+|✅
+|✅
+|✅
+|Limited
+|✅
+|===
+
+== Resource Requirements
+
+[cols="1,2,2,2"]
+|===
+|Service |Memory |CPU |Storage
+
+|Keycloak
+|512MB - 1GB
+|1-2 cores
+|Minimal (PostgreSQL)
+
+|Authentik
+|256MB - 512MB
+|1 core
+|Minimal (PostgreSQL)
+
+|Ory (Combined)
+|256MB - 512MB
+|1-2 cores
+|Minimal (PostgreSQL)
+
+|Auth0
+|N/A (Cloud)
+|N/A (Cloud)
+|N/A (Cloud)
+
+|Zitadel
+|256MB - 512MB
+|1 core
+|Minimal (PostgreSQL)
+|===
+
+== Pros and Cons Summary
+
+=== Keycloak ⭐ (RECOMMENDED)
+
+**Pros:**
+
+* ✅ Industry standard, battle-tested
+* ✅ Backed by Red Hat (IBM)
+* ✅ Comprehensive feature set
+* ✅ Excellent .NET integration
+* ✅ Rich admin UI
+* ✅ Extensive documentation
+* ✅ Large community
+
+**Cons:**
+
+* ⚠️ Higher resource usage
+* ⚠️ Java dependency
+* ⚠️ Steeper learning curve
+
+=== Authentik
+
+**Pros:**
+
+* ✅ Modern, intuitive UI
+* ✅ Lower resource usage
+* ✅ Python-based (Django)
+* ✅ Easy setup
+
+**Cons:**
+
+* ⚠️ Smaller community
+* ⚠️ Less mature ecosystem
+* ⚠️ Fewer .NET examples
+
+=== Ory (Kratos + Hydra)
+
+**Pros:**
+
+* ✅ Cloud-native architecture
+* ✅ Efficient (Go-based)
+* ✅ Flexible, API-first
+* ✅ Low resource usage
+
+**Cons:**
+
+* ⚠️ Requires multiple services
+* ⚠️ No built-in admin UI
+* ⚠️ Complex setup
+
+=== Auth0 by Okta
+
+**Pros:**
+
+* ✅ Enterprise-grade
+* ✅ Excellent SDKs
+* ✅ No infrastructure management
+* ✅ Rich features
+
+**Cons:**
+
+* ❌ Not self-hosted
+* ❌ Paid service
+* ❌ No Docker deployment
+* ❌ Vendor lock-in
+
+=== Zitadel
+
+**Pros:**
+
+* ✅ Modern architecture
+* ✅ Efficient (Go-based)
+* ✅ Multi-tenancy
+* ✅ Low resource usage
+
+**Cons:**
+
+* ⚠️ Smaller community
+* ⚠️ Less .NET examples
+* ⚠️ Relatively new
+
+== Decision Matrix
+
+[cols="2,1,1,1"]
+|===
+|Criteria |Weight |Keycloak |Authentik
+
+|Docker Support
+|10
+|10
+|10
+
+|Maturity
+|9
+|9
+|7
+
+|.NET Integration
+|9
+|9
+|6
+
+|Documentation
+|8
+|9
+|7
+
+|Community
+|8
+|9
+|6
+
+|Admin UI
+|7
+|8
+|8
+
+|Resource Usage
+|6
+|5
+|8
+
+|Setup Simplicity
+|6
+|6
+|8
+
+|*Total (Weighted)*
+|
+|*8.2*
+|*7.4*
+|===
+
+**Keycloak scores highest** when considering all weighted factors, especially in areas critical for enterprise production use: maturity, .NET integration, and community support.
+
+== Recommendation
+
+**Keycloak** is the recommended choice for Trailmarks because:
+
+1. **Production-Ready**: Battle-tested in enterprise environments
+2. **Best .NET Support**: Excellent integration with ASP.NET Core
+3. **Complete Solution**: All features needed out-of-the-box
+4. **Strong Backing**: Red Hat/IBM support ensures long-term viability
+5. **Comprehensive Docs**: Extensive documentation and examples
+
+**Trade-off Accepted**: Higher resource usage (512MB-1GB) is acceptable for the benefits provided.
+
+**Alternative**: If resource constraints are critical, **Authentik** is an excellent lightweight alternative.
+
+== References
+
+See link:0001-oauth2-authentication-service.adoc[ADR-0001] for detailed analysis and implementation plan.
