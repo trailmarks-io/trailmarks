@@ -44,7 +44,32 @@
   },
   "groups": [],
   "users": [],
-  "clients": [],
+  "clients": [
+    {
+      "clientId": "trailmarks-frontend",
+      "name": "Trailmarks Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "redirectUris": [
+        "http://localhost:4200/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200"
+      ],
+      "baseUrl": "http://localhost:4200",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "authorizationServicesEnabled": false,
+      "rootUrl": "http://localhost:4200",
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "fullScopeAllowed": true
+    }
+  ],
   "clientScopes": [],
   "defaultDefaultClientScopes": [
     "role_list",
