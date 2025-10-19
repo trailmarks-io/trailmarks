@@ -58,14 +58,9 @@ export class WandersteinMapComponent implements OnInit, OnDestroy {
     this.addMarkers();
     
     // Fit map bounds to show all markers
-    if (this.wandersteine.length > 0) {
-      const markersWithCoords = this.wandersteine.filter(w => w.latitude && w.longitude);
-      if (markersWithCoords.length > 0) {
-        const group = L.featureGroup(
-          markersWithCoords.map(w => L.marker([w.latitude!, w.longitude!]))
-        );
-        map.fitBounds(group.getBounds().pad(0.1));
-      }
+    if (this.markers.length > 0) {
+      const group = L.featureGroup(this.markers);
+      map.fitBounds(group.getBounds().pad(0.1));
     }
   }
 
@@ -85,11 +80,16 @@ export class WandersteinMapComponent implements OnInit, OnDestroy {
       if (wanderstein.latitude && wanderstein.longitude && this.map) {
         const marker = L.marker([wanderstein.latitude, wanderstein.longitude]);
         
+        // Sanitize data by escaping HTML entities
+        const escapedName = this.escapeHtml(wanderstein.name);
+        const escapedId = this.escapeHtml(wanderstein.unique_Id);
+        const escapedUrl = this.escapeHtml(wanderstein.preview_Url || '');
+        
         const popupContent = `
           <div style="min-width: 200px;">
-            <h3 style="margin: 0 0 8px 0; font-weight: 600;">${wanderstein.name}</h3>
-            <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>ID:</strong> ${wanderstein.unique_Id}</p>
-            ${wanderstein.preview_Url ? `<img src="${wanderstein.preview_Url}" alt="${wanderstein.name}" style="width: 100%; margin-top: 8px; border-radius: 4px;">` : ''}
+            <h3 style="margin: 0 0 8px 0; font-weight: 600;">${escapedName}</h3>
+            <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>ID:</strong> ${escapedId}</p>
+            ${wanderstein.preview_Url ? `<img src="${escapedUrl}" alt="${escapedName}" style="width: 100%; margin-top: 8px; border-radius: 4px;">` : ''}
           </div>
         `;
         
@@ -98,5 +98,11 @@ export class WandersteinMapComponent implements OnInit, OnDestroy {
         this.markers.push(marker);
       }
     });
+  }
+
+  private escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 }
