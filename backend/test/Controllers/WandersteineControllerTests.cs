@@ -27,7 +27,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetRecentWandersteine_ReturnsMaximumFiveItems()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext(applySeedMigrations: false);
             
             // Add 7 test items
             for (int i = 1; i <= 7; i++)
@@ -58,7 +58,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetRecentWandersteine_ReturnsItemsOrderedByCreatedAtDescending()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext(applySeedMigrations: false);
             
             context.Wandersteine.Add(new Wanderstein
             {
@@ -108,7 +108,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetAllWandersteine_ReturnsAllItems()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext(applySeedMigrations: false);
             
             for (int i = 1; i <= 10; i++)
             {
@@ -138,7 +138,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetAllWandersteine_ReturnsEmptyListWhenNoData()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext(applySeedMigrations: false);
             var logger = new Mock<ILogger<WandersteineController>>();
             var controller = new WandersteineController(context, logger.Object);
 

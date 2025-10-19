@@ -21,12 +21,14 @@ var useSqlite = builder.Configuration.GetValue<bool>("UseSqlite") || string.IsNu
 if (useSqlite)
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlite("Data Source=trailmarks.db"));
+        options.UseSqlite("Data Source=trailmarks.db",
+            b => b.MigrationsAssembly("TrailmarksApi.Migrations")));
 }
 else
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString));
+        options.UseNpgsql(connectionString,
+            b => b.MigrationsAssembly("TrailmarksApi.Migrations")));
 }
 
 // Register services

@@ -51,7 +51,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetTranslations_BuildsNestedDictionary()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext(applySeedMigrations: false);
             context.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "app.title", Language = "en", Value = "Trailmarks" },
@@ -144,7 +144,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetSupportedLanguages_ReturnsEmptyListWhenNoTranslations()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = DatabaseFixture.CreateInMemoryContext(applySeedMigrations: false);
             var logger = new Mock<ILogger<TranslationsController>>();
             var controller = new TranslationsController(context, logger.Object);
 

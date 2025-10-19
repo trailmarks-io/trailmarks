@@ -15,24 +15,18 @@ namespace TrailmarksApi.Tests.Services
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
-            // Act
+            // Act & Assert - should not throw
             await service.InitializeAsync();
-
-            // Assert
-            // Verify context has data seeded
+            
+            // Verify migrations were applied and data exists
             Assert.True(await context.Wandersteine.AnyAsync());
         }
 
         [Fact]
-        public async Task InitializeAsync_SeedsWandersteine()
+        public async Task Migrations_SeedWandersteine()
         {
-            // Arrange
+            // Arrange & Act - migrations are applied in CreateInMemoryContext
             var context = DatabaseFixture.CreateInMemoryContext();
-            var logger = new Mock<ILogger<DatabaseService>>();
-            var service = new DatabaseService(context, logger.Object);
-
-            // Act
-            await service.InitializeAsync();
 
             // Assert
             var wandersteine = await context.Wandersteine.ToListAsync();
@@ -45,15 +39,10 @@ namespace TrailmarksApi.Tests.Services
         }
 
         [Fact]
-        public async Task InitializeAsync_SeedsTranslations()
+        public async Task Migrations_SeedTranslations()
         {
-            // Arrange
+            // Arrange & Act - migrations are applied in CreateInMemoryContext
             var context = DatabaseFixture.CreateInMemoryContext();
-            var logger = new Mock<ILogger<DatabaseService>>();
-            var service = new DatabaseService(context, logger.Object);
-
-            // Act
-            await service.InitializeAsync();
 
             // Assert
             var translations = await context.Translations.ToListAsync();
@@ -67,15 +56,10 @@ namespace TrailmarksApi.Tests.Services
         }
 
         [Fact]
-        public async Task InitializeAsync_SeedsMultipleLanguages()
+        public async Task Migrations_SeedMultipleLanguages()
         {
-            // Arrange
+            // Arrange & Act - migrations are applied in CreateInMemoryContext
             var context = DatabaseFixture.CreateInMemoryContext();
-            var logger = new Mock<ILogger<DatabaseService>>();
-            var service = new DatabaseService(context, logger.Object);
-
-            // Act
-            await service.InitializeAsync();
 
             // Assert
             var languages = await context.Translations
@@ -88,21 +72,21 @@ namespace TrailmarksApi.Tests.Services
         }
 
         [Fact]
-        public async Task InitializeAsync_DoesNotDuplicateDataOnMultipleCalls()
+        public async Task InitializeAsync_DoesNotFailOnMultipleCalls()
         {
             // Arrange
             var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
-            // Act
+            // Act - calling InitializeAsync multiple times should not fail
             await service.InitializeAsync();
             var firstCount = await context.Wandersteine.CountAsync();
             
             await service.InitializeAsync();
             var secondCount = await context.Wandersteine.CountAsync();
 
-            // Assert
+            // Assert - migrations are idempotent, so count should stay the same
             Assert.Equal(firstCount, secondCount);
         }
     }
