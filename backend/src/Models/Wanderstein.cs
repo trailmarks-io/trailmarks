@@ -49,6 +49,16 @@ namespace TrailmarksApi.Models
         public string Location { get; set; } = string.Empty;
 
         /// <summary>
+        /// Latitude coordinate (WGS84)
+        /// </summary>
+        public double? Latitude { get; set; }
+
+        /// <summary>
+        /// Longitude coordinate (WGS84)
+        /// </summary>
+        public double? Longitude { get; set; }
+
+        /// <summary>
         /// Creation timestamp
         /// </summary>
         [Column("created_at")]
@@ -92,6 +102,16 @@ namespace TrailmarksApi.Models
         public string Created_At { get; set; } = string.Empty;
 
         /// <summary>
+        /// Latitude coordinate (WGS84)
+        /// </summary>
+        public double? Latitude { get; set; }
+
+        /// <summary>
+        /// Longitude coordinate (WGS84)
+        /// </summary>
+        public double? Longitude { get; set; }
+
+        /// <summary>
         /// Converts a Wanderstein entity to a response DTO
         /// </summary>
         public static WandersteinResponse FromEntity(Wanderstein wanderstein)
@@ -102,7 +122,9 @@ namespace TrailmarksApi.Models
                 Name = wanderstein.Name,
                 Unique_Id = wanderstein.UniqueId,
                 Preview_Url = wanderstein.PreviewUrl,
-                Created_At = wanderstein.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ")
+                Created_At = wanderstein.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                Latitude = wanderstein.Latitude,
+                Longitude = wanderstein.Longitude
             };
         }
     }

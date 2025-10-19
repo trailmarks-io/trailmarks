@@ -31,6 +31,7 @@
     "@angular/localize": "^20.1.4",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
+    "@bluehalo/ngx-leaflet": "^20.0.0",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/context-zone": "^1.29.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.56.0",
@@ -40,6 +41,8 @@
     "@opentelemetry/instrumentation-xml-http-request": "^0.56.0",
     "@opentelemetry/resources": "^1.29.0",
     "@opentelemetry/sdk-trace-web": "^1.29.0",
+    "@types/leaflet": "^1.9.15",
+    "leaflet": "^1.9.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

@@ -72,56 +72,68 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=1",
                     Description = "Ein historischer Wanderstein im Herzen des Schwarzwaldes",
                     Location = "Schwarzwald, Baden-Württemberg",
+                    Latitude = 48.3019,
+                    Longitude = 8.2392,
                     CreatedAt = DateTime.UtcNow.AddDays(-6),
                     UpdatedAt = DateTime.UtcNow.AddDays(-6)
                 },
                 new Wanderstein
                 {
-                    Name = "Alpenblick",
+                    Name = "Rocky Mountain Summit",
                     UniqueId = "WS-2024-002",
                     PreviewUrl = "https://picsum.photos/300/200?random=2",
-                    Description = "Wanderstein mit herrlichem Blick auf die Alpen",
-                    Location = "Allgäu, Bayern",
+                    Description = "Wanderstein mit herrlichem Blick auf die Rocky Mountains",
+                    Location = "Colorado, USA",
+                    Latitude = 39.7392,
+                    Longitude = -104.9903,
                     CreatedAt = DateTime.UtcNow.AddDays(-5),
                     UpdatedAt = DateTime.UtcNow.AddDays(-5)
                 },
                 new Wanderstein
                 {
-                    Name = "Rheintalweg",
+                    Name = "Mount Fuji Trail",
                     UniqueId = "WS-2024-003",
                     PreviewUrl = "https://picsum.photos/300/200?random=3",
-                    Description = "Markanter Stein am Rheintalweg",
-                    Location = "Rheintal, Baden-Württemberg",
+                    Description = "Markanter Stein auf dem Weg zum Mount Fuji",
+                    Location = "Fujinomiya, Japan",
+                    Latitude = 35.3606,
+                    Longitude = 138.7278,
                     CreatedAt = DateTime.UtcNow.AddDays(-4),
                     UpdatedAt = DateTime.UtcNow.AddDays(-4)
                 },
                 new Wanderstein
                 {
-                    Name = "Berggipfel",
+                    Name = "Alpenblick",
                     UniqueId = "WS-2024-004",
                     PreviewUrl = "https://picsum.photos/300/200?random=4",
                     Description = "Wanderstein auf dem höchsten Punkt der Route",
-                    Location = "Harz, Niedersachsen",
+                    Location = "Allgäu, Bayern",
+                    Latitude = 47.5596,
+                    Longitude = 10.7498,
                     CreatedAt = DateTime.UtcNow.AddDays(-3),
                     UpdatedAt = DateTime.UtcNow.AddDays(-3)
                 },
                 new Wanderstein
                 {
-                    Name = "Waldlichtung",
+                    Name = "Outback Stone",
                     UniqueId = "WS-2024-005",
                     PreviewUrl = "https://picsum.photos/300/200?random=5",
-                    Description = "Ruhiger Wanderstein in einer schönen Waldlichtung",
-                    Location = "Eifel, Nordrhein-Westfalen",
+                    Description = "Ruhiger Wanderstein im australischen Outback",
+                    Location = "Uluru, Northern Territory, Australia",
+                    Latitude = -25.3444,
+                    Longitude = 131.0369,
                     CreatedAt = DateTime.UtcNow.AddDays(-2),
                     UpdatedAt = DateTime.UtcNow.AddDays(-2)
                 },
                 new Wanderstein
                 {
-                    Name = "Seeufer",
+                    Name = "Patagonia Vista",
                     UniqueId = "WS-2024-006",
                     PreviewUrl = "https://picsum.photos/300/200?random=6",
-                    Description = "Wanderstein direkt am malerischen Seeufer",
-                    Location = "Chiemsee, Bayern",
+                    Description = "Wanderstein mit Blick auf die patagonische Landschaft",
+                    Location = "Torres del Paine, Chile",
+                    Latitude = -51.2527,
+                    Longitude = -72.9653,
                     CreatedAt = DateTime.UtcNow.AddDays(-1),
                     UpdatedAt = DateTime.UtcNow.AddDays(-1)
                 }
@@ -161,6 +173,8 @@ namespace TrailmarksApi.Services
                 new Translation { Key = "wanderstein.error", Language = "de", Value = "Fehler beim Laden der Wandersteine" },
                 new Translation { Key = "wanderstein.noData", Language = "de", Value = "Keine Wandersteine gefunden." },
                 new Translation { Key = "wanderstein.addedOn", Language = "de", Value = "Hinzugefügt" },
+                new Translation { Key = "wanderstein.map.title", Language = "de", Value = "Kartenübersicht" },
+                new Translation { Key = "wanderstein.recent.title", Language = "de", Value = "Neueste Wandersteine" },
 
                 // English translations
                 new Translation { Key = "common.loading", Language = "en", Value = "Loading..." },
@@ -173,7 +187,9 @@ namespace TrailmarksApi.Services
                 new Translation { Key = "wanderstein.loading", Language = "en", Value = "Loading hiking stones..." },
                 new Translation { Key = "wanderstein.error", Language = "en", Value = "Error loading hiking stones" },
                 new Translation { Key = "wanderstein.noData", Language = "en", Value = "No hiking stones found." },
-                new Translation { Key = "wanderstein.addedOn", Language = "en", Value = "Added on" }
+                new Translation { Key = "wanderstein.addedOn", Language = "en", Value = "Added on" },
+                new Translation { Key = "wanderstein.map.title", Language = "en", Value = "Map Overview" },
+                new Translation { Key = "wanderstein.recent.title", Language = "en", Value = "Recent Hiking Stones" }
             };
 
             _context.Translations.AddRange(translations);
