@@ -42,7 +42,9 @@
     "@opentelemetry/resources": "^1.29.0",
     "@opentelemetry/sdk-trace-web": "^1.29.0",
     "@types/leaflet": "^1.9.15",
+    "@types/leaflet.markercluster": "^1.5.4",
     "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

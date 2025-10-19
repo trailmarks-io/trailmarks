@@ -28,9 +28,9 @@ describe('WandersteinMapComponent', () => {
     expect(component.options.center).toBeDefined();
   });
 
-  it('should not initialize markers until map is ready', () => {
+  it('should not initialize marker cluster until map is ready', () => {
     component.ngOnInit();
-    expect(component.markers).toEqual([]);
+    expect(component.markerClusterGroup).toBeNull();
   });
 
   it('should handle destroy when marker cluster group is null', () => {
@@ -53,8 +53,8 @@ describe('WandersteinMapComponent', () => {
     component.wandersteine = testWandersteine;
     component.ngOnInit();
     
-    // Markers are only created when map is ready
-    expect(component.markers).toEqual([]);
+    // Marker cluster is only created when map is ready
+    expect(component.markerClusterGroup).toBeNull();
   });
 
   it('should handle wandersteine without coordinates', () => {
@@ -71,7 +71,7 @@ describe('WandersteinMapComponent', () => {
     component.wandersteine = testWandersteine;
     component.ngOnInit();
     
-    // Markers are only created when map is ready
-    expect(component.markers).toEqual([]);
+    // Marker cluster is only created when map is ready
+    expect(component.markerClusterGroup).toBeNull();
   });
 });

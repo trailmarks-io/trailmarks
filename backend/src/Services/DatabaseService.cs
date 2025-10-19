@@ -65,6 +65,7 @@ namespace TrailmarksApi.Services
 
             var sampleStones = new List<Wanderstein>
             {
+                // Germany - Black Forest cluster
                 new Wanderstein
                 {
                     Name = "Schwarzwaldstein",
@@ -74,9 +75,173 @@ namespace TrailmarksApi.Services
                     Location = "Schwarzwald, Baden-Württemberg",
                     Latitude = 48.3019,
                     Longitude = 8.2392,
-                    CreatedAt = DateTime.UtcNow.AddDays(-6),
-                    UpdatedAt = DateTime.UtcNow.AddDays(-6)
+                    CreatedAt = DateTime.UtcNow.AddDays(-20),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-20)
                 },
+                new Wanderstein
+                {
+                    Name = "Feldbergblick",
+                    UniqueId = "WS-2024-007",
+                    PreviewUrl = "https://picsum.photos/300/200?random=7",
+                    Description = "Wanderstein am höchsten Punkt des Schwarzwaldes",
+                    Location = "Feldberg, Baden-Württemberg",
+                    Latitude = 47.8742,
+                    Longitude = 8.0044,
+                    CreatedAt = DateTime.UtcNow.AddDays(-19),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-19)
+                },
+                new Wanderstein
+                {
+                    Name = "Titisee Rundweg",
+                    UniqueId = "WS-2024-008",
+                    PreviewUrl = "https://picsum.photos/300/200?random=8",
+                    Description = "Malerischer Wanderstein am Titisee",
+                    Location = "Titisee-Neustadt, Baden-Württemberg",
+                    Latitude = 47.9034,
+                    Longitude = 8.2064,
+                    CreatedAt = DateTime.UtcNow.AddDays(-18),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-18)
+                },
+                new Wanderstein
+                {
+                    Name = "Triberger Wasserfall",
+                    UniqueId = "WS-2024-009",
+                    PreviewUrl = "https://picsum.photos/300/200?random=9",
+                    Description = "Wanderstein bei Deutschlands höchsten Wasserfällen",
+                    Location = "Triberg, Baden-Württemberg",
+                    Latitude = 48.1294,
+                    Longitude = 8.2303,
+                    CreatedAt = DateTime.UtcNow.AddDays(-17),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-17)
+                },
+                
+                // Germany - Rhine Valley cluster
+                new Wanderstein
+                {
+                    Name = "Loreley Felsen",
+                    UniqueId = "WS-2024-010",
+                    PreviewUrl = "https://picsum.photos/300/200?random=10",
+                    Description = "Legendärer Wanderstein am Rhein",
+                    Location = "St. Goarshausen, Rheinland-Pfalz",
+                    Latitude = 50.1389,
+                    Longitude = 7.7311,
+                    CreatedAt = DateTime.UtcNow.AddDays(-16),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-16)
+                },
+                new Wanderstein
+                {
+                    Name = "Burg Rheinfels",
+                    UniqueId = "WS-2024-011",
+                    PreviewUrl = "https://picsum.photos/300/200?random=11",
+                    Description = "Wanderstein an historischer Burgruine",
+                    Location = "St. Goar, Rheinland-Pfalz",
+                    Latitude = 50.1503,
+                    Longitude = 7.7142,
+                    CreatedAt = DateTime.UtcNow.AddDays(-15),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-15)
+                },
+                new Wanderstein
+                {
+                    Name = "Rheinsteig Aussicht",
+                    UniqueId = "WS-2024-012",
+                    PreviewUrl = "https://picsum.photos/300/200?random=12",
+                    Description = "Panoramablick über das Rheintal",
+                    Location = "Boppard, Rheinland-Pfalz",
+                    Latitude = 50.2319,
+                    Longitude = 7.5897,
+                    CreatedAt = DateTime.UtcNow.AddDays(-14),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-14)
+                },
+                
+                // Germany - Bavarian Alps cluster
+                new Wanderstein
+                {
+                    Name = "Alpenblick",
+                    UniqueId = "WS-2024-004",
+                    PreviewUrl = "https://picsum.photos/300/200?random=4",
+                    Description = "Wanderstein auf dem höchsten Punkt der Route",
+                    Location = "Allgäu, Bayern",
+                    Latitude = 47.5596,
+                    Longitude = 10.7498,
+                    CreatedAt = DateTime.UtcNow.AddDays(-13),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-13)
+                },
+                new Wanderstein
+                {
+                    Name = "Nebelhorn",
+                    UniqueId = "WS-2024-013",
+                    PreviewUrl = "https://picsum.photos/300/200?random=13",
+                    Description = "Hochalpiner Wanderstein mit 400-Gipfel-Blick",
+                    Location = "Oberstdorf, Bayern",
+                    Latitude = 47.4119,
+                    Longitude = 10.3233,
+                    CreatedAt = DateTime.UtcNow.AddDays(-12),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-12)
+                },
+                new Wanderstein
+                {
+                    Name = "Königssee Panorama",
+                    UniqueId = "WS-2024-014",
+                    PreviewUrl = "https://picsum.photos/300/200?random=14",
+                    Description = "Wanderstein am smaragdgrünen Königssee",
+                    Location = "Schönau am Königssee, Bayern",
+                    Latitude = 47.5667,
+                    Longitude = 12.9833,
+                    CreatedAt = DateTime.UtcNow.AddDays(-11),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-11)
+                },
+                new Wanderstein
+                {
+                    Name = "Watzmann Ostwand",
+                    UniqueId = "WS-2024-015",
+                    PreviewUrl = "https://picsum.photos/300/200?random=15",
+                    Description = "Wanderstein mit Blick auf die berühmte Ostwand",
+                    Location = "Berchtesgaden, Bayern",
+                    Latitude = 47.5550,
+                    Longitude = 12.9350,
+                    CreatedAt = DateTime.UtcNow.AddDays(-10),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-10)
+                },
+                
+                // Germany - Harz cluster
+                new Wanderstein
+                {
+                    Name = "Brocken Gipfel",
+                    UniqueId = "WS-2024-016",
+                    PreviewUrl = "https://picsum.photos/300/200?random=16",
+                    Description = "Wanderstein auf dem höchsten Harzgipfel",
+                    Location = "Wernigerode, Sachsen-Anhalt",
+                    Latitude = 51.7992,
+                    Longitude = 10.6147,
+                    CreatedAt = DateTime.UtcNow.AddDays(-9),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-9)
+                },
+                new Wanderstein
+                {
+                    Name = "Hexentanzplatz",
+                    UniqueId = "WS-2024-017",
+                    PreviewUrl = "https://picsum.photos/300/200?random=17",
+                    Description = "Mystischer Wanderstein an sagenhaftem Ort",
+                    Location = "Thale, Sachsen-Anhalt",
+                    Latitude = 51.7503,
+                    Longitude = 11.0308,
+                    CreatedAt = DateTime.UtcNow.AddDays(-8),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-8)
+                },
+                new Wanderstein
+                {
+                    Name = "Rappbodetalsperre",
+                    UniqueId = "WS-2024-018",
+                    PreviewUrl = "https://picsum.photos/300/200?random=18",
+                    Description = "Wanderstein an der größten Talsperre im Harz",
+                    Location = "Oberharz am Brocken, Sachsen-Anhalt",
+                    Latitude = 51.7489,
+                    Longitude = 10.9044,
+                    CreatedAt = DateTime.UtcNow.AddDays(-7),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-7)
+                },
+                
+                // International stones (keeping some for worldwide distribution)
                 new Wanderstein
                 {
                     Name = "Rocky Mountain Summit",
@@ -86,8 +251,8 @@ namespace TrailmarksApi.Services
                     Location = "Colorado, USA",
                     Latitude = 39.7392,
                     Longitude = -104.9903,
-                    CreatedAt = DateTime.UtcNow.AddDays(-5),
-                    UpdatedAt = DateTime.UtcNow.AddDays(-5)
+                    CreatedAt = DateTime.UtcNow.AddDays(-6),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-6)
                 },
                 new Wanderstein
                 {
@@ -98,20 +263,8 @@ namespace TrailmarksApi.Services
                     Location = "Fujinomiya, Japan",
                     Latitude = 35.3606,
                     Longitude = 138.7278,
-                    CreatedAt = DateTime.UtcNow.AddDays(-4),
-                    UpdatedAt = DateTime.UtcNow.AddDays(-4)
-                },
-                new Wanderstein
-                {
-                    Name = "Alpenblick",
-                    UniqueId = "WS-2024-004",
-                    PreviewUrl = "https://picsum.photos/300/200?random=4",
-                    Description = "Wanderstein auf dem höchsten Punkt der Route",
-                    Location = "Allgäu, Bayern",
-                    Latitude = 47.5596,
-                    Longitude = 10.7498,
-                    CreatedAt = DateTime.UtcNow.AddDays(-3),
-                    UpdatedAt = DateTime.UtcNow.AddDays(-3)
+                    CreatedAt = DateTime.UtcNow.AddDays(-5),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-5)
                 },
                 new Wanderstein
                 {
@@ -122,8 +275,8 @@ namespace TrailmarksApi.Services
                     Location = "Uluru, Northern Territory, Australia",
                     Latitude = -25.3444,
                     Longitude = 131.0369,
-                    CreatedAt = DateTime.UtcNow.AddDays(-2),
-                    UpdatedAt = DateTime.UtcNow.AddDays(-2)
+                    CreatedAt = DateTime.UtcNow.AddDays(-4),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-4)
                 },
                 new Wanderstein
                 {
@@ -134,8 +287,8 @@ namespace TrailmarksApi.Services
                     Location = "Torres del Paine, Chile",
                     Latitude = -51.2527,
                     Longitude = -72.9653,
-                    CreatedAt = DateTime.UtcNow.AddDays(-1),
-                    UpdatedAt = DateTime.UtcNow.AddDays(-1)
+                    CreatedAt = DateTime.UtcNow.AddDays(-3),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-3)
                 }
             };
 

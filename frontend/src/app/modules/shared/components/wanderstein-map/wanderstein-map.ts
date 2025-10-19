@@ -2,7 +2,17 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
+import 'leaflet.markercluster';
 import { WandersteinResponse } from '../../../hiking-stones';
+
+// Extend L type to include markerClusterGroup
+declare global {
+  interface Window {
+    L: typeof L & {
+      markerClusterGroup: (options?: any) => any;
+    };
+  }
+}
 
 @Component({
   selector: 'app-wanderstein-map',
@@ -24,20 +34,17 @@ export class WandersteinMapComponent implements OnInit, OnDestroy {
     center: L.latLng(20, 0)
   };
 
-  markers: L.Marker[] = [];
+  markerClusterGroup: any = null;
   map: L.Map | null = null;
 
   ngOnInit(): void {
-    // Markers will be initialized when map is ready
+    // Marker cluster will be initialized when map is ready
   }
 
   ngOnDestroy(): void {
-    if (this.map && this.markers.length > 0) {
-      this.markers.forEach(marker => {
-        if (this.map) {
-          this.map.removeLayer(marker);
-        }
-      });
+    if (this.markerClusterGroup && this.map) {
+      this.map.removeLayer(this.markerClusterGroup);
+      this.markerClusterGroup = null;
     }
   }
 
@@ -55,29 +62,43 @@ export class WandersteinMapComponent implements OnInit, OnDestroy {
     });
     L.Marker.prototype.options.icon = iconDefault;
 
+    // Create marker cluster group - use global L object
+    const LGlobal = (window as any).L || L;
+    this.markerClusterGroup = LGlobal.markerClusterGroup({
+      maxClusterRadius: 80,
+      spiderfyOnMaxZoom: true,
+      showCoverageOnHover: true,
+      zoomToBoundsOnClick: true,
+      disableClusteringAtZoom: 15
+    });
+
     this.addMarkers();
     
-    // Fit map bounds to show all markers
-    if (this.markers.length > 0) {
-      const group = L.featureGroup(this.markers);
-      map.fitBounds(group.getBounds().pad(0.1));
+    if (this.markerClusterGroup) {
+      map.addLayer(this.markerClusterGroup);
+      
+      // Fit map bounds to show all markers
+      if (this.wandersteine.length > 0) {
+        const markersWithCoords = this.wandersteine.filter(w => w.latitude && w.longitude);
+        if (markersWithCoords.length > 0) {
+          // Use a timeout to ensure the cluster group is fully initialized
+          setTimeout(() => {
+            if (this.markerClusterGroup && this.markerClusterGroup.getBounds && this.markerClusterGroup.getBounds().isValid()) {
+              map.fitBounds(this.markerClusterGroup.getBounds().pad(0.1));
+            }
+          }, 100);
+        }
+      }
     }
   }
 
   private addMarkers(): void {
-    if (!this.map) return;
+    if (!this.markerClusterGroup) return;
 
-    // Clear existing markers
-    this.markers.forEach(marker => {
-      if (this.map) {
-        this.map.removeLayer(marker);
-      }
-    });
-    this.markers = [];
+    this.markerClusterGroup.clearLayers();
 
-    // Add new markers
     this.wandersteine.forEach(wanderstein => {
-      if (wanderstein.latitude && wanderstein.longitude && this.map) {
+      if (wanderstein.latitude && wanderstein.longitude) {
         const marker = L.marker([wanderstein.latitude, wanderstein.longitude]);
         
         // Sanitize data by escaping HTML entities
@@ -94,8 +115,7 @@ export class WandersteinMapComponent implements OnInit, OnDestroy {
         `;
         
         marker.bindPopup(popupContent);
-        marker.addTo(this.map);
-        this.markers.push(marker);
+        this.markerClusterGroup.addLayer(marker);
       }
     });
   }
