@@ -11,7 +11,7 @@ namespace TrailmarksApi.Tests.Services
         public async Task InitializeAsync_ExecutesSuccessfully()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
@@ -21,13 +21,17 @@ namespace TrailmarksApi.Tests.Services
             // Assert
             // Verify context has data seeded
             Assert.True(await context.Wandersteine.AnyAsync());
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task InitializeAsync_SeedsWandersteine()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
@@ -42,13 +46,17 @@ namespace TrailmarksApi.Tests.Services
                 Assert.False(string.IsNullOrEmpty(w.Name));
                 Assert.False(string.IsNullOrEmpty(w.UniqueId));
             });
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task InitializeAsync_SeedsTranslations()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
@@ -64,13 +72,17 @@ namespace TrailmarksApi.Tests.Services
                 Assert.False(string.IsNullOrEmpty(t.Language));
                 Assert.False(string.IsNullOrEmpty(t.Value));
             });
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task InitializeAsync_SeedsMultipleLanguages()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
@@ -85,13 +97,17 @@ namespace TrailmarksApi.Tests.Services
             
             Assert.Contains("de", languages);
             Assert.Contains("en", languages);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task InitializeAsync_DoesNotDuplicateDataOnMultipleCalls()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<DatabaseService>>();
             var service = new DatabaseService(context, logger.Object);
 
@@ -104,6 +120,10 @@ namespace TrailmarksApi.Tests.Services
 
             // Assert
             Assert.Equal(firstCount, secondCount);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
     }
 }

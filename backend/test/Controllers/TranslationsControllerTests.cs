@@ -12,7 +12,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetTranslations_ReturnsOkResultWithTranslations()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             context.Translations.Add(new Translation
             {
                 Key = "app.title",
@@ -30,13 +30,17 @@ namespace TrailmarksApi.Tests.Controllers
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             Assert.NotNull(okResult.Value);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetTranslations_ReturnsNotFoundForInvalidLanguage()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<TranslationsController>>();
             var controller = new TranslationsController(context, logger.Object);
 
@@ -45,13 +49,17 @@ namespace TrailmarksApi.Tests.Controllers
 
             // Assert
             Assert.IsType<NotFoundObjectResult>(result.Result);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetTranslations_BuildsNestedDictionary()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             context.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "app.title", Language = "en", Value = "Trailmarks" },
@@ -71,13 +79,17 @@ namespace TrailmarksApi.Tests.Controllers
             var dict = Assert.IsAssignableFrom<Dictionary<string, object>>(okResult.Value);
             Assert.True(dict.ContainsKey("app"));
             Assert.True(dict.ContainsKey("wanderstein"));
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetTranslations_IsCaseInsensitive()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             context.Translations.Add(new Translation
             {
                 Key = "test.key",
@@ -94,13 +106,17 @@ namespace TrailmarksApi.Tests.Controllers
 
             // Assert
             Assert.IsType<OkObjectResult>(result.Result);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetSupportedLanguages_ReturnsOkResult()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<TranslationsController>>();
             var controller = new TranslationsController(context, logger.Object);
 
@@ -109,13 +125,17 @@ namespace TrailmarksApi.Tests.Controllers
 
             // Assert
             Assert.IsType<OkObjectResult>(result.Result);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetSupportedLanguages_ReturnsDistinctLanguages()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             context.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "key1", Language = "de", Value = "Wert1" },
@@ -138,13 +158,17 @@ namespace TrailmarksApi.Tests.Controllers
             Assert.Contains("de", languages);
             Assert.Contains("en", languages);
             Assert.Contains("fr", languages);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetSupportedLanguages_ReturnsEmptyListWhenNoTranslations()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<TranslationsController>>();
             var controller = new TranslationsController(context, logger.Object);
 
@@ -155,13 +179,17 @@ namespace TrailmarksApi.Tests.Controllers
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var languages = Assert.IsAssignableFrom<List<string>>(okResult.Value);
             Assert.Empty(languages);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetSupportedLanguages_ReturnsLanguagesInOrder()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             context.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "key1", Language = "fr", Value = "Val" },
@@ -180,6 +208,10 @@ namespace TrailmarksApi.Tests.Controllers
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             var languages = Assert.IsAssignableFrom<List<string>>(okResult.Value);
             Assert.Equal(new List<string> { "de", "en", "fr" }, languages);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
     }
 }

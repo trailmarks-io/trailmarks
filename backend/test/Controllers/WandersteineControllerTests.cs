@@ -12,7 +12,7 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetRecentWandersteine_ReturnsOkResult()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<WandersteineController>>();
             var controller = new WandersteineController(context, logger.Object);
 
@@ -21,13 +21,17 @@ namespace TrailmarksApi.Tests.Controllers
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetRecentWandersteine_ReturnsMaximumFiveItems()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             
             // Add 7 test items
             for (int i = 1; i <= 7; i++)
@@ -52,13 +56,17 @@ namespace TrailmarksApi.Tests.Controllers
             Assert.NotNull(result);
             var wandersteine = Assert.IsAssignableFrom<IEnumerable<WandersteinResponse>>(result.Value);
             Assert.Equal(5, wandersteine.Count());
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetRecentWandersteine_ReturnsItemsOrderedByCreatedAtDescending()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             
             context.Wandersteine.Add(new Wanderstein
             {
@@ -87,13 +95,17 @@ namespace TrailmarksApi.Tests.Controllers
             var wandersteine = Assert.IsAssignableFrom<IEnumerable<WandersteinResponse>>(result.Value).ToList();
             Assert.Equal("Newest", wandersteine.First().Name);
             Assert.Equal("Oldest", wandersteine.Last().Name);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetAllWandersteine_ReturnsOkResult()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<WandersteineController>>();
             var controller = new WandersteineController(context, logger.Object);
 
@@ -102,13 +114,17 @@ namespace TrailmarksApi.Tests.Controllers
 
             // Assert
             Assert.IsType<OkObjectResult>(result);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetAllWandersteine_ReturnsAllItems()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             
             for (int i = 1; i <= 10; i++)
             {
@@ -132,13 +148,17 @@ namespace TrailmarksApi.Tests.Controllers
             Assert.NotNull(result);
             var wandersteine = Assert.IsAssignableFrom<IEnumerable<WandersteinResponse>>(result.Value);
             Assert.Equal(10, wandersteine.Count());
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
 
         [Fact]
         public async Task GetAllWandersteine_ReturnsEmptyListWhenNoData()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            var context = await DatabaseFixture.CreatePostgreSqlContextAsync();
             var logger = new Mock<ILogger<WandersteineController>>();
             var controller = new WandersteineController(context, logger.Object);
 
@@ -149,6 +169,10 @@ namespace TrailmarksApi.Tests.Controllers
             Assert.NotNull(result);
             var wandersteine = Assert.IsAssignableFrom<IEnumerable<WandersteinResponse>>(result.Value);
             Assert.Empty(wandersteine);
+            
+            // Cleanup
+            await context.Database.EnsureDeletedAsync();
+            await context.DisposeAsync();
         }
     }
 }

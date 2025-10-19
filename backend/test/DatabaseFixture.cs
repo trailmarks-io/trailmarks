@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Testcontainers.PostgreSql;
 using TrailmarksApi.Data;
 
 namespace TrailmarksApi.Tests
@@ -8,17 +9,72 @@ namespace TrailmarksApi.Tests
     /// </summary>
     public static class DatabaseFixture
     {
+        private static readonly PostgreSqlContainer _postgresContainer = new PostgreSqlBuilder()
+            .WithImage("postgres:16-alpine")
+            .WithDatabase("trailmarks_test")
+            .WithUsername("postgres")
+            .WithPassword("postgres")
+            .Build();
+
+        private static bool _containerStarted = false;
+        private static readonly object _lock = new object();
+
         /// <summary>
-        /// Creates an in-memory database context for testing
+        /// Ensures the PostgreSQL container is started (called once per test run)
         /// </summary>
-        /// <returns>A new ApplicationDbContext configured with in-memory database</returns>
-        public static ApplicationDbContext CreateInMemoryContext()
+        public static async Task EnsureContainerStartedAsync()
         {
+            if (!_containerStarted)
+            {
+                lock (_lock)
+                {
+                    if (!_containerStarted)
+                    {
+                        _postgresContainer.StartAsync().GetAwaiter().GetResult();
+                        _containerStarted = true;
+                    }
+                }
+            }
+            await Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Creates a PostgreSQL database context for testing with a unique database name
+        /// </summary>
+        /// <returns>A new ApplicationDbContext configured with PostgreSQL test database</returns>
+        public static async Task<ApplicationDbContext> CreatePostgreSqlContextAsync()
+        {
+            await EnsureContainerStartedAsync();
+
+            // Create a unique database name for each test to avoid conflicts
+            var uniqueDbName = $"test_db_{Guid.NewGuid():N}";
+            
+            // Get connection string and replace database name
+            var connectionString = _postgresContainer.GetConnectionString()
+                .Replace("trailmarks_test", uniqueDbName);
+
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+                .UseNpgsql(connectionString)
                 .Options;
 
-            return new ApplicationDbContext(options);
+            var context = new ApplicationDbContext(options);
+            
+            // Ensure database is created and migrations are applied
+            await context.Database.EnsureCreatedAsync();
+            
+            return context;
+        }
+
+        /// <summary>
+        /// Stops the PostgreSQL container (typically called during test cleanup)
+        /// </summary>
+        public static async Task StopContainerAsync()
+        {
+            if (_containerStarted)
+            {
+                await _postgresContainer.StopAsync();
+                _containerStarted = false;
+            }
         }
     }
 }
