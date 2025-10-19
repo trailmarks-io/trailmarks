@@ -34,7 +34,7 @@ The application can be configured via `appsettings.json`:
 
 - **ConnectionStrings.DefaultConnection**: PostgreSQL connection string (required)
 
-Example configuration:
+Example configuration for **development**:
 ```json
 {
   "ConnectionStrings": {
@@ -42,6 +42,12 @@ Example configuration:
   }
 }
 ```
+
+> **⚠️ Security Notes:**
+> - The example above uses default credentials for **development only**
+> - For **production**, use environment variables for credentials
+> - For **production**, enable SSL: Change `SSL Mode=Disable` to `SSL Mode=Require`
+> - Never commit production credentials to source control
 
 ## Quick Start
 
