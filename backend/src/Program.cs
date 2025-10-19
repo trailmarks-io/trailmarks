@@ -7,10 +7,14 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 
+// Constants for migrations assembly
+const string MigrationsAssemblyName = "TrailmarksApi.Migrations";
+const string MigrationsAssemblyFileName = MigrationsAssemblyName + ".dll";
+
 // Pre-load the Migrations assembly to ensure it's available at runtime
 try
 {
-    var migrationsAssemblyPath = Path.Combine(AppContext.BaseDirectory, "TrailmarksApi.Migrations.dll");
+    var migrationsAssemblyPath = Path.Combine(AppContext.BaseDirectory, MigrationsAssemblyFileName);
     if (File.Exists(migrationsAssemblyPath))
     {
         AssemblyLoadContext.Default.LoadFromAssemblyPath(migrationsAssemblyPath);
@@ -37,13 +41,13 @@ if (useSqlite)
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlite("Data Source=trailmarks.db",
-            b => b.MigrationsAssembly("TrailmarksApi.Migrations")));
+            b => b.MigrationsAssembly(MigrationsAssemblyName)));
 }
 else
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connectionString,
-            b => b.MigrationsAssembly("TrailmarksApi.Migrations")));
+            b => b.MigrationsAssembly(MigrationsAssemblyName)));
 }
 
 // Register services
