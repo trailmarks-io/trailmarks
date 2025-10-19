@@ -1,10 +1,25 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Runtime.Loader;
 using TrailmarksApi.Data;
 using TrailmarksApi.Services;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
+
+// Pre-load the Migrations assembly to ensure it's available at runtime
+try
+{
+    var migrationsAssemblyPath = Path.Combine(AppContext.BaseDirectory, "TrailmarksApi.Migrations.dll");
+    if (File.Exists(migrationsAssemblyPath))
+    {
+        AssemblyLoadContext.Default.LoadFromAssemblyPath(migrationsAssemblyPath);
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Warning: Could not pre-load Migrations assembly: {ex.Message}");
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -122,6 +137,10 @@ if (args.Contains("-DbInit"))
         var databaseService = scope.ServiceProvider.GetRequiredService<DatabaseService>();
         await databaseService.InitializeAsync();
     }
+    
+    // Exit after database initialization
+    Console.WriteLine("Database initialization completed successfully.");
+    return;
 }
 
 // Configure the HTTP request pipeline
