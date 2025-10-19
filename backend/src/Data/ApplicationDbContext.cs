@@ -36,6 +36,13 @@ namespace TrailmarksApi.Data
                 entity.Property(e => e.PreviewUrl).HasMaxLength(500);
                 entity.Property(e => e.Description).HasMaxLength(1000);
                 entity.Property(e => e.Location).HasMaxLength(200);
+                
+                // Configure GeoCoordinate as owned type
+                entity.OwnsOne(e => e.Coordinates, coordinates =>
+                {
+                    coordinates.Property(c => c.Latitude).HasColumnName("Latitude");
+                    coordinates.Property(c => c.Longitude).HasColumnName("Longitude");
+                });
             });
 
             // Configure Translation entity

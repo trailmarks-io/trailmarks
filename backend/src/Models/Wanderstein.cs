@@ -49,14 +49,9 @@ namespace TrailmarksApi.Models
         public string Location { get; set; } = string.Empty;
 
         /// <summary>
-        /// Latitude coordinate (WGS84)
+        /// Geographic coordinates (WGS84)
         /// </summary>
-        public double? Latitude { get; set; }
-
-        /// <summary>
-        /// Longitude coordinate (WGS84)
-        /// </summary>
-        public double? Longitude { get; set; }
+        public GeoCoordinate? Coordinates { get; set; }
 
         /// <summary>
         /// Creation timestamp
@@ -123,8 +118,8 @@ namespace TrailmarksApi.Models
                 Unique_Id = wanderstein.UniqueId,
                 Preview_Url = wanderstein.PreviewUrl,
                 Created_At = wanderstein.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                Latitude = wanderstein.Latitude,
-                Longitude = wanderstein.Longitude
+                Latitude = wanderstein.Coordinates?.Latitude,
+                Longitude = wanderstein.Coordinates?.Longitude
             };
         }
     }

@@ -73,8 +73,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=1",
                     Description = "Ein historischer Wanderstein im Herzen des Schwarzwaldes",
                     Location = "Schwarzwald, Baden-Württemberg",
-                    Latitude = 48.3019,
-                    Longitude = 8.2392,
+                    Coordinates = new GeoCoordinate(48.3019, 8.2392),
                     CreatedAt = DateTime.UtcNow.AddDays(-20),
                     UpdatedAt = DateTime.UtcNow.AddDays(-20)
                 },
@@ -85,8 +84,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=7",
                     Description = "Wanderstein am höchsten Punkt des Schwarzwaldes",
                     Location = "Feldberg, Baden-Württemberg",
-                    Latitude = 47.8742,
-                    Longitude = 8.0044,
+                    Coordinates = new GeoCoordinate(47.8742, 8.0044),
                     CreatedAt = DateTime.UtcNow.AddDays(-19),
                     UpdatedAt = DateTime.UtcNow.AddDays(-19)
                 },
@@ -97,8 +95,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=8",
                     Description = "Malerischer Wanderstein am Titisee",
                     Location = "Titisee-Neustadt, Baden-Württemberg",
-                    Latitude = 47.9034,
-                    Longitude = 8.2064,
+                    Coordinates = new GeoCoordinate(47.9034, 8.2064),
                     CreatedAt = DateTime.UtcNow.AddDays(-18),
                     UpdatedAt = DateTime.UtcNow.AddDays(-18)
                 },
@@ -109,8 +106,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=9",
                     Description = "Wanderstein bei Deutschlands höchsten Wasserfällen",
                     Location = "Triberg, Baden-Württemberg",
-                    Latitude = 48.1294,
-                    Longitude = 8.2303,
+                    Coordinates = new GeoCoordinate(48.1294, 8.2303),
                     CreatedAt = DateTime.UtcNow.AddDays(-17),
                     UpdatedAt = DateTime.UtcNow.AddDays(-17)
                 },
@@ -123,8 +119,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=10",
                     Description = "Legendärer Wanderstein am Rhein",
                     Location = "St. Goarshausen, Rheinland-Pfalz",
-                    Latitude = 50.1389,
-                    Longitude = 7.7311,
+                    Coordinates = new GeoCoordinate(50.1389, 7.7311),
                     CreatedAt = DateTime.UtcNow.AddDays(-16),
                     UpdatedAt = DateTime.UtcNow.AddDays(-16)
                 },
@@ -135,8 +130,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=11",
                     Description = "Wanderstein an historischer Burgruine",
                     Location = "St. Goar, Rheinland-Pfalz",
-                    Latitude = 50.1503,
-                    Longitude = 7.7142,
+                    Coordinates = new GeoCoordinate(50.1503, 7.7142),
                     CreatedAt = DateTime.UtcNow.AddDays(-15),
                     UpdatedAt = DateTime.UtcNow.AddDays(-15)
                 },
@@ -147,8 +141,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=12",
                     Description = "Panoramablick über das Rheintal",
                     Location = "Boppard, Rheinland-Pfalz",
-                    Latitude = 50.2319,
-                    Longitude = 7.5897,
+                    Coordinates = new GeoCoordinate(50.2319, 7.5897),
                     CreatedAt = DateTime.UtcNow.AddDays(-14),
                     UpdatedAt = DateTime.UtcNow.AddDays(-14)
                 },
@@ -161,8 +154,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=4",
                     Description = "Wanderstein auf dem höchsten Punkt der Route",
                     Location = "Allgäu, Bayern",
-                    Latitude = 47.5596,
-                    Longitude = 10.7498,
+                    Coordinates = new GeoCoordinate(47.5596, 10.7498),
                     CreatedAt = DateTime.UtcNow.AddDays(-13),
                     UpdatedAt = DateTime.UtcNow.AddDays(-13)
                 },
@@ -173,8 +165,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=13",
                     Description = "Hochalpiner Wanderstein mit 400-Gipfel-Blick",
                     Location = "Oberstdorf, Bayern",
-                    Latitude = 47.4119,
-                    Longitude = 10.3233,
+                    Coordinates = new GeoCoordinate(47.4119, 10.3233),
                     CreatedAt = DateTime.UtcNow.AddDays(-12),
                     UpdatedAt = DateTime.UtcNow.AddDays(-12)
                 },
@@ -185,8 +176,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=14",
                     Description = "Wanderstein am smaragdgrünen Königssee",
                     Location = "Schönau am Königssee, Bayern",
-                    Latitude = 47.5667,
-                    Longitude = 12.9833,
+                    Coordinates = new GeoCoordinate(47.5667, 12.9833),
                     CreatedAt = DateTime.UtcNow.AddDays(-11),
                     UpdatedAt = DateTime.UtcNow.AddDays(-11)
                 },
@@ -197,8 +187,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=15",
                     Description = "Wanderstein mit Blick auf die berühmte Ostwand",
                     Location = "Berchtesgaden, Bayern",
-                    Latitude = 47.5550,
-                    Longitude = 12.9350,
+                    Coordinates = new GeoCoordinate(47.5550, 12.9350),
                     CreatedAt = DateTime.UtcNow.AddDays(-10),
                     UpdatedAt = DateTime.UtcNow.AddDays(-10)
                 },
@@ -211,8 +200,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=16",
                     Description = "Wanderstein auf dem höchsten Harzgipfel",
                     Location = "Wernigerode, Sachsen-Anhalt",
-                    Latitude = 51.7992,
-                    Longitude = 10.6147,
+                    Coordinates = new GeoCoordinate(51.7992, 10.6147),
                     CreatedAt = DateTime.UtcNow.AddDays(-9),
                     UpdatedAt = DateTime.UtcNow.AddDays(-9)
                 },
@@ -223,8 +211,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=17",
                     Description = "Mystischer Wanderstein an sagenhaftem Ort",
                     Location = "Thale, Sachsen-Anhalt",
-                    Latitude = 51.7503,
-                    Longitude = 11.0308,
+                    Coordinates = new GeoCoordinate(51.7503, 11.0308),
                     CreatedAt = DateTime.UtcNow.AddDays(-8),
                     UpdatedAt = DateTime.UtcNow.AddDays(-8)
                 },
@@ -235,8 +222,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=18",
                     Description = "Wanderstein an der größten Talsperre im Harz",
                     Location = "Oberharz am Brocken, Sachsen-Anhalt",
-                    Latitude = 51.7489,
-                    Longitude = 10.9044,
+                    Coordinates = new GeoCoordinate(51.7489, 10.9044),
                     CreatedAt = DateTime.UtcNow.AddDays(-7),
                     UpdatedAt = DateTime.UtcNow.AddDays(-7)
                 },
@@ -249,8 +235,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=2",
                     Description = "Wanderstein mit herrlichem Blick auf die Rocky Mountains",
                     Location = "Colorado, USA",
-                    Latitude = 39.7392,
-                    Longitude = -104.9903,
+                    Coordinates = new GeoCoordinate(39.7392, -104.9903),
                     CreatedAt = DateTime.UtcNow.AddDays(-6),
                     UpdatedAt = DateTime.UtcNow.AddDays(-6)
                 },
@@ -261,8 +246,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=3",
                     Description = "Markanter Stein auf dem Weg zum Mount Fuji",
                     Location = "Fujinomiya, Japan",
-                    Latitude = 35.3606,
-                    Longitude = 138.7278,
+                    Coordinates = new GeoCoordinate(35.3606, 138.7278),
                     CreatedAt = DateTime.UtcNow.AddDays(-5),
                     UpdatedAt = DateTime.UtcNow.AddDays(-5)
                 },
@@ -273,8 +257,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=5",
                     Description = "Ruhiger Wanderstein im australischen Outback",
                     Location = "Uluru, Northern Territory, Australia",
-                    Latitude = -25.3444,
-                    Longitude = 131.0369,
+                    Coordinates = new GeoCoordinate(-25.3444, 131.0369),
                     CreatedAt = DateTime.UtcNow.AddDays(-4),
                     UpdatedAt = DateTime.UtcNow.AddDays(-4)
                 },
@@ -285,8 +268,7 @@ namespace TrailmarksApi.Services
                     PreviewUrl = "https://picsum.photos/300/200?random=6",
                     Description = "Wanderstein mit Blick auf die patagonische Landschaft",
                     Location = "Torres del Paine, Chile",
-                    Latitude = -51.2527,
-                    Longitude = -72.9653,
+                    Coordinates = new GeoCoordinate(-51.2527, -72.9653),
                     CreatedAt = DateTime.UtcNow.AddDays(-3),
                     UpdatedAt = DateTime.UtcNow.AddDays(-3)
                 }
