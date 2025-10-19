@@ -6,9 +6,10 @@ This is the backend API for the Trailmarks application, providing endpoints to m
 
 - **C# ASP.NET Core 8.0** - Web framework
 - **Entity Framework Core** - ORM for database operations
-- **PostgreSQL** - Primary database (with SQLite fallback for development)
+- **PostgreSQL 16** - Database
 - **Swagger/OpenAPI** - API documentation
 - **CORS** - Cross-origin resource sharing support
+- **Testcontainers** - PostgreSQL containers for testing
 
 ## Features
 
@@ -16,8 +17,9 @@ This is the backend API for the Trailmarks application, providing endpoints to m
 - Automatic database migrations and seeding
 - OpenAPI/Swagger documentation
 - CORS support for frontend communication
-- PostgreSQL support with SQLite fallback for development
+- PostgreSQL database with Entity Framework Core
 - Comprehensive logging and error handling
+- Unit tests with PostgreSQL Testcontainers
 
 ## API Endpoints
 
@@ -30,36 +32,51 @@ This is the backend API for the Trailmarks application, providing endpoints to m
 
 The application can be configured via `appsettings.json`:
 
-- **UseSqlite**: Set to `true` to use SQLite instead of PostgreSQL
-- **ConnectionStrings.DefaultConnection**: PostgreSQL connection string
+- **ConnectionStrings.DefaultConnection**: PostgreSQL connection string (required)
+
+Example configuration:
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=trailmarks;Username=postgres;Password=postgres;SSL Mode=Disable;Timezone=Europe/Berlin"
+  }
+}
+```
 
 ## Quick Start
 
 ### Prerequisites
 
 - .NET 8.0 SDK
-- PostgreSQL (optional, SQLite fallback available)
-
-### Running with SQLite (Development)
-
-```bash
-cd backend/src
-dotnet run
-```
-
-The application starts on `http://localhost:8080` and uses SQLite by default for development.
+- PostgreSQL 16 (or use Docker to run PostgreSQL)
+- Docker (optional, for running PostgreSQL in a container)
 
 ### Running with PostgreSQL
 
-1. Set up PostgreSQL database
-2. Update connection string in `appsettings.json`
-3. Set `"UseSqlite": false` in `appsettings.json`
-4. Run the application:
+1. Set up PostgreSQL database:
+   ```bash
+   # Option 1: Use Docker Compose (recommended)
+   docker-compose up -d postgres
+   
+   # Option 2: Install PostgreSQL locally
+   # Follow instructions at https://www.postgresql.org/download/
+   ```
 
-```bash
-cd backend/src
-dotnet run
-```
+2. Update connection string in `appsettings.json` if needed
+
+3. Initialize the database with sample data:
+   ```bash
+   cd backend/src
+   dotnet run -- -DbInit
+   ```
+
+4. Run the application:
+   ```bash
+   cd backend/src
+   dotnet run
+   ```
+
+The application starts on `http://localhost:8080` with PostgreSQL as the database.
 
 ## Database Schema
 
@@ -101,7 +118,10 @@ dotnet build
 
 ### Running Tests
 
-The backend has comprehensive xUnit tests covering all controllers, services, and models.
+The backend has comprehensive xUnit tests covering all controllers, services, and models. Tests use PostgreSQL Testcontainers to ensure tests run against a real PostgreSQL database.
+
+**Prerequisites:**
+- Docker must be running (for Testcontainers)
 
 ```bash
 cd backend/test
@@ -112,6 +132,9 @@ Test coverage includes:
 - Controller tests (18 tests) - HealthController, WandersteineController, TranslationsController
 - Service tests (5 tests) - DatabaseService
 - Model tests (4 tests) - WandersteinResponse mapping
+- OpenTelemetry tests (2 tests) - Configuration tests
+
+**Note:** Tests automatically start a PostgreSQL container using Testcontainers. The first test run may take longer as Docker images are downloaded.
 
 ## Documentation
 
