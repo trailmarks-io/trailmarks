@@ -54,13 +54,13 @@ namespace TrailmarksApi.Tests
                 .Replace("trailmarks_test", uniqueDbName);
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseNpgsql(connectionString)
+                .UseNpgsql(connectionString, x => x.MigrationsAssembly("TrailmarksApi.Migrations"))
                 .Options;
 
             var context = new ApplicationDbContext(options);
             
-            // Ensure database is created and migrations are applied
-            await context.Database.EnsureCreatedAsync();
+            // Apply pending migrations
+            await context.Database.MigrateAsync();
             
             return context;
         }

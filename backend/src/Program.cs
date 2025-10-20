@@ -23,7 +23,7 @@ if (string.IsNullOrEmpty(connectionString))
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString, x => x.MigrationsAssembly("TrailmarksApi.Migrations")));
 
 // Register services
 builder.Services.AddScoped<DatabaseService>();
