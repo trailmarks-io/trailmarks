@@ -9,9 +9,19 @@ using OpenTelemetry.Metrics;
 
 // Preload the Migrations assembly to ensure it's available at runtime
 var migrationsAssemblyPath = Path.Combine(AppContext.BaseDirectory, "TrailmarksApi.Migrations.dll");
+Console.WriteLine($"Looking for migrations assembly at: {migrationsAssemblyPath}");
+Console.WriteLine($"AppContext.BaseDirectory: {AppContext.BaseDirectory}");
+Console.WriteLine($"Files in base directory: {string.Join(", ", Directory.GetFiles(AppContext.BaseDirectory, "*.dll"))}");
+
 if (File.Exists(migrationsAssemblyPath))
 {
-    AssemblyLoadContext.Default.LoadFromAssemblyPath(migrationsAssemblyPath);
+    Console.WriteLine("Migrations assembly found, loading...");
+    var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(migrationsAssemblyPath);
+    Console.WriteLine($"Migrations assembly loaded: {assembly.FullName}");
+}
+else
+{
+    Console.WriteLine("WARNING: Migrations assembly NOT found!");
 }
 
 var builder = WebApplication.CreateBuilder(args);
