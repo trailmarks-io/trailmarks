@@ -24,11 +24,44 @@ namespace TrailmarksApi.Services
         {
             try
             {
-                // Ensure the database exists, then apply migrations
-                // MigrateAsync will create the database if it doesn't exist and apply all pending migrations
-                _logger.LogInformation("Checking database and applying migrations...");
+                _logger.LogInformation("Starting database initialization...");
+                
+                // Check if database can be connected
+                var canConnect = await _context.Database.CanConnectAsync();
+                _logger.LogInformation("Database connection check: {CanConnect}", canConnect);
+                
+                // Get pending migrations
+                var pendingMigrations = await _context.Database.GetPendingMigrationsAsync();
+                var pendingList = pendingMigrations.ToList();
+                _logger.LogInformation("Found {Count} pending migrations: {Migrations}", 
+                    pendingList.Count, 
+                    string.Join(", ", pendingList));
+                
+                // Get applied migrations
+                var appliedMigrations = await _context.Database.GetAppliedMigrationsAsync();
+                var appliedList = appliedMigrations.ToList();
+                _logger.LogInformation("Found {Count} already applied migrations: {Migrations}", 
+                    appliedList.Count, 
+                    string.Join(", ", appliedList));
+                
+                // Apply migrations
+                _logger.LogInformation("Applying database migrations...");
                 await _context.Database.MigrateAsync();
-                _logger.LogInformation("Database migrations applied successfully");
+                _logger.LogInformation("Database migrations completed successfully");
+                
+                // Verify migrations were applied
+                var remainingPending = await _context.Database.GetPendingMigrationsAsync();
+                var remainingList = remainingPending.ToList();
+                if (remainingList.Any())
+                {
+                    _logger.LogWarning("After migration, {Count} migrations are still pending: {Migrations}", 
+                        remainingList.Count, 
+                        string.Join(", ", remainingList));
+                }
+                else
+                {
+                    _logger.LogInformation("All migrations have been applied successfully");
+                }
             }
             catch (Exception ex)
             {
