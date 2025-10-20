@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\TrailmarksApi.csproj" />
-    <ProjectReference Include="..\migrations\TrailmarksApi.Migrations.csproj">
+    <ProjectReference Include="..\src\migrations\TrailmarksApi.Migrations.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

@@ -30,10 +30,10 @@ Migrations are managed in a separate project to:
 Instead of referencing the main API project (which would create a circular dependency), this project uses file links to reference the DbContext and Model files:
 
 ```xml
-<Compile Include="..\src\Data\ApplicationDbContext.cs" Link="Data\ApplicationDbContext.cs" />
-<Compile Include="..\src\Models\Wanderstein.cs" Link="Models\Wanderstein.cs" />
-<Compile Include="..\src\Models\GeoCoordinate.cs" Link="Models\GeoCoordinate.cs" />
-<Compile Include="..\src\Models\Translation.cs" Link="Models\Translation.cs" />
+<Compile Include="..\Data\ApplicationDbContext.cs" Link="Data\ApplicationDbContext.cs" />
+<Compile Include="..\Models\Wanderstein.cs" Link="Models\Wanderstein.cs" />
+<Compile Include="..\Models\GeoCoordinate.cs" Link="Models\GeoCoordinate.cs" />
+<Compile Include="..\Models\Translation.cs" Link="Models\Translation.cs" />
 ```
 
 This approach:

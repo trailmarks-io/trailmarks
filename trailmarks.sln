@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailmarksApi.Tests", "back
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "migrations", "migrations", "{AAD6E865-D52E-CE53-B91F-CB8B0E672DF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailmarksApi.Migrations", "backend\migrations\TrailmarksApi.Migrations.csproj", "{A4D27A6B-25B7-4000-9484-D8E7F41DAF8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailmarksApi.Migrations", "backend\src\migrations\TrailmarksApi.Migrations.csproj", "{A4D27A6B-25B7-4000-9484-D8E7F41DAF8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

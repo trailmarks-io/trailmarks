@@ -15,8 +15,12 @@ namespace TrailmarksApi.Migrations
             
             // Use a connection string for design-time operations
             // This will be overridden at runtime with the actual connection string
+            // For local development, set the MIGRATIONS_CONNECTION_STRING environment variable
             var connectionString = Environment.GetEnvironmentVariable("MIGRATIONS_CONNECTION_STRING") 
-                ?? "Host=localhost;Database=trailmarks_migrations;Username=postgres;Password=postgres";
+                ?? throw new InvalidOperationException(
+                    "MIGRATIONS_CONNECTION_STRING environment variable is not set. " +
+                    "Please set it to a valid PostgreSQL connection string for migrations. " +
+                    "Example: Host=localhost;Database=trailmarks_migrations;Username=postgres;Password=yourpassword");
             
             optionsBuilder.UseNpgsql(connectionString, x => x.MigrationsAssembly("TrailmarksApi.Migrations"));
             
