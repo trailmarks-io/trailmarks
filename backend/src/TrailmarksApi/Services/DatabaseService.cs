@@ -24,18 +24,11 @@ namespace TrailmarksApi.Services
         {
             try
             {
-                // Apply all pending migrations
-                var pendingMigrations = await _context.Database.GetPendingMigrationsAsync();
-                if (pendingMigrations.Any())
-                {
-                    _logger.LogInformation("Applying {Count} pending migrations", pendingMigrations.Count());
-                    await _context.Database.MigrateAsync();
-                    _logger.LogInformation("Database migrations applied successfully");
-                }
-                else
-                {
-                    _logger.LogInformation("Database is up to date, no pending migrations");
-                }
+                // Ensure the database exists, then apply migrations
+                // MigrateAsync will create the database if it doesn't exist and apply all pending migrations
+                _logger.LogInformation("Checking database and applying migrations...");
+                await _context.Database.MigrateAsync();
+                _logger.LogInformation("Database migrations applied successfully");
             }
             catch (Exception ex)
             {
