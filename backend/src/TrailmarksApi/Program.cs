@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using TrailmarksApi.Data;
 using TrailmarksApi.Services;
 using OpenTelemetry.Resources;

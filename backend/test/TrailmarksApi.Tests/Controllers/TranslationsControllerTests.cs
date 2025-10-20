@@ -66,7 +66,11 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetTranslations_BuildsNestedDictionary()
         {
             // Arrange
-            _context!.Translations.AddRange(new List<Translation>
+            // Clear existing seed data for this test
+            _context!.Translations.RemoveRange(_context.Translations);
+            await _context.SaveChangesAsync();
+
+            _context.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "app.title", Language = "en", Value = "Trailmarks" },
                 new Translation { Key = "app.subtitle", Language = "en", Value = "Hiking Stones" },
@@ -155,8 +159,12 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetSupportedLanguages_ReturnsEmptyListWhenNoTranslations()
         {
             // Arrange
+            // Clear existing seed data for this test
+            _context!.Translations.RemoveRange(_context.Translations);
+            await _context.SaveChangesAsync();
+
             var logger = new Mock<ILogger<TranslationsController>>();
-            var controller = new TranslationsController(_context!, logger.Object);
+            var controller = new TranslationsController(_context, logger.Object);
 
             // Act
             var result = await controller.GetSupportedLanguages();

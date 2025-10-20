@@ -35,6 +35,7 @@ namespace TrailmarksApi.Tests
                     }
                 }
             }
+            
             await Task.CompletedTask;
         }
 
@@ -59,8 +60,8 @@ namespace TrailmarksApi.Tests
 
             var context = new ApplicationDbContext(options);
             
-            // Ensure database is created and migrations are applied
-            await context.Database.EnsureCreatedAsync();
+            // Apply pending migrations
+            await context.Database.MigrateAsync();
             
             return context;
         }

@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\TrailmarksApi.csproj" />
+    <ProjectReference Include="..\..\src\TrailmarksApi\TrailmarksApi.csproj" />
   </ItemGroup>
 
 </Project>
