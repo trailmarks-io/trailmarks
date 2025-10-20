@@ -30,10 +30,10 @@ Migrations are managed in a separate project to:
 Instead of referencing the main API project (which would create a circular dependency), this project uses file links to reference the DbContext and Model files:
 
 ```xml
-<Compile Include="..\Data\ApplicationDbContext.cs" Link="Data\ApplicationDbContext.cs" />
-<Compile Include="..\Models\Wanderstein.cs" Link="Models\Wanderstein.cs" />
-<Compile Include="..\Models\GeoCoordinate.cs" Link="Models\GeoCoordinate.cs" />
-<Compile Include="..\Models\Translation.cs" Link="Models\Translation.cs" />
+<Compile Include="..\TrailmarksApi\Data\ApplicationDbContext.cs" Link="Data\ApplicationDbContext.cs" />
+<Compile Include="..\TrailmarksApi\Models\Wanderstein.cs" Link="Models\Wanderstein.cs" />
+<Compile Include="..\TrailmarksApi\Models\GeoCoordinate.cs" Link="Models\GeoCoordinate.cs" />
+<Compile Include="..\TrailmarksApi\Models\Translation.cs" Link="Models\Translation.cs" />
 ```
 
 This approach:
@@ -60,7 +60,7 @@ This ensures EF Core can discover and apply migrations at runtime.
 To create a new migration:
 
 ```bash
-cd backend/migrations
+cd backend/src/TrailmarksApi.Migrations
 dotnet ef migrations add MigrationName
 ```
 
@@ -71,7 +71,7 @@ dotnet ef migrations add MigrationName
 Use the `-DbInit` flag when starting the application:
 
 ```bash
-cd backend/src
+cd backend/src/TrailmarksApi
 dotnet run -- -DbInit
 ```
 
