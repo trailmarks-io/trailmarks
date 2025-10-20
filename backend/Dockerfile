@@ -12,6 +12,12 @@ COPY src/ ./src/
 WORKDIR /app/src/TrailmarksApi
 RUN dotnet publish -c Release -o /app/publish
 
+# Build migrations project separately and copy its output
+WORKDIR /app/src/TrailmarksApi.Migrations
+RUN dotnet build -c Release -o /app/migrations-build
+RUN cp /app/migrations-build/TrailmarksApi.Migrations.dll /app/publish/ && \
+    cp /app/migrations-build/TrailmarksApi.Migrations.pdb /app/publish/ || true
+
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
