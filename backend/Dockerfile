@@ -12,12 +12,13 @@ COPY src/ ./src/
 WORKDIR /app/src/TrailmarksApi
 RUN dotnet publish -c Release -o /app/publish
 
-# Build migrations project separately and copy its output
+# Build migrations project and copy its DLL
 WORKDIR /app/src/TrailmarksApi.Migrations
-RUN dotnet publish -c Release -o /app/migrations-publish
-# Copy all DLLs from migrations publish to main publish directory
-RUN cp /app/migrations-publish/*.dll /app/publish/ 2>/dev/null || true
-RUN cp /app/migrations-publish/*.pdb /app/publish/ 2>/dev/null || true
+RUN dotnet build -c Release -o /app/migrations-build
+RUN ls -la /app/migrations-build/
+RUN cp -v /app/migrations-build/TrailmarksApi.Migrations.dll /app/publish/
+RUN cp -v /app/migrations-build/TrailmarksApi.Migrations.pdb /app/publish/ || true
+RUN ls -la /app/publish/ | grep Migrations
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
