@@ -72,7 +72,11 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetRecentWandersteine_ReturnsItemsOrderedByCreatedAtDescending()
         {
             // Arrange
-            _context!.Wandersteine.Add(new Wanderstein
+            // Clear existing seed data for this test
+            _context!.Wandersteine.RemoveRange(_context.Wandersteine);
+            await _context.SaveChangesAsync();
+
+            _context.Wandersteine.Add(new Wanderstein
             {
                 Name = "Oldest",
                 UniqueId = "WS-001",
@@ -119,9 +123,13 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetAllWandersteine_ReturnsAllItems()
         {
             // Arrange
+            // Clear existing seed data for this test
+            _context!.Wandersteine.RemoveRange(_context.Wandersteine);
+            await _context.SaveChangesAsync();
+
             for (int i = 1; i <= 10; i++)
             {
-                _context!.Wandersteine.Add(new Wanderstein
+                _context.Wandersteine.Add(new Wanderstein
                 {
                     Name = $"Stone {i}",
                     UniqueId = $"WS-{i:D3}",
@@ -129,7 +137,7 @@ namespace TrailmarksApi.Tests.Controllers
                     CreatedAt = DateTime.UtcNow.AddDays(-i)
                 });
             }
-            await _context!.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var logger = new Mock<ILogger<WandersteineController>>();
             var controller = new WandersteineController(_context, logger.Object);
@@ -147,8 +155,12 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetAllWandersteine_ReturnsEmptyListWhenNoData()
         {
             // Arrange
+            // Clear existing seed data for this test
+            _context!.Wandersteine.RemoveRange(_context.Wandersteine);
+            await _context.SaveChangesAsync();
+
             var logger = new Mock<ILogger<WandersteineController>>();
-            var controller = new WandersteineController(_context!, logger.Object);
+            var controller = new WandersteineController(_context, logger.Object);
 
             // Act
             var result = await controller.GetAllWandersteine() as OkObjectResult;

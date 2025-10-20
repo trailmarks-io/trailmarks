@@ -35,19 +35,14 @@ namespace TrailmarksApi.Tests.Services
             await service.InitializeAsync();
 
             // Assert
-            // Verify context has data seeded
+            // Verify context has data seeded through migrations
             Assert.True(await _context!.Wandersteine.AnyAsync());
         }
 
         [Fact]
-        public async Task InitializeAsync_SeedsWandersteine()
+        public async Task InitializeAsync_DatabaseHasWandersteine()
         {
-            // Arrange
-            var logger = new Mock<ILogger<DatabaseService>>();
-            var service = new DatabaseService(_context!, logger.Object);
-
-            // Act
-            await service.InitializeAsync();
+            // Arrange & Act - Migrations should have already seeded data
 
             // Assert
             var wandersteine = await _context!.Wandersteine.ToListAsync();
@@ -60,14 +55,9 @@ namespace TrailmarksApi.Tests.Services
         }
 
         [Fact]
-        public async Task InitializeAsync_SeedsTranslations()
+        public async Task InitializeAsync_DatabaseHasTranslations()
         {
-            // Arrange
-            var logger = new Mock<ILogger<DatabaseService>>();
-            var service = new DatabaseService(_context!, logger.Object);
-
-            // Act
-            await service.InitializeAsync();
+            // Arrange & Act - Migrations should have already seeded data
 
             // Assert
             var translations = await _context!.Translations.ToListAsync();
@@ -81,14 +71,9 @@ namespace TrailmarksApi.Tests.Services
         }
 
         [Fact]
-        public async Task InitializeAsync_SeedsMultipleLanguages()
+        public async Task InitializeAsync_DatabaseHasMultipleLanguages()
         {
-            // Arrange
-            var logger = new Mock<ILogger<DatabaseService>>();
-            var service = new DatabaseService(_context!, logger.Object);
-
-            // Act
-            await service.InitializeAsync();
+            // Arrange & Act - Migrations should have already seeded data
 
             // Assert
             var languages = await _context!.Translations
