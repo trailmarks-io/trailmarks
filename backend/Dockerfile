@@ -3,12 +3,13 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy csproj files and restore dependencies
-COPY src/*.csproj ./src/
-RUN dotnet restore ./src/TrailmarksApi.csproj
+COPY src/TrailmarksApi/*.csproj ./src/TrailmarksApi/
+COPY src/TrailmarksApi.Migrations/*.csproj ./src/TrailmarksApi.Migrations/
+RUN dotnet restore ./src/TrailmarksApi/TrailmarksApi.csproj
 
 # Copy everything else and build
 COPY src/ ./src/
-WORKDIR /app/src
+WORKDIR /app/src/TrailmarksApi
 RUN dotnet publish -c Release -o /app/publish
 
 # Runtime stage
