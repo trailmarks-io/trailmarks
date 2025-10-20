@@ -1,10 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Runtime.Loader;
 using TrailmarksApi.Data;
 using TrailmarksApi.Services;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
+
+// Preload the Migrations assembly to ensure it's available at runtime
+var migrationsAssemblyPath = Path.Combine(AppContext.BaseDirectory, "TrailmarksApi.Migrations.dll");
+if (File.Exists(migrationsAssemblyPath))
+{
+    AssemblyLoadContext.Default.LoadFromAssemblyPath(migrationsAssemblyPath);
+}
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.Loader;
 using Testcontainers.PostgreSql;
 using TrailmarksApi.Data;
 
@@ -18,6 +19,7 @@ namespace TrailmarksApi.Tests
 
         private static bool _containerStarted = false;
         private static readonly object _lock = new object();
+        private static bool _migrationsLoaded = false;
 
         /// <summary>
         /// Ensures the PostgreSQL container is started (called once per test run)
@@ -35,6 +37,24 @@ namespace TrailmarksApi.Tests
                     }
                 }
             }
+            
+            // Preload migrations assembly
+            if (!_migrationsLoaded)
+            {
+                lock (_lock)
+                {
+                    if (!_migrationsLoaded)
+                    {
+                        var migrationsAssemblyPath = Path.Combine(AppContext.BaseDirectory, "TrailmarksApi.Migrations.dll");
+                        if (File.Exists(migrationsAssemblyPath))
+                        {
+                            AssemblyLoadContext.Default.LoadFromAssemblyPath(migrationsAssemblyPath);
+                        }
+                        _migrationsLoaded = true;
+                    }
+                }
+            }
+            
             await Task.CompletedTask;
         }
 

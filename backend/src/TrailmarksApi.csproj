@@ -23,4 +23,12 @@
     <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.11.0" />
   </ItemGroup>
 
+  <!-- Reference migrations project to ensure runtime assembly availability -->
+  <ItemGroup>
+    <ProjectReference Include="../migrations/TrailmarksApi.Migrations.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <PrivateAssets>none</PrivateAssets>
+    </ProjectReference>
+  </ItemGroup>
+
 </Project>
