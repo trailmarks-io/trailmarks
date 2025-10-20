@@ -14,20 +14,16 @@ builder.Services.AddControllers();
 // Configure ProblemDetails for standardized error responses (RFC 7807)
 builder.Services.AddProblemDetails();
 
-// Configure Entity Framework with PostgreSQL or SQLite fallback
+// Configure Entity Framework with PostgreSQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-var useSqlite = builder.Configuration.GetValue<bool>("UseSqlite") || string.IsNullOrEmpty(connectionString);
 
-if (useSqlite)
+if (string.IsNullOrEmpty(connectionString))
 {
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlite("Data Source=trailmarks.db"));
+    throw new InvalidOperationException("PostgreSQL connection string 'DefaultConnection' is not configured. Please ensure the connection string is set in appsettings.json or environment variables.");
 }
-else
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString));
-}
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // Register services
 builder.Services.AddScoped<DatabaseService>();
