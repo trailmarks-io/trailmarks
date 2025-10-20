@@ -15,7 +15,8 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
   /src                          - C# ASP.NET Core Backend (Produktivcode)
     /TrailmarksApi              - Hauptprojekt (Ordnername = Projektname)
     /TrailmarksApi.Migrations   - Migrations-Projekt (Ordnername = Projektname)
-  /TrailmarksApi.Tests          - xUnit Tests für Backend (Ordnername = Projektname mit .Tests Suffix)
+  /test                         - xUnit Tests für Backend
+    /TrailmarksApi.Tests        - Test-Projekt (Ordnername = Projektname mit .Tests Suffix)
 /frontend                       - Angular Frontend
 ```
 
@@ -23,7 +24,8 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
 - Jedes C# Projekt muss in einem Ordner liegen, der exakt dem Projektnamen entspricht
 - Der Ordnername muss dem Projektnamen in der `.csproj`-Datei entsprechen
 - Test-Projekte müssen den gleichen Namen wie das zu testende Projekt haben mit dem Suffix `.Tests`
-- Beispiel: `TrailmarksApi.csproj` liegt in `/src/TrailmarksApi/`, `TrailmarksApi.Tests.csproj` liegt in `/TrailmarksApi.Tests/`
+- Alle Test-Projekte für das Backend müssen im Subfolder `test` auf der gleichen Ebene wie `src` liegen
+- Beispiel: `TrailmarksApi.csproj` liegt in `/src/TrailmarksApi/`, `TrailmarksApi.Tests.csproj` liegt in `/test/TrailmarksApi.Tests/`
 
 
 ## Technologievorgaben

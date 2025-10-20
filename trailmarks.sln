@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{1AE8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailmarksApi", "backend\src\TrailmarksApi\TrailmarksApi.csproj", "{F36B3BCE-C7EB-2571-9206-5BBE8DD45CA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailmarksApi.Tests", "backend\TrailmarksApi.Tests\TrailmarksApi.Tests.csproj", "{A52614E3-5E2B-F215-8B5F-C8375DA9A0C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailmarksApi.Tests", "backend\test\TrailmarksApi.Tests\TrailmarksApi.Tests.csproj", "{A52614E3-5E2B-F215-8B5F-C8375DA9A0C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrailmarksApi.Migrations", "backend\src\TrailmarksApi.Migrations\TrailmarksApi.Migrations.csproj", "{A4D27A6B-25B7-4000-9484-D8E7F41DAF8A}"
 EndProject
