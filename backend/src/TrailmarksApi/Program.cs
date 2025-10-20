@@ -1,28 +1,10 @@
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using System.Runtime.Loader;
+using Microsoft.EntityFrameworkCore;
 using TrailmarksApi.Data;
 using TrailmarksApi.Services;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
-
-// Preload the Migrations assembly to ensure it's available at runtime
-var migrationsAssemblyPath = Path.Combine(AppContext.BaseDirectory, "TrailmarksApi.Migrations.dll");
-Console.WriteLine($"Looking for migrations assembly at: {migrationsAssemblyPath}");
-Console.WriteLine($"AppContext.BaseDirectory: {AppContext.BaseDirectory}");
-Console.WriteLine($"Files in base directory: {string.Join(", ", Directory.GetFiles(AppContext.BaseDirectory, "*.dll"))}");
-
-if (File.Exists(migrationsAssemblyPath))
-{
-    Console.WriteLine("Migrations assembly found, loading...");
-    var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(migrationsAssemblyPath);
-    Console.WriteLine($"Migrations assembly loaded: {assembly.FullName}");
-}
-else
-{
-    Console.WriteLine("WARNING: Migrations assembly NOT found!");
-}
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +23,7 @@ if (string.IsNullOrEmpty(connectionString))
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString, x => x.MigrationsAssembly("TrailmarksApi.Migrations")));
+    options.UseNpgsql(connectionString));
 
 // Register services
 builder.Services.AddScoped<DatabaseService>();

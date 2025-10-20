@@ -4,21 +4,12 @@ WORKDIR /app
 
 # Copy csproj files and restore dependencies
 COPY src/TrailmarksApi/*.csproj ./src/TrailmarksApi/
-COPY src/TrailmarksApi.Migrations/*.csproj ./src/TrailmarksApi.Migrations/
 RUN dotnet restore ./src/TrailmarksApi/TrailmarksApi.csproj
 
 # Copy everything else and build
 COPY src/ ./src/
 WORKDIR /app/src/TrailmarksApi
 RUN dotnet publish -c Release -o /app/publish
-
-# Build migrations project and copy its DLL
-WORKDIR /app/src/TrailmarksApi.Migrations
-RUN dotnet build -c Release -o /app/migrations-build
-RUN ls -la /app/migrations-build/
-RUN cp -v /app/migrations-build/TrailmarksApi.Migrations.dll /app/publish/
-RUN cp -v /app/migrations-build/TrailmarksApi.Migrations.pdb /app/publish/ || true
-RUN ls -la /app/publish/ | grep Migrations
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime

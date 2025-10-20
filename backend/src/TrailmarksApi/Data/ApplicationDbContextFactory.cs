@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using TrailmarksApi.Data;
 
-namespace TrailmarksApi.Migrations
+namespace TrailmarksApi.Data
 {
     /// <summary>
     /// Design-time factory for ApplicationDbContext to enable EF Core migrations
@@ -22,7 +22,7 @@ namespace TrailmarksApi.Migrations
                     "Please set it to a valid PostgreSQL connection string for migrations. " +
                     "Example: Host=localhost;Database=trailmarks_migrations;Username=postgres;Password=yourpassword");
             
-            optionsBuilder.UseNpgsql(connectionString, x => x.MigrationsAssembly("TrailmarksApi.Migrations"));
+            optionsBuilder.UseNpgsql(connectionString);
             
             return new ApplicationDbContext(optionsBuilder.Options);
         }
