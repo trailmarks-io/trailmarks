@@ -76,7 +76,7 @@ services:
     restart: unless-stopped
     command: 
       - dotnet
-      - Trailmarks.Api.dll
+      - TrailmarksApi.dll
       - -DbInit
 
   # Frontend
