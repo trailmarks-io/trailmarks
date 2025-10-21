@@ -20,7 +20,8 @@ namespace TrailmarksApi.Data
                 ?? throw new InvalidOperationException(
                     "MIGRATIONS_CONNECTION_STRING environment variable is not set. " +
                     "Please set it to a valid PostgreSQL connection string for migrations. " +
-                    "Example: Host=localhost;Database=trailmarks_migrations;Username=postgres;Password=yourpassword");
+                    "For guidance on secure connection string formats, see: https://www.npgsql.org/doc/connection-string-parameters.html. " +
+                    "Avoid including plaintext passwords; use environment variables or a secure secret manager.");
             
             optionsBuilder.UseNpgsql(connectionString);
             
