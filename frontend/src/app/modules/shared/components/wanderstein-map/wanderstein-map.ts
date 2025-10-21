@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
@@ -20,7 +20,7 @@ declare global {
   imports: [CommonModule, LeafletModule],
   templateUrl: './wanderstein-map.html'
 })
-export class WandersteinMapComponent implements OnInit, OnDestroy {
+export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   @Input() wandersteine: WandersteinResponse[] = [];
 
   options: L.MapOptions = {
@@ -36,12 +36,26 @@ export class WandersteinMapComponent implements OnInit, OnDestroy {
 
   markerClusterGroup: any = null;
   map: L.Map | null = null;
+  private clusteringEndListener: (() => void) | null = null;
 
   ngOnInit(): void {
     // Marker cluster will be initialized when map is ready
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // When wandersteine input changes, refresh markers if map is ready
+    if (changes['wandersteine'] && !changes['wandersteine'].firstChange && this.map && this.markerClusterGroup) {
+      this.refreshMarkers();
+    }
+  }
+
   ngOnDestroy(): void {
+    // Clean up event listeners
+    if (this.clusteringEndListener && this.markerClusterGroup) {
+      this.markerClusterGroup.off('animationend', this.clusteringEndListener);
+      this.clusteringEndListener = null;
+    }
+    
     if (this.markerClusterGroup && this.map) {
       this.map.removeLayer(this.markerClusterGroup);
       this.markerClusterGroup = null;
@@ -72,29 +86,25 @@ export class WandersteinMapComponent implements OnInit, OnDestroy {
       disableClusteringAtZoom: 15
     });
 
+    // Set up event listener for clustering completion
+    this.clusteringEndListener = () => {
+      this.updateMapBounds();
+    };
+    this.markerClusterGroup.on('animationend', this.clusteringEndListener);
+
     this.addMarkers();
     
     if (this.markerClusterGroup) {
       map.addLayer(this.markerClusterGroup);
-      
-      // Fit map bounds to show all markers
-      if (this.wandersteine.length > 0) {
-        const markersWithCoords = this.wandersteine.filter(w => w.latitude && w.longitude);
-        if (markersWithCoords.length > 0) {
-          // Use a timeout to ensure the cluster group is fully initialized
-          setTimeout(() => {
-            if (this.markerClusterGroup && this.markerClusterGroup.getBounds && this.markerClusterGroup.getBounds().isValid()) {
-              map.fitBounds(this.markerClusterGroup.getBounds().pad(0.1));
-            }
-          }, 100);
-        }
-      }
+      // Initial bounds update after markers are added
+      this.updateMapBounds();
     }
   }
 
   private addMarkers(): void {
     if (!this.markerClusterGroup) return;
 
+    // Clear existing markers to make this idempotent
     this.markerClusterGroup.clearLayers();
 
     this.wandersteine.forEach(wanderstein => {
@@ -118,6 +128,25 @@ export class WandersteinMapComponent implements OnInit, OnDestroy {
         this.markerClusterGroup.addLayer(marker);
       }
     });
+  }
+
+  private refreshMarkers(): void {
+    // Refresh markers when input changes
+    this.addMarkers();
+    this.updateMapBounds();
+  }
+
+  private updateMapBounds(): void {
+    // Only update bounds if we have a map, cluster group, and markers
+    if (!this.map || !this.markerClusterGroup) return;
+    
+    const markersWithCoords = this.wandersteine.filter(w => w.latitude && w.longitude);
+    if (markersWithCoords.length === 0) return;
+    
+    const bounds = this.markerClusterGroup.getBounds();
+    if (bounds && bounds.isValid()) {
+      this.map.fitBounds(bounds.pad(0.1));
+    }
   }
 
   private escapeHtml(text: string): string {
