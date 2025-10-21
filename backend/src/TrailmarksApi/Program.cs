@@ -19,7 +19,13 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 if (string.IsNullOrEmpty(connectionString))
 {
-    throw new InvalidOperationException("PostgreSQL connection string 'DefaultConnection' is not configured. Please ensure the connection string is set in appsettings.json or environment variables.");
+    throw new InvalidOperationException(
+        "PostgreSQL connection string 'DefaultConnection' is not configured. " +
+        "Please ensure the connection string is set in one of the supported configuration sources: " +
+        "appsettings.json, appsettings.{Environment}.json, environment variables, or command-line arguments. " +
+        "For example, you can set the environment variable 'ConnectionStrings__DefaultConnection' to your connection string. " +
+        "See https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/ for details on configuration hierarchy."
+    );
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
