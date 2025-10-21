@@ -11,6 +11,11 @@ namespace TrailmarksApi.Services
         private readonly ApplicationDbContext _context;
         private readonly ILogger<DatabaseService> _logger;
 
+        /// <summary>
+        /// Creates a new DatabaseService using the provided database context and logger.
+        /// </summary>
+        /// <param name="context">The application's EF Core <see cref="ApplicationDbContext"/> used to check and apply migrations.</param>
+        /// <param name="logger">An <see cref="ILogger{DatabaseService}"/> used to record informational and error events during initialization.</param>
         public DatabaseService(ApplicationDbContext context, ILogger<DatabaseService> logger)
         {
             _context = context;
@@ -19,7 +24,10 @@ namespace TrailmarksApi.Services
 
         /// <summary>
         /// Initialize the database by applying pending migrations
+        /// <summary>
+        /// Initializes the application's database by applying any pending Entity Framework Core migrations.
         /// </summary>
+        /// <exception cref="Exception">Propagates any exception that occurs while checking or applying migrations.</exception>
         public async Task InitializeAsync()
         {
             try

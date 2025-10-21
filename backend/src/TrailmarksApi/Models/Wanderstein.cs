@@ -108,7 +108,11 @@ namespace TrailmarksApi.Models
 
         /// <summary>
         /// Converts a Wanderstein entity to a response DTO
+        /// <summary>
+        /// Converts a <see cref="Wanderstein"/> entity into a <see cref="WandersteinResponse"/> DTO.
         /// </summary>
+        /// <param name="wanderstein">The source entity to convert.</param>
+        /// <returns>A <see cref="WandersteinResponse"/> populated from the source entity. The Created_At value is formatted as "yyyy-MM-ddTHH:mm:ssZ". Latitude and Longitude are taken from the entity's Coordinates when present; otherwise they are null.</returns>
         public static WandersteinResponse FromEntity(Wanderstein wanderstein)
         {
             return new WandersteinResponse

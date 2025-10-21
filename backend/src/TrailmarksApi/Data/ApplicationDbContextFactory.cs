@@ -9,6 +9,12 @@ namespace TrailmarksApi.Data
     /// </summary>
     public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
+        /// <summary>
+        /// Creates an <see cref="ApplicationDbContext"/> configured for design-time operations used by EF Core tools.
+        /// </summary>
+        /// <param name="args">Command-line arguments provided by the design-time host (ignored by this implementation).</param>
+        /// <returns>An <see cref="ApplicationDbContext"/> configured to use PostgreSQL with the connection string taken from the MIGRATIONS_CONNECTION_STRING environment variable.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the MIGRATIONS_CONNECTION_STRING environment variable is not set.</exception>
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();

@@ -22,6 +22,10 @@ namespace TrailmarksApi.Data
         /// </summary>
         public DbSet<Translation> Translations { get; set; }
 
+        /// <summary>
+        /// Configures the Entity Framework Core model for application entities.
+        /// </summary>
+        /// <param name="modelBuilder">The builder used to configure entity types including Wanderstein (properties, keys, indexes, and owned Coordinates mapped to Latitude/Longitude columns) and Translation (properties, keys, and composite unique index).</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
