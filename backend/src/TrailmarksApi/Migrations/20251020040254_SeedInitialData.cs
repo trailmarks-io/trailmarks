@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -86,7 +86,9 @@ namespace TrailmarksApi.Migrations.Migrations
                 });
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Deletes the seeded Wandersteine rows for the initial dataset (by unique_id) and removes all rows from the Translations table.
+        /// </summary>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             // Delete all seeded data

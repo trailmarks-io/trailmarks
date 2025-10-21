@@ -21,7 +21,12 @@ namespace TrailmarksApi.Tests
 
         /// <summary>
         /// Ensures the PostgreSQL container is started (called once per test run)
+        /// <summary>
+        /// Ensures the shared PostgreSQL test container is started for the test run; subsequent calls return immediately.
         /// </summary>
+        /// <remarks>
+        /// This method is idempotent and safe to call concurrently from multiple threads; it guarantees the container is started exactly once.
+        /// </remarks>
         public static async Task EnsureContainerStartedAsync()
         {
             if (!_containerStarted)
@@ -42,7 +47,13 @@ namespace TrailmarksApi.Tests
         /// <summary>
         /// Creates a PostgreSQL database context for testing with a unique database name
         /// </summary>
-        /// <returns>A new ApplicationDbContext configured with PostgreSQL test database</returns>
+        /// <summary>
+        /// Creates a new ApplicationDbContext backed by a unique PostgreSQL test database.
+        /// </summary>
+        /// <remarks>
+        /// The method ensures the test container is running, provisions a database name unique to the caller, and applies any pending migrations before returning the context.
+        /// </remarks>
+        /// <returns>The configured ApplicationDbContext connected to the created test database.</returns>
         public static async Task<ApplicationDbContext> CreatePostgreSqlContextAsync()
         {
             await EnsureContainerStartedAsync();
@@ -68,7 +79,12 @@ namespace TrailmarksApi.Tests
 
         /// <summary>
         /// Stops the PostgreSQL container (typically called during test cleanup)
+        /// <summary>
+        /// Stops the shared PostgreSQL test container if it is running.
         /// </summary>
+        /// <remarks>
+        /// If the container has not been started, this method has no effect; when stopped, the fixture's started flag is reset.
+        /// </remarks>
         public static async Task StopContainerAsync()
         {
             if (_containerStarted)
