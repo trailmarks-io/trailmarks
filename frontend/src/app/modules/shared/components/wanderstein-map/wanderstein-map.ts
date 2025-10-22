@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
@@ -22,6 +22,7 @@ declare global {
 })
 export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   @Input() wandersteine: WandersteinResponse[] = [];
+  @Output() markerClick = new EventEmitter<string>();
 
   options: L.MapOptions = {
     layers: [
@@ -121,10 +122,24 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
             <h3 style="margin: 0 0 8px 0; font-weight: 600;">${escapedName}</h3>
             <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>ID:</strong> ${escapedId}</p>
             ${wanderstein.preview_Url ? `<img src="${escapedUrl}" alt="${escapedName}" style="width: 100%; margin-top: 8px; border-radius: 4px;">` : ''}
+            <button id="view-details-${escapedId}" style="margin-top: 8px; padding: 6px 12px; background-color: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
+              View Details
+            </button>
           </div>
         `;
         
         marker.bindPopup(popupContent);
+        
+        // Add click event to the button after popup is opened
+        marker.on('popupopen', () => {
+          const button = document.getElementById(`view-details-${escapedId}`);
+          if (button) {
+            button.addEventListener('click', () => {
+              this.markerClick.emit(wanderstein.unique_Id);
+            });
+          }
+        });
+        
         this.markerClusterGroup.addLayer(marker);
       }
     });

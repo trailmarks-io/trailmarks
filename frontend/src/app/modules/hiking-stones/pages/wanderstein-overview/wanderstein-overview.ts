@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { WandersteinService, WandersteinResponse } from '../../services/wanderstein';
 import { LanguageService, TranslatePipe } from '../../../core';
 import { CarouselComponent, WandersteinMapComponent } from '../../../shared';
@@ -17,7 +18,8 @@ export class WandersteinOverviewPage implements OnInit {
 
   constructor(
     private wandersteinService: WandersteinService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -49,5 +51,9 @@ export class WandersteinOverviewPage implements OnInit {
       month: 'long',
       day: 'numeric'
     });
+  }
+
+  navigateToDetail(uniqueId: string): void {
+    this.router.navigate(['/wandersteine', uniqueId]);
   }
 }

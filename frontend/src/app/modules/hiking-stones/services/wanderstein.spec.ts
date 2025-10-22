@@ -34,7 +34,8 @@ describe('WandersteinService', () => {
         name: 'Test Stone',
         unique_Id: 'WS-001',
         preview_Url: 'https://example.com/1.jpg',
-        created_At: '2024-01-01T00:00:00Z'
+        created_At: '2024-01-01T00:00:00Z',
+        location: 'Test Location'
       }
     ];
 
@@ -55,14 +56,16 @@ describe('WandersteinService', () => {
         name: 'Stone 1',
         unique_Id: 'WS-001',
         preview_Url: 'https://example.com/1.jpg',
-        created_At: '2024-01-01T00:00:00Z'
+        created_At: '2024-01-01T00:00:00Z',
+        location: 'Location 1'
       },
       {
         id: 2,
         name: 'Stone 2',
         unique_Id: 'WS-002',
         preview_Url: 'https://example.com/2.jpg',
-        created_At: '2024-01-02T00:00:00Z'
+        created_At: '2024-01-02T00:00:00Z',
+        location: 'Location 2'
       }
     ];
 
@@ -72,6 +75,28 @@ describe('WandersteinService', () => {
     });
 
     const req = httpMock.expectOne('http://localhost:8080/api/wandersteine');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
+  });
+
+  it('should get wanderstein by unique ID', () => {
+    const mockData: WandersteinResponse = {
+      id: 1,
+      name: 'Test Stone',
+      unique_Id: 'WS-001',
+      preview_Url: 'https://example.com/1.jpg',
+      created_At: '2024-01-01T00:00:00Z',
+      latitude: 48.137154,
+      longitude: 11.576124,
+      location: 'Test Location'
+    };
+
+    service.getWandersteinByUniqueId('WS-001').subscribe(data => {
+      expect(data).toEqual(mockData);
+      expect(data.unique_Id).toBe('WS-001');
+    });
+
+    const req = httpMock.expectOne('http://localhost:8080/api/wandersteine/WS-001');
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });

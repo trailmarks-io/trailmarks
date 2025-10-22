@@ -11,6 +11,7 @@ export interface WandersteinResponse {
   created_At: string;
   latitude?: number;
   longitude?: number;
+  location: string;
 }
 
 @Injectable({
@@ -27,5 +28,9 @@ export class WandersteinService {
 
   getAllWandersteine(): Observable<WandersteinResponse[]> {
     return this.http.get<WandersteinResponse[]>(this.apiUrl);
+  }
+
+  getWandersteinByUniqueId(uniqueId: string): Observable<WandersteinResponse> {
+    return this.http.get<WandersteinResponse>(`${this.apiUrl}/${uniqueId}`);
   }
 }

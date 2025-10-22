@@ -47,7 +47,8 @@ describe('WandersteinMapComponent', () => {
         preview_Url: 'test.jpg',
         created_At: '2024-01-01',
         latitude: 48.3019,
-        longitude: 8.2392
+        longitude: 8.2392,
+        location: 'Test Location'
       }
     ];
     
@@ -65,7 +66,8 @@ describe('WandersteinMapComponent', () => {
         name: 'Test Stone',
         unique_Id: 'WS-001',
         preview_Url: 'test.jpg',
-        created_At: '2024-01-01'
+        created_At: '2024-01-01',
+        location: 'Test Location'
       }
     ];
     
@@ -85,7 +87,8 @@ describe('WandersteinMapComponent', () => {
         preview_Url: 'test.jpg',
         created_At: '2024-01-01',
         latitude: 48.3019,
-        longitude: 8.2392
+        longitude: 8.2392,
+        location: 'Test Location'
       }
     ];
 
@@ -121,7 +124,8 @@ describe('WandersteinMapComponent', () => {
         preview_Url: 'test1.jpg',
         created_At: '2024-01-01',
         latitude: 48.3019,
-        longitude: 8.2392
+        longitude: 8.2392,
+        location: 'Location 1'
       }
     ];
 
@@ -133,7 +137,8 @@ describe('WandersteinMapComponent', () => {
         preview_Url: 'test2.jpg',
         created_At: '2024-01-02',
         latitude: 49.0,
-        longitude: 9.0
+        longitude: 9.0,
+        location: 'Location 2'
       }
     ];
 
@@ -175,7 +180,8 @@ describe('WandersteinMapComponent', () => {
         preview_Url: 'test.jpg',
         created_At: '2024-01-01',
         latitude: 48.3019,
-        longitude: 8.2392
+        longitude: 8.2392,
+        location: 'Test Location'
       }
     ];
 

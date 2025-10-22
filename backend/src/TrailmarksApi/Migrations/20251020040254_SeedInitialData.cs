@@ -68,6 +68,15 @@ namespace TrailmarksApi.Migrations.Migrations
                     { "wanderstein.addedOn", "de", "Hinzugefügt", now, now },
                     { "wanderstein.map.title", "de", "Kartenübersicht", now, now },
                     { "wanderstein.recent.title", "de", "Neueste Wandersteine", now, now },
+                    { "wanderstein.detail.createdAt", "de", "Erstellt am", now, now },
+                    { "wanderstein.detail.id", "de", "ID", now, now },
+                    { "wanderstein.detail.location", "de", "Standortbeschreibung", now, now },
+                    { "wanderstein.detail.map", "de", "Karte", now, now },
+                    { "wanderstein.detail.coordinates", "de", "Koordinaten", now, now },
+                    { "wanderstein.detail.noCoordinates", "de", "Für diesen Wanderstein sind keine Koordinaten verfügbar.", now, now },
+                    { "wanderstein.detail.error", "de", "Fehler beim Laden der Details", now, now },
+                    { "wanderstein.detail.error.noId", "de", "Keine Wanderstein-ID angegeben", now, now },
+                    { "common.back", "de", "Zurück", now, now },
 
                     // English translations
                     { "common.loading", "en", "Loading...", now, now },
@@ -82,7 +91,16 @@ namespace TrailmarksApi.Migrations.Migrations
                     { "wanderstein.noData", "en", "No hiking stones found.", now, now },
                     { "wanderstein.addedOn", "en", "Added on", now, now },
                     { "wanderstein.map.title", "en", "Map Overview", now, now },
-                    { "wanderstein.recent.title", "en", "Recent Hiking Stones", now, now }
+                    { "wanderstein.recent.title", "en", "Recent Hiking Stones", now, now },
+                    { "wanderstein.detail.createdAt", "en", "Created on", now, now },
+                    { "wanderstein.detail.id", "en", "ID", now, now },
+                    { "wanderstein.detail.location", "en", "Location Description", now, now },
+                    { "wanderstein.detail.map", "en", "Map", now, now },
+                    { "wanderstein.detail.coordinates", "en", "Coordinates", now, now },
+                    { "wanderstein.detail.noCoordinates", "en", "No coordinates available for this hiking stone.", now, now },
+                    { "wanderstein.detail.error", "en", "Error loading details", now, now },
+                    { "wanderstein.detail.error.noId", "en", "No hiking stone ID provided", now, now },
+                    { "common.back", "en", "Back", now, now }
                 });
         }
 

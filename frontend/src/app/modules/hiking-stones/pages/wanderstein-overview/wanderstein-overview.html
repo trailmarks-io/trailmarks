@@ -17,7 +17,7 @@
     <!-- Map Overview -->
     <div class="mb-12">
       <h2 class="text-gray-800 text-2xl mb-4 text-center font-semibold">{{ 'wanderstein.map.title' | translate }}</h2>
-      <app-wanderstein-map [wandersteine]="wandersteine"></app-wanderstein-map>
+      <app-wanderstein-map [wandersteine]="wandersteine" (markerClick)="navigateToDetail($event)"></app-wanderstein-map>
     </div>
 
     <!-- Carousel with Recent Wandersteine -->
@@ -25,7 +25,7 @@
       <h2 class="text-gray-800 text-2xl mb-4 text-center font-semibold">{{ 'wanderstein.recent.title' | translate }}</h2>
       <app-carousel [items]="wandersteine" [maxVisibleItems]="3">
         <ng-template let-wanderstein>
-          <div class="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-xl group">
+          <div class="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-xl group cursor-pointer" (click)="navigateToDetail(wanderstein.unique_Id)">
             <div class="relative h-48 overflow-hidden">
               <img [src]="wanderstein.preview_Url" [alt]="wanderstein.name" class="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105">
               <div class="absolute top-0 right-0 bg-gradient-to-br from-indigo-500 to-purple-600 text-white py-2 px-4 rounded-bl-xl">

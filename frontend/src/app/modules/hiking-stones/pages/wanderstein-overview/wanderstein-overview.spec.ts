@@ -1,4 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { WandersteinOverviewPage } from './wanderstein-overview';
 import { WandersteinService, WandersteinResponse } from '../../services/wanderstein';
@@ -9,6 +10,7 @@ describe('WandersteinOverviewPage', () => {
   let fixture: ComponentFixture<WandersteinOverviewPage>;
   let wandersteinServiceSpy: jasmine.SpyObj<WandersteinService>;
   let languageServiceSpy: jasmine.SpyObj<LanguageService>;
+  let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     wandersteinServiceSpy = jasmine.createSpyObj('WandersteinService', [
@@ -23,6 +25,8 @@ describe('WandersteinOverviewPage', () => {
       currentLanguage: jasmine.createSpy('currentLanguage').and.returnValue('de')
     });
 
+    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+
     languageServiceSpy.getLanguage.and.returnValue('de');
     languageServiceSpy.translate.and.returnValue('Fehler beim Laden');
     languageServiceSpy.getSupportedLanguages.and.returnValue(['de', 'en']);
@@ -31,7 +35,8 @@ describe('WandersteinOverviewPage', () => {
       imports: [WandersteinOverviewPage],
       providers: [
         { provide: WandersteinService, useValue: wandersteinServiceSpy },
-        { provide: LanguageService, useValue: languageServiceSpy }
+        { provide: LanguageService, useValue: languageServiceSpy },
+        { provide: Router, useValue: routerSpy }
       ]
     }).compileComponents();
 
@@ -50,7 +55,8 @@ describe('WandersteinOverviewPage', () => {
         name: 'Test Stone',
         unique_Id: 'WS-001',
         preview_Url: 'https://example.com/1.jpg',
-        created_At: '2024-01-01T00:00:00Z'
+        created_At: '2024-01-01T00:00:00Z',
+        location: 'Test Location'
       }
     ];
 
@@ -99,6 +105,12 @@ describe('WandersteinOverviewPage', () => {
     
     expect(formatted).toContain('January');
     expect(formatted).toContain('2024');
+  });
+
+  it('should navigate to detail page when navigateToDetail is called', () => {
+    component.navigateToDetail('WS-TEST-001');
+
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/wandersteine', 'WS-TEST-001']);
   });
 
   it('should call loadRecentWandersteine on ngOnInit', () => {
