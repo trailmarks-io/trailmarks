@@ -63,7 +63,7 @@ Comprehensive documentation is available in the **[docs/](docs/)** folder:
 
 - **Backend**: .NET 8.0, ASP.NET Core, Entity Framework Core
 - **Frontend**: Angular 20.1.0, TypeScript, Tailwind CSS
-- **Database**: PostgreSQL 16 (SQLite for development)
+- **Database**: PostgreSQL 16
 - **API Documentation**: OpenAPI 3.0 / Swagger
 - **Observability**: OpenTelemetry, Jaeger
 - **Containerization**: Docker, Docker Compose

@@ -49,6 +49,11 @@ namespace TrailmarksApi.Models
         public string Location { get; set; } = string.Empty;
 
         /// <summary>
+        /// Geographic coordinates (WGS84)
+        /// </summary>
+        public GeoCoordinate? Coordinates { get; set; }
+
+        /// <summary>
         /// Creation timestamp
         /// </summary>
         [Column("created_at")]
@@ -92,8 +97,22 @@ namespace TrailmarksApi.Models
         public string Created_At { get; set; } = string.Empty;
 
         /// <summary>
-        /// Converts a Wanderstein entity to a response DTO
+        /// Latitude coordinate (WGS84)
         /// </summary>
+        public double? Latitude { get; set; }
+
+        /// <summary>
+        /// Longitude coordinate (WGS84)
+        /// </summary>
+        public double? Longitude { get; set; }
+
+        /// <summary>
+        /// Converts a Wanderstein entity to a response DTO
+        /// <summary>
+        /// Converts a <see cref="Wanderstein"/> entity into a <see cref="WandersteinResponse"/> DTO.
+        /// </summary>
+        /// <param name="wanderstein">The source entity to convert.</param>
+        /// <returns>A <see cref="WandersteinResponse"/> populated from the source entity. The Created_At value is formatted as "yyyy-MM-ddTHH:mm:ssZ". Latitude and Longitude are taken from the entity's Coordinates when present; otherwise they are null.</returns>
         public static WandersteinResponse FromEntity(Wanderstein wanderstein)
         {
             return new WandersteinResponse
@@ -102,7 +121,9 @@ namespace TrailmarksApi.Models
                 Name = wanderstein.Name,
                 Unique_Id = wanderstein.UniqueId,
                 Preview_Url = wanderstein.PreviewUrl,
-                Created_At = wanderstein.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ")
+                Created_At = wanderstein.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                Latitude = wanderstein.Coordinates?.Latitude,
+                Longitude = wanderstein.Coordinates?.Longitude
             };
         }
     }

@@ -22,6 +22,10 @@ namespace TrailmarksApi.Data
         /// </summary>
         public DbSet<Translation> Translations { get; set; }
 
+        /// <summary>
+        /// Configures the Entity Framework Core model for application entities.
+        /// </summary>
+        /// <param name="modelBuilder">The builder used to configure entity types including Wanderstein (properties, keys, indexes, and owned Coordinates mapped to Latitude/Longitude columns) and Translation (properties, keys, and composite unique index).</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -36,6 +40,13 @@ namespace TrailmarksApi.Data
                 entity.Property(e => e.PreviewUrl).HasMaxLength(500);
                 entity.Property(e => e.Description).HasMaxLength(1000);
                 entity.Property(e => e.Location).HasMaxLength(200);
+                
+                // Configure GeoCoordinate as owned type
+                entity.OwnsOne(e => e.Coordinates, coordinates =>
+                {
+                    coordinates.Property(c => c.Latitude).HasColumnName("Latitude");
+                    coordinates.Property(c => c.Longitude).HasColumnName("Longitude");
+                });
             });
 
             // Configure Translation entity

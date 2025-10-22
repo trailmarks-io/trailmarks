@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using TrailmarksApi.Data;
 using TrailmarksApi.Services;
 using OpenTelemetry.Resources;
@@ -14,20 +14,22 @@ builder.Services.AddControllers();
 // Configure ProblemDetails for standardized error responses (RFC 7807)
 builder.Services.AddProblemDetails();
 
-// Configure Entity Framework with PostgreSQL or SQLite fallback
+// Configure Entity Framework with PostgreSQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-var useSqlite = builder.Configuration.GetValue<bool>("UseSqlite") || string.IsNullOrEmpty(connectionString);
 
-if (useSqlite)
+if (string.IsNullOrEmpty(connectionString))
 {
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlite("Data Source=trailmarks.db"));
+    throw new InvalidOperationException(
+        "PostgreSQL connection string 'DefaultConnection' is not configured. " +
+        "Please ensure the connection string is set in one of the supported configuration sources: " +
+        "appsettings.json, appsettings.{Environment}.json, environment variables, or command-line arguments. " +
+        "For example, you can set the environment variable 'ConnectionStrings__DefaultConnection' to your connection string. " +
+        "See https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/ for details on configuration hierarchy."
+    );
 }
-else
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseNpgsql(connectionString));
-}
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // Register services
 builder.Services.AddScoped<DatabaseService>();

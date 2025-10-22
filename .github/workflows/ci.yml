@@ -21,19 +21,13 @@ jobs:
           dotnet-version: '8.0.x'
       
       - name: Restore dependencies
-        run: |
-          cd backend/src
-          dotnet restore
+        run: dotnet restore trailmarks.sln
       
       - name: Build backend
-        run: |
-          cd backend/src
-          dotnet build --no-restore --configuration Release
+        run: dotnet build trailmarks.sln --no-restore --configuration Release
       
       - name: Run backend tests
-        run: |
-          cd backend/test
-          dotnet test --verbosity normal --configuration Release
+        run: dotnet test trailmarks.sln --verbosity normal --configuration Release
 
   frontend-build-and-test:
     name: Frontend Build & Test

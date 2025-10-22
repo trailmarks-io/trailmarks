@@ -12,10 +12,21 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
 ### Verzeichnisstruktur
 ```
 /backend
-  /src      - C# ASP.NET Core Backend (Produktivcode)
-  /test     - xUnit Tests für Backend
-/frontend   - Angular Frontend
+  /src                          - C# ASP.NET Core Backend (Produktivcode)
+    /TrailmarksApi              - Hauptprojekt (Ordnername = Projektname)
+    /TrailmarksApi.Migrations   - Migrations-Projekt (Ordnername = Projektname)
+  /test                         - xUnit Tests für Backend
+    /TrailmarksApi.Tests        - Test-Projekt (Ordnername = Projektname mit .Tests Suffix)
+/frontend                       - Angular Frontend
 ```
+
+**Projektstruktur-Regeln:**
+- Jedes C# Projekt muss in einem Ordner liegen, der exakt dem Projektnamen entspricht
+- Der Ordnername muss dem Projektnamen in der `.csproj`-Datei entsprechen
+- Test-Projekte müssen den gleichen Namen wie das zu testende Projekt haben mit dem Suffix `.Tests`
+- Alle Test-Projekte für das Backend müssen im Subfolder `test` auf der gleichen Ebene wie `src` liegen
+- Beispiel: `TrailmarksApi.csproj` liegt in `/src/TrailmarksApi/`, `TrailmarksApi.Tests.csproj` liegt in `/test/TrailmarksApi.Tests/`
+
 
 ## Technologievorgaben
 
@@ -61,19 +72,26 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
    - Füge keine neuen Abhängigkeiten (NuGet-Pakete, npm-Pakete) ohne Genehmigung hinzu
    - Verwende die bereits im Projekt vorhandenen Bibliotheken und Frameworks
 
-3. **Entwicklungsprozess**:
+3. **Sicherheit**:
+   - **NIEMALS** Passwörter, API-Keys, Secrets oder andere Credentials im Code hardcoden
+   - **NIEMALS** Connection Strings mit Passwörtern im Code hardcoden
+   - Verwende immer Umgebungsvariablen oder Configuration Management für sensible Daten
+   - Bei fehlenden Credentials: Wirf eine aussagekräftige Exception mit Anleitung zur Konfiguration
+   - Beispiel für Connection Strings: Nutze `Environment.GetEnvironmentVariable()` und wirf Exception wenn nicht gesetzt
+
+4. **Entwicklungsprozess**:
    - Trenne Feature-Entwicklung klar von Refactorings
    - Halte Pull Requests klein und fokussiert
    - Ein PR sollte entweder neue Features ODER Refactoring enthalten, nicht beides
    - Dokumentiere größere Änderungen im Code mit Kommentaren
 
-4. **Design-Prinzipien**:
+5. **Design-Prinzipien**:
    - **Composition over Inheritance**: Bevorzuge Komposition gegenüber Vererbung
    - Verwende statische Helper-Klassen oder Dependency Injection statt Vererbungshierarchien
    - Halte Klassen fokussiert und folge dem Single Responsibility Principle
    - Vermeide tiefe Vererbungshierarchien, die schwer zu testen und zu warten sind
 
-5. **Testing**:
+6. **Testing**:
    - Schreibe Unit Tests für alle neuen Komponenten, Services und API-Endpunkte
    - Tests müssen vor dem Mergen eines PRs alle erfolgreich durchlaufen
    - Backend: Verwende xUnit mit Moq und In-Memory Database
@@ -81,7 +99,7 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
    - Teste sowohl Success- als auch Error-Szenarien
    - Halte Tests einfach, lesbar und wartbar
 
-6. **Screenshots und Dokumentation**:
+7. **Screenshots und Dokumentation**:
    - Bei UI-Änderungen: Erstelle immer Screenshots, die alle Bestandteile fehlerfrei zeigen
    - Screenshots müssen sowohl Desktop- als auch Mobile-Ansichten abdecken (falls relevant)
    - Füge Screenshots in PR-Beschreibungen und Kommentaren hinzu

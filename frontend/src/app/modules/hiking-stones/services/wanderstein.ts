@@ -9,6 +9,8 @@ export interface WandersteinResponse {
   unique_Id: string;
   preview_Url: string;
   created_At: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 @Injectable({

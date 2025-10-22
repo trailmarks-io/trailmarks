@@ -2,27 +2,43 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using TrailmarksApi.Controllers;
+using TrailmarksApi.Data;
 using TrailmarksApi.Models;
 
 namespace TrailmarksApi.Tests.Controllers
 {
-    public class TranslationsControllerTests
+    public class TranslationsControllerTests : IAsyncLifetime
     {
+        private ApplicationDbContext? _context;
+
+        public async Task InitializeAsync()
+        {
+            _context = await DatabaseFixture.CreatePostgreSqlContextAsync();
+        }
+
+        public async Task DisposeAsync()
+        {
+            if (_context != null)
+            {
+                await _context.Database.EnsureDeletedAsync();
+                await _context.DisposeAsync();
+            }
+        }
+
         [Fact]
         public async Task GetTranslations_ReturnsOkResultWithTranslations()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
-            context.Translations.Add(new Translation
+            _context!.Translations.Add(new Translation
             {
                 Key = "app.title",
                 Language = "de",
                 Value = "Trailmarks"
             });
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var logger = new Mock<ILogger<TranslationsController>>();
-            var controller = new TranslationsController(context, logger.Object);
+            var controller = new TranslationsController(_context, logger.Object);
 
             // Act
             var result = await controller.GetTranslations("de");
@@ -36,9 +52,8 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetTranslations_ReturnsNotFoundForInvalidLanguage()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<TranslationsController>>();
-            var controller = new TranslationsController(context, logger.Object);
+            var controller = new TranslationsController(_context!, logger.Object);
 
             // Act
             var result = await controller.GetTranslations("fr");
@@ -51,17 +66,20 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetTranslations_BuildsNestedDictionary()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
-            context.Translations.AddRange(new List<Translation>
+            // Clear existing seed data for this test
+            _context!.Translations.RemoveRange(_context.Translations);
+            await _context.SaveChangesAsync();
+
+            _context.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "app.title", Language = "en", Value = "Trailmarks" },
                 new Translation { Key = "app.subtitle", Language = "en", Value = "Hiking Stones" },
                 new Translation { Key = "wanderstein.error", Language = "en", Value = "Error loading stones" }
             });
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var logger = new Mock<ILogger<TranslationsController>>();
-            var controller = new TranslationsController(context, logger.Object);
+            var controller = new TranslationsController(_context, logger.Object);
 
             // Act
             var result = await controller.GetTranslations("en");
@@ -77,17 +95,16 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetTranslations_IsCaseInsensitive()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
-            context.Translations.Add(new Translation
+            _context!.Translations.Add(new Translation
             {
                 Key = "test.key",
                 Language = "de",
                 Value = "Test"
             });
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var logger = new Mock<ILogger<TranslationsController>>();
-            var controller = new TranslationsController(context, logger.Object);
+            var controller = new TranslationsController(_context, logger.Object);
 
             // Act
             var result = await controller.GetTranslations("DE");
@@ -100,9 +117,8 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetSupportedLanguages_ReturnsOkResult()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
             var logger = new Mock<ILogger<TranslationsController>>();
-            var controller = new TranslationsController(context, logger.Object);
+            var controller = new TranslationsController(_context!, logger.Object);
 
             // Act
             var result = await controller.GetSupportedLanguages();
@@ -115,18 +131,17 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetSupportedLanguages_ReturnsDistinctLanguages()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
-            context.Translations.AddRange(new List<Translation>
+            _context!.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "key1", Language = "de", Value = "Wert1" },
                 new Translation { Key = "key2", Language = "de", Value = "Wert2" },
                 new Translation { Key = "key1", Language = "en", Value = "Value1" },
                 new Translation { Key = "key3", Language = "fr", Value = "Valeur3" }
             });
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var logger = new Mock<ILogger<TranslationsController>>();
-            var controller = new TranslationsController(context, logger.Object);
+            var controller = new TranslationsController(_context, logger.Object);
 
             // Act
             var result = await controller.GetSupportedLanguages();
@@ -144,9 +159,12 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetSupportedLanguages_ReturnsEmptyListWhenNoTranslations()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
+            // Clear existing seed data for this test
+            _context!.Translations.RemoveRange(_context.Translations);
+            await _context.SaveChangesAsync();
+
             var logger = new Mock<ILogger<TranslationsController>>();
-            var controller = new TranslationsController(context, logger.Object);
+            var controller = new TranslationsController(_context, logger.Object);
 
             // Act
             var result = await controller.GetSupportedLanguages();
@@ -161,17 +179,16 @@ namespace TrailmarksApi.Tests.Controllers
         public async Task GetSupportedLanguages_ReturnsLanguagesInOrder()
         {
             // Arrange
-            var context = DatabaseFixture.CreateInMemoryContext();
-            context.Translations.AddRange(new List<Translation>
+            _context!.Translations.AddRange(new List<Translation>
             {
                 new Translation { Key = "key1", Language = "fr", Value = "Val" },
                 new Translation { Key = "key2", Language = "de", Value = "Val" },
                 new Translation { Key = "key3", Language = "en", Value = "Val" }
             });
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var logger = new Mock<ILogger<TranslationsController>>();
-            var controller = new TranslationsController(context, logger.Object);
+            var controller = new TranslationsController(_context, logger.Object);
 
             // Act
             var result = await controller.GetSupportedLanguages();

@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WandersteinService, WandersteinResponse } from '../../services/wanderstein';
 import { LanguageService, TranslatePipe } from '../../../core';
-import { CarouselComponent } from '../../../shared';
+import { CarouselComponent, WandersteinMapComponent } from '../../../shared';
 
 @Component({
   selector: 'app-wanderstein-overview',
-  imports: [CommonModule, TranslatePipe, CarouselComponent],
+  imports: [CommonModule, TranslatePipe, CarouselComponent, WandersteinMapComponent],
   templateUrl: './wanderstein-overview.html',
   standalone: true
 })

@@ -61,7 +61,7 @@ docker-compose down -v
 - **Container Name**: `trailmarks-backend`
 - **Port**: 8080
 - **Technology**: .NET 8.0 ASP.NET Core
-- **Database**: PostgreSQL (no SQLite in Docker)
+- **Database**: PostgreSQL (only)
 - **Build**: Multi-stage build (.NET SDK for building, ASP.NET runtime for execution)
 
 ### Database (PostgreSQL)
