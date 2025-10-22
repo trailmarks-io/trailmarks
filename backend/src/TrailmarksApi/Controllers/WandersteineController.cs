@@ -95,7 +95,7 @@ namespace TrailmarksApi.Controllers
         /// <response code="404">If the Wanderstein was not found</response>
         /// <response code="500">If there was an internal server error</response>
         [HttpGet("{uniqueId}")]
-        [ProducesResponseType(typeof(WandersteinResponse), 200)]
+        [ProducesResponseType(typeof(WandersteinDetailResponse), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         [ProducesResponseType(typeof(ProblemDetails), 500)]
         public async Task<IActionResult> GetWandersteinByUniqueId(string uniqueId)
@@ -107,7 +107,7 @@ namespace TrailmarksApi.Controllers
 
                 if (wanderstein == null)
                 {
-                    _logger.LogWarning($"Wanderstein with unique ID {uniqueId} not found");
+                    _logger.LogWarning("Wanderstein with unique ID {UniqueId} not found", uniqueId);
                     return Problem(
                         title: "Resource not found",
                         statusCode: StatusCodes.Status404NotFound,
@@ -115,13 +115,13 @@ namespace TrailmarksApi.Controllers
                     );
                 }
 
-                var response = WandersteinResponse.FromEntity(wanderstein);
-                _logger.LogInformation($"Retrieved Wanderstein with unique ID {uniqueId}");
+                var response = WandersteinDetailResponse.FromEntity(wanderstein);
+                _logger.LogInformation("Retrieved Wanderstein with unique ID {UniqueId}", uniqueId);
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error occurred while fetching Wanderstein with unique ID {uniqueId}");
+                _logger.LogError(ex, "Error occurred while fetching Wanderstein with unique ID {UniqueId}", uniqueId);
                 return Problem(
                     title: "An error occurred while fetching the Wanderstein",
                     statusCode: StatusCodes.Status500InternalServerError

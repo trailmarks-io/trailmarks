@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { WandersteinService, WandersteinResponse } from '../../services/wanderstein';
+import { WandersteinService, WandersteinDetailResponse } from '../../services/wanderstein';
 import { LanguageService, TranslatePipe } from '../../../core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
@@ -13,7 +13,7 @@ import * as L from 'leaflet';
   standalone: true
 })
 export class WandersteinDetailPage implements OnInit {
-  wanderstein: WandersteinResponse | null = null;
+  wanderstein: WandersteinDetailResponse | null = null;
   loading = true;
   error: string | null = null;
   

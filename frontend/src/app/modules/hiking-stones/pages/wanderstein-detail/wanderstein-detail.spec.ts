@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { WandersteinDetailPage } from './wanderstein-detail';
-import { WandersteinService, WandersteinResponse } from '../../services/wanderstein';
+import { WandersteinService, WandersteinDetailResponse } from '../../services/wanderstein';
 import { LanguageService } from '../../../core';
 import { provideHttpClient } from '@angular/common/http';
 
@@ -14,15 +14,17 @@ describe('WandersteinDetailPage', () => {
   let routerSpy: jasmine.SpyObj<Router>;
   let activatedRouteSpy: jasmine.SpyObj<ActivatedRoute>;
 
-  const mockWanderstein: WandersteinResponse = {
+  const mockWanderstein: WandersteinDetailResponse = {
     id: 1,
     name: 'Test Stone',
     unique_Id: 'WS-TEST-001',
     preview_Url: 'https://example.com/test.jpg',
+    description: 'Test Description',
+    location: 'Test Location Description',
     created_At: '2024-01-15T10:30:00Z',
+    updated_At: '2024-01-15T10:30:00Z',
     latitude: 48.137154,
-    longitude: 11.576124,
-    location: 'Test Location Description'
+    longitude: 11.576124
   };
 
   beforeEach(async () => {

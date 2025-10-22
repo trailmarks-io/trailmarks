@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { WandersteinService, WandersteinResponse } from './wanderstein';
+import { WandersteinService, WandersteinResponse, WandersteinDetailResponse } from './wanderstein';
 import { provideHttpClient } from '@angular/common/http';
 
 describe('WandersteinService', () => {
@@ -80,15 +80,17 @@ describe('WandersteinService', () => {
   });
 
   it('should get wanderstein by unique ID', () => {
-    const mockData: WandersteinResponse = {
+    const mockData: WandersteinDetailResponse = {
       id: 1,
       name: 'Test Stone',
       unique_Id: 'WS-001',
       preview_Url: 'https://example.com/1.jpg',
+      description: 'Test Description',
+      location: 'Test Location',
       created_At: '2024-01-01T00:00:00Z',
+      updated_At: '2024-01-01T00:00:00Z',
       latitude: 48.137154,
-      longitude: 11.576124,
-      location: 'Test Location'
+      longitude: 11.576124
     };
 
     service.getWandersteinByUniqueId('WS-001').subscribe(data => {

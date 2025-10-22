@@ -183,6 +183,7 @@ namespace TrailmarksApi.Tests.Controllers
                 Name = "Test Stone",
                 UniqueId = "WS-TEST-001",
                 PreviewUrl = "https://example.com/test.jpg",
+                Description = "Test Description",
                 Location = "Test Location",
                 Coordinates = new GeoCoordinate(48.137154, 11.576124),
                 CreatedAt = DateTime.UtcNow
@@ -199,9 +200,10 @@ namespace TrailmarksApi.Tests.Controllers
             // Assert
             Assert.IsType<OkObjectResult>(result);
             var okResult = result as OkObjectResult;
-            var wanderstein = Assert.IsType<WandersteinResponse>(okResult!.Value);
+            var wanderstein = Assert.IsType<WandersteinDetailResponse>(okResult!.Value);
             Assert.Equal("Test Stone", wanderstein.Name);
             Assert.Equal("WS-TEST-001", wanderstein.Unique_Id);
+            Assert.Equal("Test Description", wanderstein.Description);
             Assert.Equal("Test Location", wanderstein.Location);
             Assert.Equal(48.137154, wanderstein.Latitude);
             Assert.Equal(11.576124, wanderstein.Longitude);
@@ -249,7 +251,7 @@ namespace TrailmarksApi.Tests.Controllers
 
             // Assert
             var okResult = result as OkObjectResult;
-            var wanderstein = Assert.IsType<WandersteinResponse>(okResult!.Value);
+            var wanderstein = Assert.IsType<WandersteinDetailResponse>(okResult!.Value);
             Assert.Equal("Near the old oak tree, 500m from the parking lot", wanderstein.Location);
         }
     }

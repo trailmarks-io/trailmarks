@@ -14,6 +14,19 @@ export interface WandersteinResponse {
   location: string;
 }
 
+export interface WandersteinDetailResponse {
+  id: number;
+  name: string;
+  unique_Id: string;
+  preview_Url: string;
+  description: string;
+  location: string;
+  created_At: string;
+  updated_At: string;
+  latitude?: number;
+  longitude?: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -30,7 +43,7 @@ export class WandersteinService {
     return this.http.get<WandersteinResponse[]>(this.apiUrl);
   }
 
-  getWandersteinByUniqueId(uniqueId: string): Observable<WandersteinResponse> {
-    return this.http.get<WandersteinResponse>(`${this.apiUrl}/${uniqueId}`);
+  getWandersteinByUniqueId(uniqueId: string): Observable<WandersteinDetailResponse> {
+    return this.http.get<WandersteinDetailResponse>(`${this.apiUrl}/${uniqueId}`);
   }
 }

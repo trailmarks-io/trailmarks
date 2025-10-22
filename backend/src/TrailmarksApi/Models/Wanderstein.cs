@@ -112,8 +112,6 @@ namespace TrailmarksApi.Models
         public string Location { get; set; } = string.Empty;
 
         /// <summary>
-        /// Converts a Wanderstein entity to a response DTO
-        /// <summary>
         /// Converts a <see cref="Wanderstein"/> entity into a <see cref="WandersteinResponse"/> DTO.
         /// </summary>
         /// <param name="wanderstein">The source entity to convert.</param>
@@ -130,6 +128,84 @@ namespace TrailmarksApi.Models
                 Latitude = wanderstein.Coordinates?.Latitude,
                 Longitude = wanderstein.Coordinates?.Longitude,
                 Location = wanderstein.Location
+            };
+        }
+    }
+
+    /// <summary>
+    /// Detailed response DTO for individual Wanderstein endpoints
+    /// </summary>
+    public class WandersteinDetailResponse
+    {
+        /// <summary>
+        /// Unique identifier
+        /// </summary>
+        public uint Id { get; set; }
+
+        /// <summary>
+        /// Name of the Wanderstein
+        /// </summary>
+        public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Unique identifier string
+        /// </summary>
+        public string Unique_Id { get; set; } = string.Empty;
+
+        /// <summary>
+        /// URL to the preview image
+        /// </summary>
+        public string Preview_Url { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Description of the Wanderstein
+        /// </summary>
+        public string Description { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Location description
+        /// </summary>
+        public string Location { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Creation timestamp in ISO 8601 format
+        /// </summary>
+        public string Created_At { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Update timestamp in ISO 8601 format
+        /// </summary>
+        public string Updated_At { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Latitude coordinate (WGS84)
+        /// </summary>
+        public double? Latitude { get; set; }
+
+        /// <summary>
+        /// Longitude coordinate (WGS84)
+        /// </summary>
+        public double? Longitude { get; set; }
+
+        /// <summary>
+        /// Converts a <see cref="Wanderstein"/> entity into a <see cref="WandersteinDetailResponse"/> DTO.
+        /// </summary>
+        /// <param name="wanderstein">The source entity to convert.</param>
+        /// <returns>A <see cref="WandersteinDetailResponse"/> populated from the source entity.</returns>
+        public static WandersteinDetailResponse FromEntity(Wanderstein wanderstein)
+        {
+            return new WandersteinDetailResponse
+            {
+                Id = wanderstein.Id,
+                Name = wanderstein.Name,
+                Unique_Id = wanderstein.UniqueId,
+                Preview_Url = wanderstein.PreviewUrl,
+                Description = wanderstein.Description,
+                Location = wanderstein.Location,
+                Created_At = wanderstein.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                Updated_At = wanderstein.UpdatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                Latitude = wanderstein.Coordinates?.Latitude,
+                Longitude = wanderstein.Coordinates?.Longitude
             };
         }
     }
