@@ -170,5 +170,87 @@ namespace TrailmarksApi.Tests.Controllers
             var wandersteine = Assert.IsAssignableFrom<IEnumerable<WandersteinResponse>>(result.Value);
             Assert.Empty(wandersteine);
         }
+
+        [Fact]
+        public async Task GetWandersteinByUniqueId_ReturnsOkResultWithCorrectItem()
+        {
+            // Arrange
+            _context!.Wandersteine.RemoveRange(_context.Wandersteine);
+            await _context.SaveChangesAsync();
+
+            var testWanderstein = new Wanderstein
+            {
+                Name = "Test Stone",
+                UniqueId = "WS-TEST-001",
+                PreviewUrl = "https://example.com/test.jpg",
+                Location = "Test Location",
+                Coordinates = new GeoCoordinate(48.137154, 11.576124),
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Wandersteine.Add(testWanderstein);
+            await _context.SaveChangesAsync();
+
+            var logger = new Mock<ILogger<WandersteineController>>();
+            var controller = new WandersteineController(_context, logger.Object);
+
+            // Act
+            var result = await controller.GetWandersteinByUniqueId("WS-TEST-001");
+
+            // Assert
+            Assert.IsType<OkObjectResult>(result);
+            var okResult = result as OkObjectResult;
+            var wanderstein = Assert.IsType<WandersteinResponse>(okResult!.Value);
+            Assert.Equal("Test Stone", wanderstein.Name);
+            Assert.Equal("WS-TEST-001", wanderstein.Unique_Id);
+            Assert.Equal("Test Location", wanderstein.Location);
+            Assert.Equal(48.137154, wanderstein.Latitude);
+            Assert.Equal(11.576124, wanderstein.Longitude);
+        }
+
+        [Fact]
+        public async Task GetWandersteinByUniqueId_ReturnsNotFoundForNonExistentId()
+        {
+            // Arrange
+            var logger = new Mock<ILogger<WandersteineController>>();
+            var controller = new WandersteineController(_context!, logger.Object);
+
+            // Act
+            var result = await controller.GetWandersteinByUniqueId("WS-DOES-NOT-EXIST");
+
+            // Assert
+            Assert.IsType<ObjectResult>(result);
+            var objectResult = result as ObjectResult;
+            Assert.Equal(404, objectResult!.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetWandersteinByUniqueId_ReturnsLocationDescription()
+        {
+            // Arrange
+            _context!.Wandersteine.RemoveRange(_context.Wandersteine);
+            await _context.SaveChangesAsync();
+
+            var testWanderstein = new Wanderstein
+            {
+                Name = "Stone with Location",
+                UniqueId = "WS-LOC-001",
+                PreviewUrl = "https://example.com/loc.jpg",
+                Location = "Near the old oak tree, 500m from the parking lot",
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Wandersteine.Add(testWanderstein);
+            await _context.SaveChangesAsync();
+
+            var logger = new Mock<ILogger<WandersteineController>>();
+            var controller = new WandersteineController(_context, logger.Object);
+
+            // Act
+            var result = await controller.GetWandersteinByUniqueId("WS-LOC-001");
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            var wanderstein = Assert.IsType<WandersteinResponse>(okResult!.Value);
+            Assert.Equal("Near the old oak tree, 500m from the parking lot", wanderstein.Location);
+        }
     }
 }

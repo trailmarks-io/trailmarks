@@ -107,6 +107,11 @@ namespace TrailmarksApi.Models
         public double? Longitude { get; set; }
 
         /// <summary>
+        /// Location description
+        /// </summary>
+        public string Location { get; set; } = string.Empty;
+
+        /// <summary>
         /// Converts a Wanderstein entity to a response DTO
         /// <summary>
         /// Converts a <see cref="Wanderstein"/> entity into a <see cref="WandersteinResponse"/> DTO.
@@ -123,7 +128,8 @@ namespace TrailmarksApi.Models
                 Preview_Url = wanderstein.PreviewUrl,
                 Created_At = wanderstein.CreatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                 Latitude = wanderstein.Coordinates?.Latitude,
-                Longitude = wanderstein.Coordinates?.Longitude
+                Longitude = wanderstein.Coordinates?.Longitude,
+                Location = wanderstein.Location
             };
         }
     }

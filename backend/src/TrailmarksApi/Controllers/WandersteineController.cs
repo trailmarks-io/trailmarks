@@ -85,5 +85,48 @@ namespace TrailmarksApi.Controllers
                 );
             }
         }
+
+        /// <summary>
+        /// Get a specific Wanderstein by its unique identifier
+        /// </summary>
+        /// <param name="uniqueId">The unique identifier (e.g., WS-2024-001)</param>
+        /// <returns>The requested hiking stone</returns>
+        /// <response code="200">Returns the requested Wanderstein</response>
+        /// <response code="404">If the Wanderstein was not found</response>
+        /// <response code="500">If there was an internal server error</response>
+        [HttpGet("{uniqueId}")]
+        [ProducesResponseType(typeof(WandersteinResponse), 200)]
+        [ProducesResponseType(typeof(ProblemDetails), 404)]
+        [ProducesResponseType(typeof(ProblemDetails), 500)]
+        public async Task<IActionResult> GetWandersteinByUniqueId(string uniqueId)
+        {
+            try
+            {
+                var wanderstein = await _context.Wandersteine
+                    .FirstOrDefaultAsync(w => w.UniqueId == uniqueId);
+
+                if (wanderstein == null)
+                {
+                    _logger.LogWarning($"Wanderstein with unique ID {uniqueId} not found");
+                    return Problem(
+                        title: "Resource not found",
+                        statusCode: StatusCodes.Status404NotFound,
+                        detail: $"The requested Wanderstein with ID '{uniqueId}' was not found"
+                    );
+                }
+
+                var response = WandersteinResponse.FromEntity(wanderstein);
+                _logger.LogInformation($"Retrieved Wanderstein with unique ID {uniqueId}");
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error occurred while fetching Wanderstein with unique ID {uniqueId}");
+                return Problem(
+                    title: "An error occurred while fetching the Wanderstein",
+                    statusCode: StatusCodes.Status500InternalServerError
+                );
+            }
+        }
     }
 }
