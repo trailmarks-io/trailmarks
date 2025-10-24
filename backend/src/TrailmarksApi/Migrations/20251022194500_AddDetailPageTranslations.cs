@@ -64,6 +64,7 @@ namespace TrailmarksApi.Migrations.Migrations
                     'wanderstein.detail.error.noId',
                     'common.back'
                 )
+                AND ""Language"" IN ('de', 'en')
             ");
         }
     }
