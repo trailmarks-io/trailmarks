@@ -1,4 +1,4 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { WandersteinOverviewPage } from './wanderstein-overview';
@@ -48,7 +48,7 @@ describe('WandersteinOverviewPage', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load wandersteine on init', () => {
+  it('should load wandersteine on init', fakeAsync(() => {
     const mockData: WandersteinResponse[] = [
       {
         id: 1,
@@ -62,12 +62,13 @@ describe('WandersteinOverviewPage', () => {
 
     wandersteinServiceSpy.getRecentWandersteine.and.returnValue(of(mockData));
     
-    fixture.detectChanges(); // triggers ngOnInit
+  fixture.detectChanges(); // triggers ngOnInit
+  tick(500);
     
     expect(component.wandersteine).toEqual(mockData);
     expect(component.loading).toBeFalse();
     expect(component.error).toBeNull();
-  });
+  }));
 
   it('should set loading to true initially', () => {
     wandersteinServiceSpy.getRecentWandersteine.and.returnValue(of([]));
@@ -75,17 +76,18 @@ describe('WandersteinOverviewPage', () => {
     expect(component.loading).toBeTrue();
   });
 
-  it('should handle errors when loading wandersteine', () => {
+  it('should handle errors when loading wandersteine', fakeAsync(() => {
     const errorResponse = { message: 'Server error' };
     wandersteinServiceSpy.getRecentWandersteine.and.returnValue(
       throwError(() => errorResponse)
     );
     
-    fixture.detectChanges(); // triggers ngOnInit
+  fixture.detectChanges(); // triggers ngOnInit
+  tick(500);
     
     expect(component.error).toContain('Fehler beim Laden');
     expect(component.loading).toBeFalse();
-  });
+  }));
 
   it('should format dates correctly for German locale', () => {
     languageServiceSpy.getLanguage.and.returnValue('de');
@@ -113,14 +115,13 @@ describe('WandersteinOverviewPage', () => {
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/wandersteine', 'WS-TEST-001']);
   });
 
-  it('should call loadRecentWandersteine on ngOnInit', () => {
+  it('should call loadRecentWandersteine on ngOnInit', fakeAsync(() => {
     spyOn(component, 'loadRecentWandersteine');
     wandersteinServiceSpy.getRecentWandersteine.and.returnValue(of([]));
-    
     component.ngOnInit();
-    
+    tick(500);
     expect(component.loadRecentWandersteine).toHaveBeenCalled();
-  });
+  }));
 
   it('should set error to null when loading starts', () => {
     component.error = 'Previous error';
@@ -132,36 +133,39 @@ describe('WandersteinOverviewPage', () => {
     expect(component.error).toBeNull();
   });
 
-  it('should handle empty wandersteine list', () => {
+  it('should handle empty wandersteine list', fakeAsync(() => {
     wandersteinServiceSpy.getRecentWandersteine.and.returnValue(of([]));
     
-    fixture.detectChanges();
+  fixture.detectChanges();
+  tick(500);
     
     expect(component.wandersteine).toEqual([]);
     expect(component.loading).toBeFalse();
-  });
+  }));
 
-  it('should call translate with correct key on error', () => {
+  it('should call translate with correct key on error', fakeAsync(() => {
     const errorResponse = { message: 'Test error' };
     wandersteinServiceSpy.getRecentWandersteine.and.returnValue(
       throwError(() => errorResponse)
     );
     
-    fixture.detectChanges();
+  fixture.detectChanges();
+  tick(500);
     
     expect(languageServiceSpy.translate).toHaveBeenCalledWith('wanderstein.error');
-  });
+  }));
 
-  it('should include error message in error property', () => {
+  it('should include error message in error property', fakeAsync(() => {
     const errorResponse = { message: 'Network failure' };
     languageServiceSpy.translate.and.returnValue('Error loading');
     wandersteinServiceSpy.getRecentWandersteine.and.returnValue(
       throwError(() => errorResponse)
     );
     
-    fixture.detectChanges();
+  fixture.detectChanges();
+  tick(500);
     
     expect(component.error).toContain('Error loading');
     expect(component.error).toContain('Network failure');
-  });
+  }));
 });
