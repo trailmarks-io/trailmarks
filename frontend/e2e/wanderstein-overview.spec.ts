@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-// TODO: Temporarily skipped - CI environment issues need to be resolved
-// These tests work locally but fail in GitHub Actions CI
-test.describe.skip('Wanderstein Overview Page', () => {
+test.describe('Wanderstein Overview Page', () => {
   test('should display page title and subtitle', async ({ page }) => {
     // Mock translations API
     await page.route('**/api/translations/**', route => {
@@ -105,7 +103,8 @@ test.describe.skip('Wanderstein Overview Page', () => {
     await page.goto('/wandersteine');
     
     // Wait for error message or retry button
-    await expect(page.locator('button, .text-red-600, [class*="error"]')).toBeVisible({ timeout: 10000 });
+  await expect(page.getByRole('button', { name: /common\.retry/i })).toBeVisible({ timeout: 10000 });
+  await expect(page.locator('.text-red-600')).toBeVisible({ timeout: 10000 });
   });
 
   test('should display carousel when data is loaded', async ({ page }) => {

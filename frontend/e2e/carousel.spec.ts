@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-// TODO: Temporarily skipped - CI environment issues need to be resolved
-// These tests work locally but fail in GitHub Actions CI
-test.describe.skip('Carousel Component', () => {
+test.describe('Carousel Component', () => {
   test.beforeEach(async ({ page }) => {
     // Mock translations API
     await page.route('**/api/translations/**', route => {

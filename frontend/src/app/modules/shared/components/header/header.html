@@ -29,24 +29,23 @@
 </header>
 
 <!-- Mobile: Side Navigation (overlay) -->
-<div 
-  *ngIf="isSideNavOpen()"
-  class="fixed inset-0 z-40 md:hidden"
-  (click)="closeSideNav()">
-  <!-- Backdrop -->
-  <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
-  
+
+<div *ngIf="isSideNavOpen()" class="fixed inset-0 z-40 md:hidden">
   <!-- Side Nav Panel - Left side -->
-  <nav 
-    class="fixed top-16 left-0 bottom-0 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out"
-    (click)="$event.stopPropagation()">
-    <div class="p-4">
-      <div class="mb-6">
-        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">{{ 'header.language' | translate }}</h3>
-        <app-language-switcher></app-language-switcher>
+  <ng-container *ngIf="isSideNavOpen()">
+    <nav 
+      class="fixed top-16 left-0 bottom-0 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out pointer-events-auto"
+      (click)="$event.stopPropagation()">
+      <div class="p-4">
+        <div class="mb-6">
+          <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">{{ 'header.language' | translate }}</h3>
+          <app-language-switcher></app-language-switcher>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </ng-container>
+  <!-- Backdrop (rendered after nav, above it) -->
+  <div class="fixed inset-0 z-50 bg-black bg-opacity-50 transition-opacity pointer-events-auto" data-testid="side-nav-backdrop" (click)="closeSideNav()"></div>
 </div>
 
 <!-- Spacer to prevent content from going under fixed header -->

@@ -1,10 +1,10 @@
-<div class="max-w-7xl mx-auto p-8 md:p-4 font-sans">
+<div data-testid="homepage-container" class="max-w-7xl mx-auto p-8 md:p-4 font-sans">
   <div class="mb-8">
     <h1 class="text-gray-800 text-4xl md:text-3xl mb-2 text-center font-normal">{{ 'wanderstein.title' | translate }}</h1>
     <p class="text-center text-gray-500 text-lg m-0">{{ 'wanderstein.subtitle' | translate }}</p>
   </div>
 
-  <div *ngIf="loading" class="text-center p-8 text-lg">
+  <div *ngIf="loading" class="text-center p-8 text-lg" data-testid="loading-indicator">
     <p>{{ 'wanderstein.loading' | translate }}</p>
   </div>
 

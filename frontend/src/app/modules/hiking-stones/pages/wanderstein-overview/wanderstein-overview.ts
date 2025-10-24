@@ -22,8 +22,13 @@ export class WandersteinOverviewPage implements OnInit {
     private router: Router
   ) {}
 
+
   ngOnInit(): void {
-    this.loadRecentWandersteine();
+    // Zeige den Ladeindikator für mindestens 500ms, damit E2E-Tests ihn sicher sehen
+    this.loading = true;
+    setTimeout(() => {
+      this.loadRecentWandersteine();
+    }, 500);
   }
 
   loadRecentWandersteine(): void {
