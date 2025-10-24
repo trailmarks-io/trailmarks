@@ -56,7 +56,10 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
 - **Primäre Datenbank**: PostgreSQL
 - **Entwicklungsdatenbank**: SQLite als Fallback
 - **ORM**: Entity Framework Core mit Code-First-Ansatz
-- **Migrations**: Automatische Datenbankmigrationen
+- **Migrationen**: Automatische Datenbankmigrationen
+  - **Migrationen sind unveränderlich**: Einmal erstellte Migrationen dürfen nicht mehr geändert werden
+  - Für neue Änderungen muss immer eine neue Migration erstellt werden
+  - Existierende (bereits ausgeführte) Migrationen nicht verändern; für Korrekturen immer eine neue Migration erstellen
 
 ## Entwicklungsrichtlinien
 

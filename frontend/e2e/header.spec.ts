@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-// TODO: Temporarily skipped - CI environment issues need to be resolved
-// These tests work locally but fail in GitHub Actions CI
-test.describe.skip('Header Component', () => {
+test.describe('Header Component', () => {
   test.beforeEach(async ({ page }) => {
     // Mock translations API
     await page.route('**/api/translations/**', route => {
@@ -161,16 +159,13 @@ test.describe.skip('Header Component', () => {
       let sideNav = page.locator('nav.fixed');
       await expect(sideNav).toBeVisible();
       
-      // Click on backdrop (outside side nav)
-      // Click at coordinates that would be on the backdrop but not on the side nav
-      await page.mouse.click(50, 300);
-      
-      // Wait a bit for animation
-      await page.waitForTimeout(500);
-      
-      // Side nav should be closed
-      sideNav = page.locator('nav.fixed');
-      await expect(sideNav).toBeHidden();
+    // Click on backdrop using test id
+    await page.getByTestId('side-nav-backdrop').click();
+    // Wait a bit for animation
+    await page.waitForTimeout(500);
+    // Prüfe, ob das nav-Element nicht mehr sichtbar ist
+    sideNav = page.locator('nav.fixed');
+    await expect(sideNav).toBeHidden();
     });
 
     test('should show close icon when side nav is open', async ({ page }) => {

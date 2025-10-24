@@ -27,9 +27,10 @@ namespace TrailmarksApi.Controllers
         /// <param name="language">Language code (e.g., "de", "en")</param>
         /// <returns>Dictionary of translation keys and values</returns>
         [HttpGet("{language}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Dictionary<string, object>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Dictionary<string, object>>> GetTranslations(string language)
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetTranslations(string language)
         {
             try
             {
@@ -67,8 +68,9 @@ namespace TrailmarksApi.Controllers
         /// </summary>
         /// <returns>List of language codes</returns>
         [HttpGet("languages")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<string>>> GetSupportedLanguages()
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetSupportedLanguages()
         {
             try
             {
@@ -104,6 +106,14 @@ namespace TrailmarksApi.Controllers
                 if (!current.ContainsKey(parts[i]))
                 {
                     current[parts[i]] = new Dictionary<string, object>();
+                }
+                else if (current[parts[i]] is not Dictionary<string, object>)
+                {
+                    // If the current value is not a dictionary (e.g., it's a string),
+                    // we can't navigate deeper. This can happen if we have keys like:
+                    // "a.b.c" = "value1" and "a.b.c.d" = "value2"
+                    // In this case, we skip the nested value to preserve the first one.
+                    return;
                 }
                 current = (Dictionary<string, object>)current[parts[i]];
             }

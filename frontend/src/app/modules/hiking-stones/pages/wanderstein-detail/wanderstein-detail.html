@@ -1,0 +1,80 @@
+<div class="max-w-5xl mx-auto p-8 md:p-4 font-sans">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center p-8 text-lg">
+    <p>{{ 'wanderstein.loading' | translate }}</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="text-center p-8 text-lg text-red-600">
+    <p>{{ error }}</p>
+    <button (click)="goBack()" class="bg-blue-500 text-white border-none py-2 px-4 rounded cursor-pointer mt-4 hover:bg-blue-600">
+      {{ 'common.back' | translate }}
+    </button>
+  </div>
+
+  <!-- Detail View -->
+  <div *ngIf="!loading && !error && wanderstein" class="space-y-6">
+    <!-- Header with back button -->
+    <div class="flex items-center mb-6">
+      <button (click)="goBack()" class="flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        {{ 'common.back' | translate }}
+      </button>
+    </div>
+
+    <!-- Main Content Card -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <!-- Image -->
+      <div class="relative h-96 overflow-hidden">
+        <img [src]="wanderstein.preview_Url" [alt]="wanderstein.name" class="w-full h-full object-cover">
+        <div class="absolute top-0 right-0 bg-gradient-to-br from-indigo-500 to-purple-600 text-white py-3 px-5 rounded-bl-xl">
+          <span class="font-bold text-lg">{{ wanderstein.unique_Id }}</span>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="p-8">
+        <h1 class="text-gray-800 text-4xl md:text-3xl mb-4 font-bold">{{ wanderstein.name }}</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <!-- Creation Date -->
+          <div class="border-l-4 border-indigo-500 pl-4">
+            <h2 class="text-gray-600 text-sm uppercase font-semibold mb-1">{{ 'wanderstein.detail.createdAt' | translate }}</h2>
+            <p class="text-gray-800 text-lg">{{ formatDate(wanderstein.created_At) }}</p>
+          </div>
+
+          <!-- Unique ID -->
+          <div class="border-l-4 border-purple-500 pl-4">
+            <h2 class="text-gray-600 text-sm uppercase font-semibold mb-1">{{ 'wanderstein.detail.id' | translate }}</h2>
+            <p class="text-gray-800 text-lg">{{ wanderstein.unique_Id }}</p>
+          </div>
+        </div>
+
+        <!-- Location Description -->
+        <div *ngIf="wanderstein.location" class="mb-6 bg-gray-50 rounded-lg p-6">
+          <h2 class="text-gray-800 text-xl font-semibold mb-3">{{ 'wanderstein.detail.location' | translate }}</h2>
+          <p class="text-gray-700 text-base leading-relaxed">{{ wanderstein.location }}</p>
+        </div>
+
+        <!-- Map -->
+        <div *ngIf="wanderstein.latitude && wanderstein.longitude" class="mt-6">
+          <h2 class="text-gray-800 text-xl font-semibold mb-3">{{ 'wanderstein.detail.map' | translate }}</h2>
+          <div class="rounded-lg overflow-hidden shadow-md" style="height: 400px;">
+            <div leaflet [leafletOptions]="mapOptions" (leafletMapReady)="onMapReady($event)" class="h-full"></div>
+          </div>
+          <p class="text-gray-500 text-sm mt-2">
+            {{ 'wanderstein.detail.coordinates' | translate }}: 
+            {{ wanderstein.latitude | number:'1.6-6' }}, {{ wanderstein.longitude | number:'1.6-6' }}
+          </p>
+        </div>
+
+        <!-- No Location Message -->
+        <div *ngIf="!wanderstein.latitude || !wanderstein.longitude" class="mt-6 bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <p class="text-yellow-800">{{ 'wanderstein.detail.noCoordinates' | translate }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

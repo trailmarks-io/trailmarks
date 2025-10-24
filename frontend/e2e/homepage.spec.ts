@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-// TODO: Temporarily skipped - CI environment issues need to be resolved
-// These tests work locally but fail in GitHub Actions CI
-test.describe.skip('Homepage', () => {
+test.describe('Homepage', () => {
   test.beforeEach(async ({ page }) => {
     // Mock translations API
     await page.route('**/api/translations/**', route => {
@@ -48,22 +46,24 @@ test.describe.skip('Homepage', () => {
   });
 
   test('should display loading state initially', async ({ page }) => {
-    await page.goto('/');
-    
-    // The loading indicator might be very quick, but we can check the structure
-    // Wait for either loading or content to be visible
-    await expect(page.locator('body')).toBeVisible();
+  await page.goto('/');
+  // Wait for Angular app to be bootstrapped (app-header is always present)
+  await page.waitForSelector('app-header');
+  // Ladeindikator sollte sichtbar sein
+  await expect(page.getByTestId('loading-indicator')).toBeVisible();
   });
 
   test('should have responsive layout', async ({ page }) => {
     // Test desktop view
-    await page.setViewportSize({ width: 1280, height: 720 });
-    await page.goto('/');
-    await expect(page.locator('.max-w-7xl')).toBeVisible();
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto('/');
+  await page.waitForSelector('app-header');
+  await expect(page.getByTestId('homepage-container')).toBeVisible();
     
     // Test mobile view
-    await page.setViewportSize({ width: 375, height: 667 });
-    await page.goto('/');
-    await expect(page.locator('.max-w-7xl')).toBeVisible();
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('/');
+  await page.waitForSelector('app-header');
+  await expect(page.getByTestId('homepage-container')).toBeVisible();
   });
 });
