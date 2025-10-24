@@ -1,7 +1,31 @@
 import { test, expect } from '@playwright/test';
 
-// TODO: Temporarily skipped - CI environment issues need to be resolved
-// These tests work locally but fail in GitHub Actions CI
+/**
+ * E2E Tests for Wanderstein Detail Page
+ * 
+ * SKIPPED: These tests are currently disabled due to CI environment issues.
+ * 
+ * Issue: All E2E tests fail in GitHub Actions CI but pass locally.
+ * Likely causes:
+ * - Missing Playwright browser binaries in CI environment
+ * - Network/timeout issues in CI
+ * - Development server startup issues in CI
+ * 
+ * TODO: Create a tracking issue to:
+ * 1. Investigate and fix CI Playwright setup
+ * 2. Configure proper test timeouts and retries
+ * 3. Ensure dev server is properly started before tests run
+ * 4. Re-enable all E2E tests once CI environment is stable
+ * 
+ * Manual Testing Required: Until E2E tests run in CI, detail page changes
+ * must be manually verified before merging.
+ * 
+ * To run locally:
+ * ```
+ * cd frontend
+ * npm run e2e
+ * ```
+ */
 test.describe.skip('Wanderstein Detail Page', () => {
   test('should display wanderstein details with all information', async ({ page }) => {
     const mockWanderstein = {
