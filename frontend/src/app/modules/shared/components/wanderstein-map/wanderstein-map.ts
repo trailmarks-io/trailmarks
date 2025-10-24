@@ -118,11 +118,11 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
         const escapedUrl = this.escapeHtml(wanderstein.preview_Url || '');
         
         const popupContent = `
-          <div style="min-width: 200px;">
-            <h3 style="margin: 0 0 8px 0; font-weight: 600;">${escapedName}</h3>
-            <p style="margin: 4px 0; color: #6b7280; font-size: 14px;"><strong>ID:</strong> ${escapedId}</p>
-            ${wanderstein.preview_Url ? `<img src="${escapedUrl}" alt="${escapedName}" style="width: 100%; margin-top: 8px; border-radius: 4px;">` : ''}
-            <button id="view-details-${escapedId}" style="margin-top: 8px; padding: 6px 12px; background-color: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">
+          <div class="min-w-[200px]">
+            <h3 class="m-0 mb-2 font-semibold">${escapedName}</h3>
+            <p class="my-1 text-gray-500 text-sm"><strong>ID:</strong> ${escapedId}</p>
+            ${wanderstein.preview_Url ? `<img src="${escapedUrl}" alt="${escapedName}" class="w-full mt-2 rounded">` : ''}
+            <button id="view-details-${escapedId}" class="mt-2 px-3 py-1.5 bg-blue-500 text-white border-none rounded cursor-pointer w-full hover:bg-blue-600 transition-colors">
               View Details
             </button>
           </div>
