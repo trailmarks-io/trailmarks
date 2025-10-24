@@ -44,7 +44,7 @@ namespace TrailmarksApi.Tests.Controllers
             var result = await controller.GetTranslations("de");
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
             Assert.NotNull(okResult.Value);
         }
 
@@ -59,7 +59,7 @@ namespace TrailmarksApi.Tests.Controllers
             var result = await controller.GetTranslations("fr");
 
             // Assert
-            Assert.IsType<NotFoundObjectResult>(result.Result);
+            Assert.IsType<NotFoundObjectResult>(result);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace TrailmarksApi.Tests.Controllers
             var result = await controller.GetTranslations("en");
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
             var dict = Assert.IsAssignableFrom<Dictionary<string, object>>(okResult.Value);
             Assert.True(dict.ContainsKey("app"));
             Assert.True(dict.ContainsKey("wanderstein"));
@@ -110,7 +110,7 @@ namespace TrailmarksApi.Tests.Controllers
             var result = await controller.GetTranslations("DE");
 
             // Assert
-            Assert.IsType<OkObjectResult>(result.Result);
+            Assert.IsType<OkObjectResult>(result);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace TrailmarksApi.Tests.Controllers
             var result = await controller.GetSupportedLanguages();
 
             // Assert
-            Assert.IsType<OkObjectResult>(result.Result);
+            Assert.IsType<OkObjectResult>(result);
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace TrailmarksApi.Tests.Controllers
             var result = await controller.GetSupportedLanguages();
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
             var languages = Assert.IsAssignableFrom<List<string>>(okResult.Value);
             Assert.Equal(3, languages.Count);
             Assert.Contains("de", languages);
@@ -170,7 +170,7 @@ namespace TrailmarksApi.Tests.Controllers
             var result = await controller.GetSupportedLanguages();
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
             var languages = Assert.IsAssignableFrom<List<string>>(okResult.Value);
             Assert.Empty(languages);
         }
@@ -194,7 +194,7 @@ namespace TrailmarksApi.Tests.Controllers
             var result = await controller.GetSupportedLanguages();
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
             var languages = Assert.IsAssignableFrom<List<string>>(okResult.Value);
             Assert.Equal(new List<string> { "de", "en", "fr" }, languages);
         }

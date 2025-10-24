@@ -10,7 +10,7 @@ namespace TrailmarksApi.Migrations.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            var now = DateTime.UtcNow;
+            var now = new DateTime(2025, 10, 22, 19, 45, 0, DateTimeKind.Utc);
             
             // Add German translations for detail page
             migrationBuilder.InsertData(
