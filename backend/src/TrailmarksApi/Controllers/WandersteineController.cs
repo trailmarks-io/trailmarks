@@ -88,8 +88,8 @@ namespace TrailmarksApi.Controllers
                 var searchRadius = radiusKm ?? (latitude.HasValue && longitude.HasValue ? 50.0 : 100.0);
 
                 // Validate coordinates
-                var centerPoint = new GeoCoordinate(centerLat, centerLon);
-                if (!centerPoint.IsValid())
+                var centerCoord = new GeoCoordinate(centerLat, centerLon);
+                if (!centerCoord.IsValid())
                 {
                     return Problem(
                         title: "Invalid coordinates",
@@ -99,30 +99,19 @@ namespace TrailmarksApi.Controllers
                 }
 
                 // Use NetTopologySuite with PostGIS for efficient radius filtering in database
-                // NetTopologySuite provides the spatial type system that EF Core translates to PostGIS
+                // The LocationPoint property is a PostGIS Point that EF Core can query directly
                 var radiusInMeters = searchRadius * 1000;
                 
-                // Use NetTopologySuite's GeometryFactory with WGS84 SRID (4326) for proper spatial reference
-                // This ensures PostGIS uses the correct coordinate reference system for geography calculations
+                // Create center point using NetTopologySuite with WGS84 SRID (4326)
                 const int WGS84_SRID = 4326;
                 var geometryFactory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(srid: WGS84_SRID);
-                var centerPointNTS = geometryFactory.CreatePoint(new Coordinate(centerLon, centerLat));
+                var centerPoint = geometryFactory.CreatePoint(new Coordinate(centerLon, centerLat));
                 
-                // Query using PostGIS ST_DWithin with geography type for accurate spherical distance
-                // NetTopologySuite integration enables EF Core to work with PostGIS spatial functions
+                // Query using LINQ - EF Core with NetTopologySuite translates Distance() to PostGIS ST_Distance
+                // The LocationPoint column is a PostGIS geography point for accurate spherical distance
                 var nearbyWandersteine = await _context.Wandersteine
-                    .FromSqlInterpolated($@"
-                        SELECT ""Id"", ""Name"", ""unique_id"", ""preview_url"", ""Description"", ""Location"", 
-                               ""Latitude"", ""Longitude"", ""created_at"", ""updated_at""
-                        FROM ""Wandersteine""
-                        WHERE ""Latitude"" IS NOT NULL 
-                        AND ""Longitude"" IS NOT NULL
-                        AND ST_DWithin(
-                            ST_SetSRID(ST_MakePoint(""Longitude"", ""Latitude""), {WGS84_SRID})::geography,
-                            ST_GeomFromText({centerPointNTS.AsText()}, {WGS84_SRID})::geography,
-                            {radiusInMeters}
-                        )
-                        ORDER BY ""created_at"" DESC")
+                    .Where(w => w.LocationPoint != null && w.LocationPoint.Distance(centerPoint) <= radiusInMeters)
+                    .OrderByDescending(w => w.CreatedAt)
                     .ToListAsync();
 
                 var responses = nearbyWandersteine.Select(WandersteinResponse.FromEntity).ToList();

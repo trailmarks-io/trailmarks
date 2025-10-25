@@ -32,6 +32,9 @@ namespace TrailmarksApi.Data
 
             // Enable PostGIS extension
             modelBuilder.HasPostgresExtension("postgis");
+            
+            // Configure NetTopologySuite for spatial types
+            modelBuilder.HasPostgresExtension("postgis");
 
             // Configure Wanderstein entity
             modelBuilder.Entity<Wanderstein>(entity =>
@@ -44,12 +47,14 @@ namespace TrailmarksApi.Data
                 entity.Property(e => e.Description).HasMaxLength(1000);
                 entity.Property(e => e.Location).HasMaxLength(200);
                 
-                // Configure GeoCoordinate as owned type
-                entity.OwnsOne(e => e.Coordinates, coordinates =>
-                {
-                    coordinates.Property(c => c.Latitude).HasColumnName("Latitude");
-                    coordinates.Property(c => c.Longitude).HasColumnName("Longitude");
-                });
+                // LocationPoint is automatically mapped by NetTopologySuite as a PostGIS Point column
+                // Coordinates property provides GeoCoordinate interface while LocationPoint stores as spatial type
+                entity.Ignore(e => e.Coordinates); // Coordinates is computed from LocationPoint, not stored
+                
+                // Configure LocationPoint as a geography point with SRID 4326 (WGS84)
+                // Geography type provides accurate spherical distance calculations
+                entity.Property(e => e.LocationPoint)
+                    .HasColumnType("geography (point, 4326)");
             });
 
             // Configure Translation entity
