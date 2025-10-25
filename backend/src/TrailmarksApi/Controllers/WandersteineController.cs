@@ -117,7 +117,7 @@ namespace TrailmarksApi.Controllers
                 var responses = nearbyWandersteine.Select(WandersteinResponse.FromEntity).ToList();
                 
                 _logger.LogInformation(
-                    $"Retrieved {responses.Count} Wandersteine within {searchRadius}km of ({centerLat}, {centerLon})");
+                    $"Retrieved {responses.Count} Wandersteine within {searchRadius}km of specified location");
                 
                 return Ok(responses);
             }
