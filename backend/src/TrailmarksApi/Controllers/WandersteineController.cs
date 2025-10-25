@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrailmarksApi.Data;
 using TrailmarksApi.Models;
+using TrailmarksApi.Services;
 
 namespace TrailmarksApi.Controllers
 {
@@ -49,6 +50,77 @@ namespace TrailmarksApi.Controllers
                 _logger.LogError(ex, "Error occurred while fetching recent Wandersteine");
                 return Problem(
                     title: "An error occurred while fetching recent Wandersteine",
+                    statusCode: StatusCodes.Status500InternalServerError
+                );
+            }
+        }
+
+        /// <summary>
+        /// Get Wandersteine within a specified radius of a location
+        /// </summary>
+        /// <param name="latitude">Latitude of the center point (defaults to Bochum: 51.4818)</param>
+        /// <param name="longitude">Longitude of the center point (defaults to Bochum: 7.2162)</param>
+        /// <param name="radiusKm">Search radius in kilometers (defaults to 100km if not specified, 50km if position provided)</param>
+        /// <returns>List of hiking stones within the specified radius</returns>
+        /// <response code="200">Returns the list of nearby Wandersteine</response>
+        /// <response code="400">If the provided coordinates are invalid</response>
+        /// <response code="500">If there was an internal server error</response>
+        [HttpGet("nearby")]
+        [ProducesResponseType(typeof(IEnumerable<WandersteinResponse>), 200)]
+        [ProducesResponseType(typeof(ProblemDetails), 400)]
+        [ProducesResponseType(typeof(ProblemDetails), 500)]
+        public async Task<IActionResult> GetNearbyWandersteine(
+            [FromQuery] double? latitude = null,
+            [FromQuery] double? longitude = null,
+            [FromQuery] double? radiusKm = null)
+        {
+            try
+            {
+                // Default to Bochum coordinates if not provided
+                const double defaultLatitude = 51.4818;
+                const double defaultLongitude = 7.2162;
+                
+                var centerLat = latitude ?? defaultLatitude;
+                var centerLon = longitude ?? defaultLongitude;
+                
+                // Default radius: 50km if position provided, 100km if using default (Bochum)
+                var searchRadius = radiusKm ?? (latitude.HasValue && longitude.HasValue ? 50.0 : 100.0);
+
+                // Validate coordinates
+                var centerPoint = new GeoCoordinate(centerLat, centerLon);
+                if (!centerPoint.IsValid())
+                {
+                    return Problem(
+                        title: "Invalid coordinates",
+                        statusCode: StatusCodes.Status400BadRequest,
+                        detail: "The provided latitude or longitude values are outside valid ranges"
+                    );
+                }
+
+                // Get all wandersteine with coordinates
+                var allWandersteine = await _context.Wandersteine
+                    .Where(w => w.Coordinates != null)
+                    .ToListAsync();
+
+                // Filter by distance
+                var nearbyWandersteine = allWandersteine
+                    .Where(w => w.Coordinates != null && 
+                                GeoDistanceCalculator.CalculateDistanceKm(centerPoint, w.Coordinates) <= searchRadius)
+                    .OrderByDescending(w => w.CreatedAt)
+                    .ToList();
+
+                var responses = nearbyWandersteine.Select(WandersteinResponse.FromEntity).ToList();
+                
+                _logger.LogInformation(
+                    $"Retrieved {responses.Count} Wandersteine within {searchRadius}km of ({centerLat}, {centerLon})");
+                
+                return Ok(responses);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching nearby Wandersteine");
+                return Problem(
+                    title: "An error occurred while fetching nearby Wandersteine",
                     statusCode: StatusCodes.Status500InternalServerError
                 );
             }

@@ -17,13 +17,17 @@
     <!-- Map Overview -->
     <div class="mb-12">
       <h2 class="text-gray-800 text-2xl mb-4 text-center font-semibold">{{ 'wanderstein.map.title' | translate }}</h2>
-      <app-wanderstein-map [wandersteine]="wandersteine" (markerClick)="navigateToDetail($event)"></app-wanderstein-map>
+      <app-wanderstein-map 
+        [wandersteine]="nearbyWandersteine" 
+        [enableDynamicLoading]="true"
+        (markerClick)="navigateToDetail($event)"
+        (locationChange)="onMapLocationChange($event)"></app-wanderstein-map>
     </div>
 
     <!-- Carousel with Recent Wandersteine -->
     <div>
       <h2 class="text-gray-800 text-2xl mb-4 text-center font-semibold">{{ 'wanderstein.recent.title' | translate }}</h2>
-      <app-carousel [items]="wandersteine" [maxVisibleItems]="3">
+      <app-carousel [items]="recentWandersteine" [maxVisibleItems]="3">
         <ng-template let-wanderstein>
           <div class="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-xl group cursor-pointer" (click)="navigateToDetail(wanderstein.unique_Id)">
             <div class="relative h-48 overflow-hidden">
@@ -42,7 +46,7 @@
     </div>
   </div>
 
-  <div *ngIf="!loading && !error && wandersteine.length === 0" class="text-center p-8 text-lg">
+  <div *ngIf="!loading && !error && recentWandersteine.length === 0" class="text-center p-8 text-lg">
     <p>{{ 'wanderstein.noData' | translate }}</p>
   </div>
 </div>

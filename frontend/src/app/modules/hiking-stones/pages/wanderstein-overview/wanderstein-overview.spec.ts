@@ -14,7 +14,8 @@ describe('WandersteinOverviewPage', () => {
 
   beforeEach(async () => {
     wandersteinServiceSpy = jasmine.createSpyObj('WandersteinService', [
-      'getRecentWandersteine'
+      'getRecentWandersteine',
+      'getNearbyWandersteine'
     ]);
     
     languageServiceSpy = jasmine.createSpyObj('LanguageService', [
@@ -65,7 +66,7 @@ describe('WandersteinOverviewPage', () => {
   fixture.detectChanges(); // triggers ngOnInit
   tick(500);
     
-    expect(component.wandersteine).toEqual(mockData);
+    expect(component.recentWandersteine).toEqual(mockData);
     expect(component.loading).toBeFalse();
     expect(component.error).toBeNull();
   }));
@@ -139,7 +140,7 @@ describe('WandersteinOverviewPage', () => {
   fixture.detectChanges();
   tick(500);
     
-    expect(component.wandersteine).toEqual([]);
+    expect(component.recentWandersteine).toEqual([]);
     expect(component.loading).toBeFalse();
   }));
 
@@ -168,4 +169,48 @@ describe('WandersteinOverviewPage', () => {
     expect(component.error).toContain('Error loading');
     expect(component.error).toContain('Network failure');
   }));
+
+  it('should load nearby wandersteine when map location changes', () => {
+    const mockNearbyData: WandersteinResponse[] = [
+      {
+        id: 2,
+        name: 'Nearby Stone',
+        unique_Id: 'WS-002',
+        preview_Url: 'https://example.com/2.jpg',
+        created_At: '2024-01-02T00:00:00Z',
+        latitude: 51.4818,
+        longitude: 7.2162,
+        location: 'Bochum'
+      }
+    ];
+
+    wandersteinServiceSpy.getNearbyWandersteine.and.returnValue(of(mockNearbyData));
+    
+    component.onMapLocationChange({ latitude: 51.4818, longitude: 7.2162, radiusKm: 50 });
+    
+    expect(wandersteinServiceSpy.getNearbyWandersteine).toHaveBeenCalledWith(51.4818, 7.2162, 50);
+    expect(component.nearbyWandersteine).toEqual(mockNearbyData);
+  });
+
+  it('should fallback to recent wandersteine on nearby error', () => {
+    const mockRecentData: WandersteinResponse[] = [
+      {
+        id: 1,
+        name: 'Recent Stone',
+        unique_Id: 'WS-001',
+        preview_Url: 'https://example.com/1.jpg',
+        created_At: '2024-01-01T00:00:00Z',
+        location: 'Test'
+      }
+    ];
+
+    component.recentWandersteine = mockRecentData;
+    wandersteinServiceSpy.getNearbyWandersteine.and.returnValue(
+      throwError(() => new Error('Network error'))
+    );
+    
+    component.onMapLocationChange({ latitude: 51.4818, longitude: 7.2162, radiusKm: 50 });
+    
+    expect(component.nearbyWandersteine).toEqual(mockRecentData);
+  });
 });
