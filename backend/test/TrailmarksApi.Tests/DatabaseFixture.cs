@@ -66,7 +66,7 @@ namespace TrailmarksApi.Tests
                 .Replace("trailmarks_test", uniqueDbName);
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseNpgsql(connectionString, o => o.UseNetTopologySuite())
+                .UseNpgsql(connectionString, DbContextOptionsHelper.ConfigureNpgsql)
                 .Options;
 
             var context = new ApplicationDbContext(options);

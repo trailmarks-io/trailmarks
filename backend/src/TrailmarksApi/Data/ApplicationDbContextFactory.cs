@@ -29,7 +29,7 @@ namespace TrailmarksApi.Data
                     "For guidance on secure connection string formats, see: https://www.npgsql.org/doc/connection-string-parameters.html. " +
                     "Avoid including plaintext passwords; use environment variables or a secure secret manager.");
             
-            optionsBuilder.UseNpgsql(connectionString, o => o.UseNetTopologySuite());
+            optionsBuilder.UseNpgsql(connectionString, DbContextOptionsHelper.ConfigureNpgsql);
             
             return new ApplicationDbContext(optionsBuilder.Options);
         }
