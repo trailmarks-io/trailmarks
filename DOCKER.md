@@ -64,10 +64,12 @@ docker-compose down -v
 - **Database**: PostgreSQL (only)
 - **Build**: Multi-stage build (.NET SDK for building, ASP.NET runtime for execution)
 
-### Database (PostgreSQL)
+### Database (PostgreSQL with PostGIS)
 - **Container Name**: `trailmarks-postgres`
 - **Port**: 5432 (internal only, not exposed to host)
-- **Version**: PostgreSQL 16 Alpine
+- **Version**: PostgreSQL 16 Alpine with PostGIS 3.4
+- **Image**: `postgis/postgis:16-3.4-alpine`
+- **Extensions**: PostGIS for spatial data support
 - **Data Persistence**: Docker volume `postgres-data`
 - **Credentials**:
   - Database: `trailmarks`
