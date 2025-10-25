@@ -97,13 +97,28 @@ namespace TrailmarksApi.Controllers
                     );
                 }
 
-                // Get all wandersteine with coordinates
-                var allWandersteine = await _context.Wandersteine
-                    .Where(w => w.Coordinates != null)
+                // Optimize query by filtering with bounding box first, then precise distance
+                // This reduces the number of rows that need distance calculation
+                // Calculate bounding box (approximate, good enough for pre-filtering)
+                var latDelta = searchRadius / 111.0; // ~111 km per degree latitude
+                var lonDelta = searchRadius / (111.0 * Math.Cos(centerLat * Math.PI / 180.0));
+                
+                var minLat = centerLat - latDelta;
+                var maxLat = centerLat + latDelta;
+                var minLon = centerLon - lonDelta;
+                var maxLon = centerLon + lonDelta;
+
+                // First, filter by bounding box in database (very fast with indexes)
+                var candidateWandersteine = await _context.Wandersteine
+                    .Where(w => w.Coordinates != null &&
+                                w.Coordinates.Latitude >= minLat &&
+                                w.Coordinates.Latitude <= maxLat &&
+                                w.Coordinates.Longitude >= minLon &&
+                                w.Coordinates.Longitude <= maxLon)
                     .ToListAsync();
 
-                // Filter by distance
-                var nearbyWandersteine = allWandersteine
+                // Then, apply precise distance calculation on filtered results
+                var nearbyWandersteine = candidateWandersteine
                     .Where(w => w.Coordinates != null && 
                                 GeoDistanceCalculator.CalculateDistanceKm(centerPoint, w.Coordinates) <= searchRadius)
                     .OrderByDescending(w => w.CreatedAt)
