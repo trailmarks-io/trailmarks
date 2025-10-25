@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NetTopologySuite.Geometries;
 using TrailmarksApi.Data;
 using TrailmarksApi.Models;
 using TrailmarksApi.Services;
@@ -97,14 +98,18 @@ namespace TrailmarksApi.Controllers
                     );
                 }
 
-                // Use PostGIS ST_DWithin for efficient radius filtering in database
-                // ST_MakePoint creates a geography point, ST_DWithin checks distance in meters
-                // Convert radius from km to meters for PostGIS geography functions
+                // Use NetTopologySuite with PostGIS for efficient radius filtering in database
+                // NetTopologySuite provides the spatial type system that EF Core translates to PostGIS
                 var radiusInMeters = searchRadius * 1000;
-
-                // Use PostGIS geography type for accurate distance calculation on a sphere
-                // ST_DWithin with geography type accounts for Earth's curvature
-                // Note: We need to explicitly list all columns for proper entity materialization
+                
+                // Use NetTopologySuite's GeometryFactory with WGS84 SRID (4326) for proper spatial reference
+                // This ensures PostGIS uses the correct coordinate reference system for geography calculations
+                const int WGS84_SRID = 4326;
+                var geometryFactory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(srid: WGS84_SRID);
+                var centerPointNTS = geometryFactory.CreatePoint(new Coordinate(centerLon, centerLat));
+                
+                // Query using PostGIS ST_DWithin with geography type for accurate spherical distance
+                // NetTopologySuite integration enables EF Core to work with PostGIS spatial functions
                 var nearbyWandersteine = await _context.Wandersteine
                     .FromSqlInterpolated($@"
                         SELECT ""Id"", ""Name"", ""unique_id"", ""preview_url"", ""Description"", ""Location"", 
@@ -113,8 +118,8 @@ namespace TrailmarksApi.Controllers
                         WHERE ""Latitude"" IS NOT NULL 
                         AND ""Longitude"" IS NOT NULL
                         AND ST_DWithin(
-                            ST_MakePoint(""Longitude"", ""Latitude"")::geography,
-                            ST_MakePoint({centerLon}, {centerLat})::geography,
+                            ST_SetSRID(ST_MakePoint(""Longitude"", ""Latitude""), {WGS84_SRID})::geography,
+                            ST_GeomFromText({centerPointNTS.AsText()}, {WGS84_SRID})::geography,
                             {radiusInMeters}
                         )
                         ORDER BY ""created_at"" DESC")
