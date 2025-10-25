@@ -97,32 +97,28 @@ namespace TrailmarksApi.Controllers
                     );
                 }
 
-                // Optimize query by filtering with bounding box first, then precise distance
-                // This reduces the number of rows that need distance calculation
-                // Calculate bounding box (approximate, good enough for pre-filtering)
-                var latDelta = searchRadius / 111.0; // ~111 km per degree latitude
-                var lonDelta = searchRadius / (111.0 * Math.Cos(centerLat * Math.PI / 180.0));
-                
-                var minLat = centerLat - latDelta;
-                var maxLat = centerLat + latDelta;
-                var minLon = centerLon - lonDelta;
-                var maxLon = centerLon + lonDelta;
+                // Use PostGIS ST_DWithin for efficient radius filtering in database
+                // ST_MakePoint creates a geography point, ST_DWithin checks distance in meters
+                // Convert radius from km to meters for PostGIS geography functions
+                var radiusInMeters = searchRadius * 1000;
 
-                // First, filter by bounding box in database (very fast with indexes)
-                var candidateWandersteine = await _context.Wandersteine
-                    .Where(w => w.Coordinates != null &&
-                                w.Coordinates.Latitude >= minLat &&
-                                w.Coordinates.Latitude <= maxLat &&
-                                w.Coordinates.Longitude >= minLon &&
-                                w.Coordinates.Longitude <= maxLon)
+                // Use PostGIS geography type for accurate distance calculation on a sphere
+                // ST_DWithin with geography type accounts for Earth's curvature
+                // Note: We need to explicitly list all columns for proper entity materialization
+                var nearbyWandersteine = await _context.Wandersteine
+                    .FromSqlInterpolated($@"
+                        SELECT ""Id"", ""Name"", ""unique_id"", ""preview_url"", ""Description"", ""Location"", 
+                               ""Latitude"", ""Longitude"", ""created_at"", ""updated_at""
+                        FROM ""Wandersteine""
+                        WHERE ""Latitude"" IS NOT NULL 
+                        AND ""Longitude"" IS NOT NULL
+                        AND ST_DWithin(
+                            ST_MakePoint(""Longitude"", ""Latitude"")::geography,
+                            ST_MakePoint({centerLon}, {centerLat})::geography,
+                            {radiusInMeters}
+                        )
+                        ORDER BY ""created_at"" DESC")
                     .ToListAsync();
-
-                // Then, apply precise distance calculation on filtered results
-                var nearbyWandersteine = candidateWandersteine
-                    .Where(w => w.Coordinates != null && 
-                                GeoDistanceCalculator.CalculateDistanceKm(centerPoint, w.Coordinates) <= searchRadius)
-                    .OrderByDescending(w => w.CreatedAt)
-                    .ToList();
 
                 var responses = nearbyWandersteine.Select(WandersteinResponse.FromEntity).ToList();
                 

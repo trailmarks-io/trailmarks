@@ -10,7 +10,7 @@ namespace TrailmarksApi.Tests
     public static class DatabaseFixture
     {
         private static readonly PostgreSqlContainer _postgresContainer = new PostgreSqlBuilder()
-            .WithImage("postgres:16-alpine")
+            .WithImage("postgis/postgis:16-3.4-alpine")
             .WithDatabase("trailmarks_test")
             .WithUsername("postgres")
             .WithPassword("postgres")
@@ -66,7 +66,7 @@ namespace TrailmarksApi.Tests
                 .Replace("trailmarks_test", uniqueDbName);
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseNpgsql(connectionString)
+                .UseNpgsql(connectionString, o => o.UseNetTopologySuite())
                 .Options;
 
             var context = new ApplicationDbContext(options);

@@ -30,6 +30,9 @@ namespace TrailmarksApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Enable PostGIS extension
+            modelBuilder.HasPostgresExtension("postgis");
+
             // Configure Wanderstein entity
             modelBuilder.Entity<Wanderstein>(entity =>
             {
