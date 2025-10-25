@@ -53,9 +53,11 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
   - Single Page Application (SPA)
 
 ### Persistenz
-- **Primäre Datenbank**: PostgreSQL
+- **Primäre Datenbank**: PostgreSQL with PostGIS
 - **Entwicklungsdatenbank**: SQLite als Fallback
+- **Spatial Extension**: PostGIS für geografische Datentypen und Berechnungen
 - **ORM**: Entity Framework Core mit Code-First-Ansatz
+- **Spatial Support**: NetTopologySuite für .NET/EF Core Integration mit PostGIS
 - **Migrationen**: Automatische Datenbankmigrationen
   - **Migrationen sind unveränderlich**: Einmal erstellte Migrationen dürfen nicht mehr geändert werden
   - Für neue Änderungen muss immer eine neue Migration erstellt werden
@@ -101,6 +103,12 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
    - Frontend: Verwende Jasmine/Karma mit TestBed und Spies
    - Teste sowohl Success- als auch Error-Szenarien
    - Halte Tests einfach, lesbar und wartbar
+   - **Docker-Compose Setup**: Bei Änderungen an der Infrastruktur (Datenbank, Services, Konfiguration) muss das docker-compose Setup getestet werden:
+     - Validiere die docker-compose.yml Konfiguration: `docker compose config --quiet`
+     - Teste ob alle Services erfolgreich starten: `docker compose up -d`
+     - Verifiziere dass die Services funktionieren (z.B. Health Checks, Datenbank-Verbindung)
+     - Dies ist immens wichtig um die lokale Entwicklung zu unterstützen
+     - Dokumentiere alle Änderungen in `DOCKER.md`
 
 7. **Screenshots und Dokumentation**:
    - Bei UI-Änderungen: Erstelle immer Screenshots, die alle Bestandteile fehlerfrei zeigen

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using NetTopologySuite.Geometries;
 
 namespace TrailmarksApi.Models
 {
@@ -8,6 +9,10 @@ namespace TrailmarksApi.Models
     /// </summary>
     public class Wanderstein
     {
+        private const int WGS84_SRID = 4326;
+        private static readonly GeometryFactory GeometryFactory = 
+            NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(srid: WGS84_SRID);
+
         /// <summary>
         /// Unique identifier for the Wanderstein
         /// </summary>
@@ -49,9 +54,24 @@ namespace TrailmarksApi.Models
         public string Location { get; set; } = string.Empty;
 
         /// <summary>
-        /// Geographic coordinates (WGS84)
+        /// Geographic coordinates (WGS84) - stored as PostGIS Point in database
         /// </summary>
-        public GeoCoordinate? Coordinates { get; set; }
+        [NotMapped]
+        public GeoCoordinate? Coordinates 
+        { 
+            get => LocationPoint == null || LocationPoint.IsEmpty
+                ? null 
+                : new GeoCoordinate(LocationPoint.Y, LocationPoint.X);
+            set => LocationPoint = value == null 
+                ? null 
+                : GeometryFactory.CreatePoint(new Coordinate(value.Longitude, value.Latitude));
+        }
+
+        /// <summary>
+        /// Internal PostGIS Point column for spatial queries
+        /// </summary>
+        [Column("Location_Point")]
+        public Point? LocationPoint { get; set; }
 
         /// <summary>
         /// Creation timestamp

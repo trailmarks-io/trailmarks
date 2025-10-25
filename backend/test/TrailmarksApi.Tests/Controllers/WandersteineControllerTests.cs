@@ -254,5 +254,224 @@ namespace TrailmarksApi.Tests.Controllers
             var wanderstein = Assert.IsType<WandersteinDetailResponse>(okResult!.Value);
             Assert.Equal("Near the old oak tree, 500m from the parking lot", wanderstein.Location);
         }
+
+        [Fact]
+        public async Task GetNearbyWandersteine_WithDefaultParameters_ReturnsBochumArea()
+        {
+            // Arrange
+            _context!.Wandersteine.RemoveRange(_context.Wandersteine);
+            await _context.SaveChangesAsync();
+
+            // Add stones in and around Bochum (within 100km)
+            _context.Wandersteine.Add(new Wanderstein
+            {
+                Name = "Bochum Stone",
+                UniqueId = "WS-BOCHUM-001",
+                PreviewUrl = "https://example.com/bochum.jpg",
+                Coordinates = new GeoCoordinate(51.4818, 7.2162), // Bochum
+                CreatedAt = DateTime.UtcNow
+            });
+            _context.Wandersteine.Add(new Wanderstein
+            {
+                Name = "Essen Stone",
+                UniqueId = "WS-ESSEN-001",
+                PreviewUrl = "https://example.com/essen.jpg",
+                Coordinates = new GeoCoordinate(51.4556, 7.0116), // Essen (about 14km from Bochum)
+                CreatedAt = DateTime.UtcNow.AddDays(-1)
+            });
+            _context.Wandersteine.Add(new Wanderstein
+            {
+                Name = "Munich Stone",
+                UniqueId = "WS-MUNICH-001",
+                PreviewUrl = "https://example.com/munich.jpg",
+                Coordinates = new GeoCoordinate(48.1351, 11.5820), // Munich (>400km from Bochum)
+                CreatedAt = DateTime.UtcNow.AddDays(-2)
+            });
+            await _context.SaveChangesAsync();
+
+            var logger = new Mock<ILogger<WandersteineController>>();
+            var controller = new WandersteineController(_context, logger.Object);
+
+            // Act - No parameters defaults to Bochum with 100km radius
+            var result = await controller.GetNearbyWandersteine();
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+            var wandersteine = Assert.IsAssignableFrom<IEnumerable<WandersteinResponse>>(okResult.Value).ToList();
+            Assert.Equal(2, wandersteine.Count); // Should find Bochum and Essen, but not Munich
+            Assert.Contains(wandersteine, w => w.Unique_Id == "WS-BOCHUM-001");
+            Assert.Contains(wandersteine, w => w.Unique_Id == "WS-ESSEN-001");
+            Assert.DoesNotContain(wandersteine, w => w.Unique_Id == "WS-MUNICH-001");
+        }
+
+        [Fact]
+        public async Task GetNearbyWandersteine_WithCustomLocation_ReturnsCorrectStones()
+        {
+            // Arrange
+            _context!.Wandersteine.RemoveRange(_context.Wandersteine);
+            await _context.SaveChangesAsync();
+
+            _context.Wandersteine.Add(new Wanderstein
+            {
+                Name = "Munich Stone",
+                UniqueId = "WS-MUNICH-001",
+                PreviewUrl = "https://example.com/munich.jpg",
+                Coordinates = new GeoCoordinate(48.1351, 11.5820), // Munich
+                CreatedAt = DateTime.UtcNow
+            });
+            _context.Wandersteine.Add(new Wanderstein
+            {
+                Name = "Bochum Stone",
+                UniqueId = "WS-BOCHUM-001",
+                PreviewUrl = "https://example.com/bochum.jpg",
+                Coordinates = new GeoCoordinate(51.4818, 7.2162), // Bochum (>400km from Munich)
+                CreatedAt = DateTime.UtcNow.AddDays(-1)
+            });
+            await _context.SaveChangesAsync();
+
+            var logger = new Mock<ILogger<WandersteineController>>();
+            var controller = new WandersteineController(_context, logger.Object);
+
+            // Act - Search around Munich with 50km radius
+            var result = await controller.GetNearbyWandersteine(latitude: 48.1351, longitude: 11.5820);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+            var wandersteine = Assert.IsAssignableFrom<IEnumerable<WandersteinResponse>>(okResult.Value).ToList();
+            Assert.Single(wandersteine); // Should find only Munich
+            Assert.Equal("WS-MUNICH-001", wandersteine.First().Unique_Id);
+        }
+
+        [Fact]
+        public async Task GetNearbyWandersteine_WithCustomRadius_ReturnsCorrectStones()
+        {
+            // Arrange
+            _context!.Wandersteine.RemoveRange(_context.Wandersteine);
+            await _context.SaveChangesAsync();
+
+            var bochum = new GeoCoordinate(51.4818, 7.2162);
+            
+            _context.Wandersteine.Add(new Wanderstein
+            {
+                Name = "Close Stone",
+                UniqueId = "WS-CLOSE-001",
+                PreviewUrl = "https://example.com/close.jpg",
+                Coordinates = bochum,
+                CreatedAt = DateTime.UtcNow
+            });
+            _context.Wandersteine.Add(new Wanderstein
+            {
+                Name = "Far Stone",
+                UniqueId = "WS-FAR-001",
+                PreviewUrl = "https://example.com/far.jpg",
+                Coordinates = new GeoCoordinate(51.4818, 8.5), // About 90km east of Bochum
+                CreatedAt = DateTime.UtcNow.AddDays(-1)
+            });
+            await _context.SaveChangesAsync();
+
+            var logger = new Mock<ILogger<WandersteineController>>();
+            var controller = new WandersteineController(_context, logger.Object);
+
+            // Act - Search with 10km radius should only find close stone
+            var result = await controller.GetNearbyWandersteine(
+                latitude: bochum.Latitude, 
+                longitude: bochum.Longitude, 
+                radiusKm: 10);
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+            var wandersteine = Assert.IsAssignableFrom<IEnumerable<WandersteinResponse>>(okResult.Value).ToList();
+            Assert.Single(wandersteine);
+            Assert.Equal("WS-CLOSE-001", wandersteine.First().Unique_Id);
+        }
+
+        [Fact]
+        public async Task GetNearbyWandersteine_WithInvalidCoordinates_ReturnsBadRequest()
+        {
+            // Arrange
+            var logger = new Mock<ILogger<WandersteineController>>();
+            var controller = new WandersteineController(_context!, logger.Object);
+
+            // Act - Invalid latitude (>90)
+            var result = await controller.GetNearbyWandersteine(latitude: 95.0, longitude: 7.2162);
+
+            // Assert
+            Assert.IsType<ObjectResult>(result);
+            var objectResult = result as ObjectResult;
+            Assert.Equal(400, objectResult!.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetNearbyWandersteine_ExcludesWandersteineWithoutCoordinates()
+        {
+            // Arrange
+            _context!.Wandersteine.RemoveRange(_context.Wandersteine);
+            await _context.SaveChangesAsync();
+
+            _context.Wandersteine.Add(new Wanderstein
+            {
+                Name = "With Coords",
+                UniqueId = "WS-WITH-001",
+                PreviewUrl = "https://example.com/with.jpg",
+                Coordinates = new GeoCoordinate(51.4818, 7.2162),
+                CreatedAt = DateTime.UtcNow
+            });
+            _context.Wandersteine.Add(new Wanderstein
+            {
+                Name = "Without Coords",
+                UniqueId = "WS-WITHOUT-001",
+                PreviewUrl = "https://example.com/without.jpg",
+                Coordinates = null, // No coordinates
+                CreatedAt = DateTime.UtcNow.AddDays(-1)
+            });
+            await _context.SaveChangesAsync();
+
+            var logger = new Mock<ILogger<WandersteineController>>();
+            var controller = new WandersteineController(_context, logger.Object);
+
+            // Act
+            var result = await controller.GetNearbyWandersteine();
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+            var wandersteine = Assert.IsAssignableFrom<IEnumerable<WandersteinResponse>>(okResult.Value).ToList();
+            Assert.Single(wandersteine);
+            Assert.Equal("WS-WITH-001", wandersteine.First().Unique_Id);
+        }
+
+        [Fact]
+        public async Task GetNearbyWandersteine_ReturnsEmptyListWhenNoStonesInRadius()
+        {
+            // Arrange
+            _context!.Wandersteine.RemoveRange(_context.Wandersteine);
+            await _context.SaveChangesAsync();
+
+            // Add a stone very far away
+            _context.Wandersteine.Add(new Wanderstein
+            {
+                Name = "Far Away Stone",
+                UniqueId = "WS-FAR-001",
+                PreviewUrl = "https://example.com/far.jpg",
+                Coordinates = new GeoCoordinate(-33.8688, 151.2093), // Sydney, Australia
+                CreatedAt = DateTime.UtcNow
+            });
+            await _context.SaveChangesAsync();
+
+            var logger = new Mock<ILogger<WandersteineController>>();
+            var controller = new WandersteineController(_context, logger.Object);
+
+            // Act - Search in Bochum
+            var result = await controller.GetNearbyWandersteine();
+
+            // Assert
+            var okResult = result as OkObjectResult;
+            Assert.NotNull(okResult);
+            var wandersteine = Assert.IsAssignableFrom<IEnumerable<WandersteinResponse>>(okResult.Value);
+            Assert.Empty(wandersteine);
+        }
     }
 }

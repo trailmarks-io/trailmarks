@@ -12,7 +12,8 @@ import { CarouselComponent, WandersteinMapComponent } from '../../../shared';
   standalone: true
 })
 export class WandersteinOverviewPage implements OnInit {
-  wandersteine: WandersteinResponse[] = [];
+  recentWandersteine: WandersteinResponse[] = [];
+  nearbyWandersteine: WandersteinResponse[] = [];
   loading = true;
   error: string | null = null;
 
@@ -37,13 +38,26 @@ export class WandersteinOverviewPage implements OnInit {
     
     this.wandersteinService.getRecentWandersteine().subscribe({
       next: (data) => {
-        this.wandersteine = data;
+        this.recentWandersteine = data;
         this.loading = false;
       },
       error: (err) => {
         const errorMsg = this.languageService.translate('wanderstein.error');
         this.error = `${errorMsg}: ${err.message}`;
         this.loading = false;
+      }
+    });
+  }
+
+  onMapLocationChange(location: {latitude: number, longitude: number, radiusKm: number}): void {
+    this.wandersteinService.getNearbyWandersteine(location.latitude, location.longitude, location.radiusKm).subscribe({
+      next: (data) => {
+        this.nearbyWandersteine = data;
+      },
+      error: (err) => {
+        console.error('Error loading nearby wandersteine:', err);
+        // Fall back to showing recent wandersteine
+        this.nearbyWandersteine = this.recentWandersteine;
       }
     });
   }

@@ -29,7 +29,7 @@ if (string.IsNullOrEmpty(connectionString))
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
+    options.UseNpgsql(connectionString, DbContextOptionsHelper.ConfigureNpgsql));
 
 // Register services
 builder.Services.AddScoped<DatabaseService>();

@@ -43,6 +43,15 @@ export class WandersteinService {
     return this.http.get<WandersteinResponse[]>(this.apiUrl);
   }
 
+  getNearbyWandersteine(latitude?: number, longitude?: number, radiusKm?: number): Observable<WandersteinResponse[]> {
+    const params: any = {};
+    if (latitude !== undefined) params.latitude = latitude.toString();
+    if (longitude !== undefined) params.longitude = longitude.toString();
+    if (radiusKm !== undefined) params.radiusKm = radiusKm.toString();
+    
+    return this.http.get<WandersteinResponse[]>(`${this.apiUrl}/nearby`, { params });
+  }
+
   getWandersteinByUniqueId(uniqueId: string): Observable<WandersteinDetailResponse> {
     return this.http.get<WandersteinDetailResponse>(`${this.apiUrl}/${uniqueId}`);
   }

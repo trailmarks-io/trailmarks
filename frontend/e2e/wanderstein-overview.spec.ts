@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Wanderstein Overview Page', () => {
-  test('should display page title and subtitle', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     // Mock translations API
     await page.route('**/api/translations/**', route => {
       route.fulfill({
@@ -9,12 +9,19 @@ test.describe('Wanderstein Overview Page', () => {
         contentType: 'application/json',
         body: JSON.stringify({
           'wanderstein.title': 'Wandersteine',
-          'wanderstein.subtitle': 'Entdecke die neuesten Wandersteine'
+          'wanderstein.subtitle': 'Entdecke die neuesten Wandersteine',
+          'wanderstein.map.title': 'Kartenübersicht',
+          'wanderstein.recent.title': 'Neueste Wandersteine',
+          'wanderstein.loading': 'Laden...',
+          'wanderstein.error': 'Fehler beim Laden',
+          'wanderstein.addedOn': 'Hinzugefügt am',
+          'common.retry': 'Erneut versuchen',
+          'wanderstein.noData': 'Keine Daten verfügbar'
         })
       });
     });
 
-    // Mock wandersteine API
+    // Mock wandersteine recent API
     await page.route('**/api/wandersteine/recent', route => {
       route.fulfill({
         status: 200,
@@ -25,12 +32,37 @@ test.describe('Wanderstein Overview Page', () => {
             name: 'Test Stone',
             unique_Id: 'WS-001',
             preview_Url: 'https://via.placeholder.com/400',
-            created_At: '2024-01-01T00:00:00Z'
+            created_At: '2024-01-01T00:00:00Z',
+            latitude: 51.4818,
+            longitude: 7.2162,
+            location: 'Bochum'
           }
         ])
       });
     });
 
+    // Mock wandersteine nearby API
+    await page.route('**/api/wandersteine/nearby**', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            id: 1,
+            name: 'Test Stone',
+            unique_Id: 'WS-001',
+            preview_Url: 'https://via.placeholder.com/400',
+            created_At: '2024-01-01T00:00:00Z',
+            latitude: 51.4818,
+            longitude: 7.2162,
+            location: 'Bochum'
+          }
+        ])
+      });
+    });
+  });
+
+  test('should display page title and subtitle', async ({ page }) => {
     await page.goto('/wandersteine');
     
     // Check for title
@@ -43,34 +75,6 @@ test.describe('Wanderstein Overview Page', () => {
   });
 
   test('should show loading state or content', async ({ page }) => {
-    // Mock translations API
-    await page.route('**/api/translations/**', route => {
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          'wanderstein.loading': 'Laden...'
-        })
-      });
-    });
-
-    // Mock wandersteine API
-    await page.route('**/api/wandersteine/recent', route => {
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([
-          {
-            id: 1,
-            name: 'Test Stone',
-            unique_Id: 'WS-001',
-            preview_Url: 'https://via.placeholder.com/400',
-            created_At: '2024-01-01T00:00:00Z'
-          }
-        ])
-      });
-    });
-
     await page.goto('/wandersteine');
     
     // Either loading message or content should be visible
@@ -79,19 +83,7 @@ test.describe('Wanderstein Overview Page', () => {
   });
 
   test('should handle API errors gracefully', async ({ page }) => {
-    // Mock translations API
-    await page.route('**/api/translations/**', route => {
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          'wanderstein.error': 'Fehler beim Laden',
-          'common.retry': 'Erneut versuchen'
-        })
-      });
-    });
-
-    // Mock API to return an error
+    // Override recent endpoint to return error
     await page.route('**/api/wandersteine/recent', route => {
       route.fulfill({
         status: 500,
@@ -108,42 +100,6 @@ test.describe('Wanderstein Overview Page', () => {
   });
 
   test('should display carousel when data is loaded', async ({ page }) => {
-    // Mock translations API
-    await page.route('**/api/translations/**', route => {
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          'wanderstein.title': 'Wandersteine',
-          'wanderstein.addedOn': 'Hinzugefügt am'
-        })
-      });
-    });
-
-    // Mock successful API response
-    await page.route('**/api/wandersteine/recent', route => {
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify([
-          {
-            id: 1,
-            name: 'Test Stone 1',
-            unique_Id: 'WS-001',
-            preview_Url: 'https://via.placeholder.com/400',
-            created_At: '2024-01-01T00:00:00Z'
-          },
-          {
-            id: 2,
-            name: 'Test Stone 2',
-            unique_Id: 'WS-002',
-            preview_Url: 'https://via.placeholder.com/400',
-            created_At: '2024-01-02T00:00:00Z'
-          }
-        ])
-      });
-    });
-    
     await page.goto('/wandersteine');
     
     // Wait for carousel to be visible
@@ -151,19 +107,7 @@ test.describe('Wanderstein Overview Page', () => {
   });
 
   test('should show retry button on error', async ({ page }) => {
-    // Mock translations API
-    await page.route('**/api/translations/**', route => {
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          'wanderstein.error': 'Fehler beim Laden',
-          'common.retry': 'Erneut versuchen'
-        })
-      });
-    });
-
-    // Mock API to return an error
+    // Override recent endpoint to return error
     await page.route('**/api/wandersteine/recent', route => {
       route.fulfill({
         status: 500,
@@ -180,19 +124,7 @@ test.describe('Wanderstein Overview Page', () => {
   });
 
   test('should display "no data" message when API returns empty array', async ({ page }) => {
-    // Mock translations API
-    await page.route('**/api/translations/**', route => {
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          'wanderstein.title': 'Wandersteine',
-          'wanderstein.noData': 'Keine Daten verfügbar'
-        })
-      });
-    });
-
-    // Mock API to return empty array
+    // Override APIs to return empty arrays
     await page.route('**/api/wandersteine/recent', route => {
       route.fulfill({
         status: 200,
