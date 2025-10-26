@@ -2,8 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TrailmarksApi.Data;
 
@@ -12,9 +12,11 @@ using TrailmarksApi.Data;
 namespace TrailmarksApi.Migrations.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251025072343_EnablePostGIS")]
+    partial class EnablePostGIS
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,10 +85,6 @@ namespace TrailmarksApi.Migrations.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<Point>("LocationPoint")
-                        .HasColumnType("geography (point, 4326)")
-                        .HasColumnName("Location_Point");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -114,6 +112,32 @@ namespace TrailmarksApi.Migrations.Migrations
                         .IsUnique();
 
                     b.ToTable("Wandersteine");
+                });
+
+            modelBuilder.Entity("TrailmarksApi.Models.Wanderstein", b =>
+                {
+                    b.OwnsOne("TrailmarksApi.Models.GeoCoordinate", "Coordinates", b1 =>
+                        {
+                            b1.Property<long>("WandersteinId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<double>("Latitude")
+                                .HasColumnType("double precision")
+                                .HasColumnName("Latitude");
+
+                            b1.Property<double>("Longitude")
+                                .HasColumnType("double precision")
+                                .HasColumnName("Longitude");
+
+                            b1.HasKey("WandersteinId");
+
+                            b1.ToTable("Wandersteine");
+
+                            b1.WithOwner()
+                                .HasForeignKey("WandersteinId");
+                        });
+
+                    b.Navigation("Coordinates");
                 });
 #pragma warning restore 612, 618
         }

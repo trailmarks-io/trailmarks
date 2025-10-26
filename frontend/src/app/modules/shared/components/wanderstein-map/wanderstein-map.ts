@@ -22,7 +22,9 @@ declare global {
 })
 export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   @Input() wandersteine: WandersteinResponse[] = [];
+  @Input() enableDynamicLoading: boolean = false;
   @Output() markerClick = new EventEmitter<string>();
+  @Output() locationChange = new EventEmitter<{latitude: number, longitude: number, radiusKm: number}>();
 
   options: L.MapOptions = {
     layers: [
@@ -38,9 +40,13 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   markerClusterGroup: any = null;
   map: L.Map | null = null;
   private clusteringEndListener: (() => void) | null = null;
+  private userLocation: L.LatLng | null = null;
 
   ngOnInit(): void {
     // Marker cluster will be initialized when map is ready
+    if (this.enableDynamicLoading) {
+      this.getUserLocation();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -100,6 +106,87 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
       // Initial bounds update after markers are added
       this.updateMapBounds();
     }
+
+    // If dynamic loading is enabled, set up event handlers
+    if (this.enableDynamicLoading) {
+      // Set initial center based on user location or default to Bochum
+      if (this.userLocation) {
+        map.setView(this.userLocation, 10);
+      } else {
+        // Default to Bochum, Germany
+        map.setView(L.latLng(51.4818, 7.2162), 9);
+      }
+      
+      // Emit initial location
+      this.emitCurrentLocation();
+
+      // Listen for map move/zoom events
+      map.on('moveend', () => this.emitCurrentLocation());
+      map.on('zoomend', () => this.emitCurrentLocation());
+    }
+  }
+
+  private getUserLocation(): void {
+    // Guard for SSR - check if window and navigator are available
+    if (typeof window === 'undefined' || !navigator || !navigator.geolocation) {
+      return;
+    }
+
+    const geolocationOptions: PositionOptions = {
+      timeout: 5000,
+      maximumAge: 0,
+      enableHighAccuracy: false
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
+        if (this.map) {
+          this.map.setView(this.userLocation, 10);
+          this.emitCurrentLocation();
+        }
+      },
+      (error) => {
+        // Geolocation failed, use default location (Bochum)
+        console.log('Geolocation failed, using default location (Bochum)', error);
+        this.userLocation = null;
+        
+        // Set map to Bochum as fallback
+        const bochumLocation = L.latLng(51.4818, 7.2162);
+        if (this.map) {
+          this.map.setView(bochumLocation, 9);
+          this.emitCurrentLocation();
+        }
+      },
+      geolocationOptions
+    );
+  }
+
+  private emitCurrentLocation(): void {
+    if (!this.map) return;
+
+    const center = this.map.getCenter();
+    const bounds = this.map.getBounds();
+    
+    // Calculate radius based on map bounds (use the larger of the two distances)
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
+    const latDiff = northEast.lat - southWest.lat;
+    const lngDiff = northEast.lng - southWest.lng;
+    
+    // Approximate km per degree (varies by latitude, but good enough for this purpose)
+    const kmPerDegreeLat = 111;
+    const kmPerDegreeLng = 111 * Math.cos(center.lat * Math.PI / 180);
+    
+    const radiusLat = (latDiff * kmPerDegreeLat) / 2;
+    const radiusLng = (lngDiff * kmPerDegreeLng) / 2;
+    const radiusKm = Math.max(radiusLat, radiusLng);
+
+    this.locationChange.emit({
+      latitude: center.lat,
+      longitude: center.lng,
+      radiusKm: Math.ceil(radiusKm)
+    });
   }
 
   private addMarkers(): void {

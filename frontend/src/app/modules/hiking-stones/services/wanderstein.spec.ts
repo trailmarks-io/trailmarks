@@ -114,4 +114,74 @@ describe('WandersteinService', () => {
     const req = httpMock.expectOne('http://localhost:8080/api/wandersteine/recent');
     req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
   });
+
+  it('should get nearby wandersteine without parameters', () => {
+    const mockData: WandersteinResponse[] = [
+      {
+        id: 1,
+        name: 'Nearby Stone',
+        unique_Id: 'WS-001',
+        preview_Url: 'https://example.com/1.jpg',
+        created_At: '2024-01-01T00:00:00Z',
+        latitude: 51.4818,
+        longitude: 7.2162,
+        location: 'Bochum'
+      }
+    ];
+
+    service.getNearbyWandersteine().subscribe(data => {
+      expect(data).toEqual(mockData);
+      expect(data.length).toBe(1);
+    });
+
+    const req = httpMock.expectOne('http://localhost:8080/api/wandersteine/nearby');
+    expect(req.request.method).toBe('GET');
+    expect(req.request.params.keys().length).toBe(0);
+    req.flush(mockData);
+  });
+
+  it('should get nearby wandersteine with location parameters', () => {
+    const mockData: WandersteinResponse[] = [
+      {
+        id: 1,
+        name: 'Munich Stone',
+        unique_Id: 'WS-001',
+        preview_Url: 'https://example.com/1.jpg',
+        created_At: '2024-01-01T00:00:00Z',
+        latitude: 48.1351,
+        longitude: 11.5820,
+        location: 'Munich'
+      }
+    ];
+
+    service.getNearbyWandersteine(48.1351, 11.5820, 50).subscribe(data => {
+      expect(data).toEqual(mockData);
+    });
+
+    const req = httpMock.expectOne(request => 
+      request.url === 'http://localhost:8080/api/wandersteine/nearby' &&
+      request.params.get('latitude') === '48.1351' &&
+      request.params.get('longitude') === '11.582' &&
+      request.params.get('radiusKm') === '50'
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
+  });
+
+  it('should get nearby wandersteine with partial parameters', () => {
+    const mockData: WandersteinResponse[] = [];
+
+    service.getNearbyWandersteine(51.4818, 7.2162).subscribe(data => {
+      expect(data).toEqual(mockData);
+    });
+
+    const req = httpMock.expectOne(request => 
+      request.url === 'http://localhost:8080/api/wandersteine/nearby' &&
+      request.params.get('latitude') === '51.4818' &&
+      request.params.get('longitude') === '7.2162' &&
+      !request.params.has('radiusKm')
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
+  });
 });
