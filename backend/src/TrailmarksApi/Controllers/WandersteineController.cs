@@ -140,11 +140,9 @@ namespace TrailmarksApi.Controllers
                 
                 // Structured logging with named placeholders
                 _logger.LogInformation(
-                    "Retrieved {Count} Wandersteine within {RadiusKm}km of location ({Latitude}, {Longitude})",
+                    "Retrieved {Count} Wandersteine within {RadiusKm}km of specified location",
                     responses.Count,
-                    searchRadius,
-                    centerLat,
-                    centerLon);
+                    searchRadius);
                 
                 return Ok(responses);
             }
