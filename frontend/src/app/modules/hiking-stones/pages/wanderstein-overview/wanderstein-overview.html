@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <div *ngIf="!loading && !error && recentWandersteine.length === 0" class="text-center p-8 text-lg">
+  <div *ngIf="!loading && !error && recentWandersteine.length === 0 && (nearbyWandersteine?.length ?? 0) === 0" class="text-center p-8 text-lg">
     <p>{{ 'wanderstein.noData' | translate }}</p>
   </div>
 </div>

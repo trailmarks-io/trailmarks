@@ -170,7 +170,7 @@ describe('WandersteinOverviewPage', () => {
     expect(component.error).toContain('Network failure');
   }));
 
-  it('should load nearby wandersteine when map location changes', () => {
+  it('should load nearby wandersteine when map location changes', fakeAsync(() => {
     const mockNearbyData: WandersteinResponse[] = [
       {
         id: 2,
@@ -188,11 +188,14 @@ describe('WandersteinOverviewPage', () => {
     
     component.onMapLocationChange({ latitude: 51.4818, longitude: 7.2162, radiusKm: 50 });
     
+    // Tick for debounceTime(250)
+    tick(250);
+    
     expect(wandersteinServiceSpy.getNearbyWandersteine).toHaveBeenCalledWith(51.4818, 7.2162, 50);
     expect(component.nearbyWandersteine).toEqual(mockNearbyData);
-  });
+  }));
 
-  it('should fallback to recent wandersteine on nearby error', () => {
+  it('should fallback to recent wandersteine on nearby error', fakeAsync(() => {
     const mockRecentData: WandersteinResponse[] = [
       {
         id: 1,
@@ -211,6 +214,9 @@ describe('WandersteinOverviewPage', () => {
     
     component.onMapLocationChange({ latitude: 51.4818, longitude: 7.2162, radiusKm: 50 });
     
+    // Tick for debounceTime(250)
+    tick(250);
+    
     expect(component.nearbyWandersteine).toEqual(mockRecentData);
-  });
+  }));
 });

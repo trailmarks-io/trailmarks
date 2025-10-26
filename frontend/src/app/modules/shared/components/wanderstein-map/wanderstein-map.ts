@@ -127,22 +127,39 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private getUserLocation(): void {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
-          if (this.map) {
-            this.map.setView(this.userLocation, 10);
-            this.emitCurrentLocation();
-          }
-        },
-        (error) => {
-          // Geolocation failed, use default location (Bochum)
-          console.log('Geolocation failed, using default location (Bochum)', error);
-          this.userLocation = null;
-        }
-      );
+    // Guard for SSR - check if window and navigator are available
+    if (typeof window === 'undefined' || !navigator || !navigator.geolocation) {
+      return;
     }
+
+    const geolocationOptions: PositionOptions = {
+      timeout: 5000,
+      maximumAge: 0,
+      enableHighAccuracy: false
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
+        if (this.map) {
+          this.map.setView(this.userLocation, 10);
+          this.emitCurrentLocation();
+        }
+      },
+      (error) => {
+        // Geolocation failed, use default location (Bochum)
+        console.log('Geolocation failed, using default location (Bochum)', error);
+        this.userLocation = null;
+        
+        // Set map to Bochum as fallback
+        const bochumLocation = L.latLng(51.4818, 7.2162);
+        if (this.map) {
+          this.map.setView(bochumLocation, 9);
+          this.emitCurrentLocation();
+        }
+      },
+      geolocationOptions
+    );
   }
 
   private emitCurrentLocation(): void {

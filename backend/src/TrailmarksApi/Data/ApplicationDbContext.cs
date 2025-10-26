@@ -30,10 +30,7 @@ namespace TrailmarksApi.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Enable PostGIS extension
-            modelBuilder.HasPostgresExtension("postgis");
-            
-            // Configure NetTopologySuite for spatial types
+            // Enable PostGIS extension for spatial types (NetTopologySuite)
             modelBuilder.HasPostgresExtension("postgis");
 
             // Configure Wanderstein entity

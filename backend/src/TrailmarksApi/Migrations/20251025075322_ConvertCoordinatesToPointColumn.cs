@@ -26,6 +26,13 @@ namespace TrailmarksApi.Migrations.Migrations
                 WHERE ""Latitude"" IS NOT NULL AND ""Longitude"" IS NOT NULL;
             ");
 
+            // Create spatial index on Location_Point for performance
+            migrationBuilder.Sql(@"
+                CREATE INDEX ix_wandersteine_location_point 
+                ON ""Wandersteine"" 
+                USING GIST (""Location_Point"");
+            ");
+
             // Drop the old Latitude and Longitude columns
             migrationBuilder.DropColumn(
                 name: "Latitude",
@@ -59,6 +66,11 @@ namespace TrailmarksApi.Migrations.Migrations
                     ""Longitude"" = ST_X(""Location_Point""::geometry)
                 WHERE ""Location_Point"" IS NOT NULL;
             ");
+
+            // Drop the spatial index
+            migrationBuilder.DropIndex(
+                name: "ix_wandersteine_location_point",
+                table: "Wandersteine");
 
             // Drop the Location_Point column
             migrationBuilder.DropColumn(

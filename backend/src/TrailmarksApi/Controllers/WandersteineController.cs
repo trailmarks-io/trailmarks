@@ -77,6 +77,16 @@ namespace TrailmarksApi.Controllers
         {
             try
             {
+                // XOR validation: Both latitude/longitude must be provided together or neither
+                if (latitude.HasValue != longitude.HasValue)
+                {
+                    return Problem(
+                        title: "Invalid parameters",
+                        statusCode: StatusCodes.Status400BadRequest,
+                        detail: "Both latitude and longitude must be provided together, or neither"
+                    );
+                }
+
                 // Default to Bochum coordinates if not provided
                 const double defaultLatitude = 51.4818;
                 const double defaultLongitude = 7.2162;
@@ -86,6 +96,16 @@ namespace TrailmarksApi.Controllers
                 
                 // Default radius: 50km if position provided, 100km if using default (Bochum)
                 var searchRadius = radiusKm ?? (latitude.HasValue && longitude.HasValue ? 50.0 : 100.0);
+
+                // Validate radiusKm
+                if (searchRadius <= 0 || searchRadius > 200)
+                {
+                    return Problem(
+                        title: "Invalid radius",
+                        statusCode: StatusCodes.Status400BadRequest,
+                        detail: "Radius must be greater than 0 and less than or equal to 200 km"
+                    );
+                }
 
                 // Validate coordinates
                 var centerCoord = new GeoCoordinate(centerLat, centerLon);
@@ -109,15 +129,22 @@ namespace TrailmarksApi.Controllers
                 
                 // Query using LINQ - EF Core with NetTopologySuite translates Distance() to PostGIS ST_Distance
                 // The LocationPoint column is a PostGIS geography point for accurate spherical distance
+                // AsNoTracking is used since this is a read-only query
                 var nearbyWandersteine = await _context.Wandersteine
+                    .AsNoTracking()
                     .Where(w => w.LocationPoint != null && w.LocationPoint.Distance(centerPoint) <= radiusInMeters)
                     .OrderByDescending(w => w.CreatedAt)
                     .ToListAsync();
 
                 var responses = nearbyWandersteine.Select(WandersteinResponse.FromEntity).ToList();
                 
+                // Structured logging with named placeholders
                 _logger.LogInformation(
-                    $"Retrieved {responses.Count} Wandersteine within {searchRadius}km of specified location");
+                    "Retrieved {Count} Wandersteine within {RadiusKm}km of location ({Latitude}, {Longitude})",
+                    responses.Count,
+                    searchRadius,
+                    centerLat,
+                    centerLon);
                 
                 return Ok(responses);
             }
