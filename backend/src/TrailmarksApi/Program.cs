@@ -46,8 +46,10 @@ builder.Services.AddOpenTelemetry()
         .AddHttpClientInstrumentation()
         .AddEntityFrameworkCoreInstrumentation(options =>
         {
-            options.SetDbStatementForText = true;
-            options.SetDbStatementForStoredProcedure = true;
+            options.EnrichWithIDbCommand = (activity, command) =>
+            {
+                activity.SetTag("db.statement", command.CommandText);
+            };
         })
         .AddOtlpExporter(options =>
         {
