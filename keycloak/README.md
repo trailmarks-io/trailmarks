@@ -63,13 +63,13 @@ The realm configuration is automatically imported when Keycloak starts for the f
 
 ### OpenID Connect Endpoints
 
-All endpoints are under the realm: `http://localhost:8180/realms/trailmarks`
+All endpoints are under the realm base URL: `http://localhost:8180/realms/trailmarks`
 
-- **Discovery Document**: `/.well-known/openid-configuration`
-- **Authorization**: `/protocol/openid-connect/auth`
-- **Token**: `/protocol/openid-connect/token`
-- **Userinfo**: `/protocol/openid-connect/userinfo`
-- **Logout**: `/protocol/openid-connect/logout`
+- **Discovery Document**: `http://localhost:8180/realms/trailmarks/.well-known/openid-configuration`
+- **Authorization**: `http://localhost:8180/realms/trailmarks/protocol/openid-connect/auth`
+- **Token**: `http://localhost:8180/realms/trailmarks/protocol/openid-connect/token`
+- **Userinfo**: `http://localhost:8180/realms/trailmarks/protocol/openid-connect/userinfo`
+- **Logout**: `http://localhost:8180/realms/trailmarks/protocol/openid-connect/logout`
 
 ### Modifying the Realm
 
@@ -86,7 +86,7 @@ To update the realm configuration:
 
 Before deploying to production:
 
-1. **Change admin password**: Update `KEYCLOAK_ADMIN_PASSWORD` in `docker-compose.yml`
+1. **Change admin password**: Set `KEYCLOAK_ADMIN_PASSWORD` via environment variable or `.env` file (do not hardcode in docker-compose.yml)
 2. **Use production mode**: Change `start-dev` to `start` in Keycloak command
 3. **Enable HTTPS**: Configure SSL certificates and set `KC_HOSTNAME_STRICT_HTTPS=true`
 4. **Update redirect URIs**: Add production URLs to client configuration
