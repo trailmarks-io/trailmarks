@@ -35,6 +35,7 @@ This command will:
 - **Frontend**: http://localhost:4200
 - **Backend API**: http://localhost:8080
 - **API Documentation (Swagger)**: http://localhost:8080/swagger
+- **Keycloak Admin Console**: http://localhost:8180
 - **Jaeger UI (Tracing)**: http://localhost:16686
 
 ### 4. Stop All Services
@@ -71,10 +72,36 @@ docker-compose down -v
 - **Image**: `postgis/postgis:16-3.4-alpine`
 - **Extensions**: PostGIS for spatial data support
 - **Data Persistence**: Docker volume `postgres-data`
+- **Databases**:
+  - `trailmarks` - Main application database
+  - `keycloak` - Keycloak authentication database (auto-created on first start)
 - **Credentials**:
-  - Database: `trailmarks`
   - User: `postgres`
   - Password: `postgres`
+
+### Authentication (Keycloak)
+- **Container Name**: `trailmarks-keycloak`
+- **Port**: 8180 (mapped to internal port 8080)
+- **Version**: Keycloak 26.0.7
+- **Image**: `quay.io/keycloak/keycloak:26.0.7`
+- **Database**: Uses PostgreSQL `keycloak` database
+- **Admin Console**: http://localhost:8180
+- **Admin Credentials**:
+  - Username: `admin`
+  - Password: `admin`
+- **Realm**: `trailmarks` (auto-imported on startup)
+- **Clients**:
+  - `trailmarks-frontend` - Public client for Angular SPA
+  - `trailmarks-backend` - Bearer-only client for API protection
+- **Features**:
+  - OpenID Connect (OIDC) authentication
+  - OAuth2 authorization
+  - User management
+  - Role-based access control (user, moderator, admin)
+  - Multi-language support (English, German)
+  - Self-registration enabled
+  - Password reset enabled
+  - Brute force protection
 
 ### Observability (Jaeger)
 - **Container Name**: `trailmarks-jaeger`
@@ -115,6 +142,7 @@ docker-compose logs -f
 docker-compose logs -f backend
 docker-compose logs -f frontend
 docker-compose logs -f postgres
+docker-compose logs -f keycloak
 docker-compose logs -f jaeger
 docker-compose logs -f nginx-otlp
 ```
@@ -172,11 +200,11 @@ For development, you can use Docker Compose while still editing code locally:
 
 ### Alternative: Hybrid Development
 
-For faster iteration during development, you can run services locally and only use Docker for the database:
+For faster iteration during development, you can run services locally and only use Docker for infrastructure services:
 
 ```bash
-# Start only the database
-docker-compose up -d postgres
+# Start only infrastructure services (database, keycloak, jaeger)
+docker-compose up -d postgres keycloak jaeger nginx-otlp
 
 # Run backend locally
 cd backend/src
@@ -187,7 +215,7 @@ cd frontend
 npm start
 ```
 
-This approach provides faster rebuild times during development while still ensuring the database is consistent.
+This approach provides faster rebuild times during development while still ensuring infrastructure services are consistent.
 
 ### Database Management
 
@@ -329,10 +357,45 @@ If the backend cannot connect to the database:
 
 ### Port Conflicts
 
-If ports 4200 or 8080 are already in use:
+If ports 4200, 8080, or 8180 are already in use:
 
 1. Stop the conflicting services
 2. Or change ports in `docker-compose.yml`
+
+### Keycloak Issues
+
+If Keycloak fails to start or is not accessible:
+
+1. **Check Keycloak logs**:
+   ```bash
+   docker-compose logs keycloak
+   ```
+
+2. **Verify Keycloak database exists**:
+   ```bash
+   docker-compose exec postgres psql -U postgres -l | grep keycloak
+   ```
+
+3. **Check Keycloak health**:
+   ```bash
+   curl http://localhost:8180/health/ready
+   ```
+
+4. **Access Keycloak Admin Console**:
+   - URL: http://localhost:8180
+   - Username: `admin`
+   - Password: `admin`
+
+5. **Verify realm import**:
+   - Login to Keycloak Admin Console
+   - Check if `trailmarks` realm exists
+   - Verify clients `trailmarks-frontend` and `trailmarks-backend` are configured
+
+6. **Common issues**:
+   - **Keycloak database not created**: Ensure the init script ran successfully. Check postgres logs.
+   - **Realm not imported**: Verify `keycloak/realm-export.json` exists and is mounted correctly.
+   - **Port conflict**: If port 8180 is in use, change it in docker-compose.yml
+   - **Slow startup**: Keycloak can take 60-90 seconds to start. Check health check status.
 
 ### Rebuild from Scratch
 
@@ -360,7 +423,10 @@ All builds happen inside Docker containers:
 
 Services communicate via a Docker bridge network (`trailmarks-network`):
 - Frontend → Backend: via `http://backend:8080` (internal) or `http://localhost:8080` (from browser)
+- Frontend → Keycloak: via `http://localhost:8180` (from browser)
 - Backend → Database: via `postgres:5432`
+- Backend → Keycloak: via `http://keycloak:8080` (internal, for token validation)
+- Keycloak → Database: via `postgres:5432` (keycloak database)
 - All services can resolve each other by service name
 
 ## Volume Management
@@ -441,6 +507,124 @@ If traces are not appearing in Jaeger:
 3. Verify backend can reach Jaeger: `docker-compose exec backend ping jaeger`
 4. Check browser console for frontend tracing errors
 
+## Keycloak Authentication
+
+The Trailmarks application includes Keycloak for authentication and authorization. Keycloak is pre-configured with a `trailmarks` realm and two clients for the frontend and backend.
+
+### Keycloak Admin Console
+
+Access the Keycloak Admin Console to manage users, roles, and configuration:
+
+**URL**: http://localhost:8180
+
+**Credentials:**
+- Username: `admin`
+- Password: `admin`
+
+### Trailmarks Realm
+
+The `trailmarks` realm is automatically imported on first startup from `keycloak/realm-export.json`.
+
+**Realm Configuration:**
+- **Realm Name**: `trailmarks`
+- **Supported Locales**: English (en), German (de)
+- **Default Locale**: English
+- **Registration**: Enabled (users can self-register)
+- **Email Verification**: Disabled (for development)
+- **Password Reset**: Enabled
+- **Remember Me**: Enabled
+- **Brute Force Protection**: Enabled
+
+### Roles
+
+The realm includes three predefined roles:
+
+1. **user**: Regular user role (default for all users)
+2. **moderator**: Moderator role for content management
+3. **admin**: Administrator role with full access
+
+### Clients
+
+#### trailmarks-frontend (Public Client)
+
+Configuration for the Angular frontend application:
+
+- **Client ID**: `trailmarks-frontend`
+- **Client Type**: Public (no client secret required)
+- **Protocol**: OpenID Connect
+- **Valid Redirect URIs**: 
+  - `http://localhost:4200/*`
+  - `http://localhost/*`
+- **Web Origins**: 
+  - `http://localhost:4200`
+  - `http://localhost`
+- **Authentication Flow**: Authorization Code with PKCE (S256)
+- **Direct Access Grants**: Enabled
+
+**Token Claims:**
+- `preferred_username`: Username
+- `email`: Email address
+- `roles`: Array of realm roles
+
+#### trailmarks-backend (Bearer-Only Client)
+
+Configuration for the ASP.NET Core backend API:
+
+- **Client ID**: `trailmarks-backend`
+- **Client Type**: Bearer-only (validates tokens but doesn't authenticate users)
+- **Protocol**: OpenID Connect
+- **Access Token Lifespan**: 300 seconds (5 minutes)
+
+### User Management
+
+**Creating Users:**
+
+1. Login to Keycloak Admin Console
+2. Select `trailmarks` realm
+3. Navigate to "Users" → "Add user"
+4. Fill in user details (username, email, first name, last name)
+5. Click "Save"
+6. Go to "Credentials" tab and set password
+7. Optionally assign roles in "Role Mappings" tab
+
+**Assigning Roles:**
+
+1. Select user in "Users" list
+2. Go to "Role Mappings" tab
+3. Select desired roles from "Available Roles"
+4. Click "Add selected"
+
+### OpenID Connect Endpoints
+
+The Keycloak realm provides standard OIDC endpoints:
+
+- **Discovery**: `http://localhost:8180/realms/trailmarks/.well-known/openid-configuration`
+- **Authorization**: `http://localhost:8180/realms/trailmarks/protocol/openid-connect/auth`
+- **Token**: `http://localhost:8180/realms/trailmarks/protocol/openid-connect/token`
+- **Userinfo**: `http://localhost:8180/realms/trailmarks/protocol/openid-connect/userinfo`
+- **Logout**: `http://localhost:8180/realms/trailmarks/protocol/openid-connect/logout`
+
+### Configuration for Production
+
+For production deployment, update the following:
+
+1. **Change admin password**: Update `KEYCLOAK_ADMIN_PASSWORD` in docker-compose.yml
+2. **Enable HTTPS**: Configure SSL/TLS certificates and set `KC_HOSTNAME_STRICT_HTTPS=true`
+3. **Update redirect URIs**: Add production URLs to client configuration
+4. **Update web origins**: Add production domains to CORS configuration
+5. **Enable email verification**: Set up SMTP and enable email verification
+6. **Review security settings**: Adjust session timeouts, token lifespans, brute force protection
+
+### Database
+
+Keycloak uses a separate PostgreSQL database (`keycloak`) in the same PostgreSQL instance as the application database. The database is automatically created on first startup via the initialization script.
+
+**Connection Details:**
+- **Database**: `keycloak`
+- **Host**: `postgres:5432`
+- **User**: `postgres`
+- **Password**: `postgres`
+
 ## Additional Resources
 
 - [Docker Documentation](https://docs.docker.com/)
@@ -448,5 +632,7 @@ If traces are not appearing in Jaeger:
 - [PostgreSQL Docker Image](https://hub.docker.com/_/postgres)
 - [.NET Docker Images](https://hub.docker.com/_/microsoft-dotnet)
 - [nginx Docker Image](https://hub.docker.com/_/nginx)
+- [Keycloak Documentation](https://www.keycloak.org/documentation)
+- [Keycloak Docker Image](https://quay.io/repository/keycloak/keycloak)
 - [Jaeger Documentation](https://www.jaegertracing.io/docs/)
 - [OpenTelemetry Documentation](https://opentelemetry.io/docs/)

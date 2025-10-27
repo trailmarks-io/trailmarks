@@ -21,6 +21,7 @@ docker-compose up -d
 - 🌐 Frontend: http://localhost:4200
 - 🔌 Backend API: http://localhost:8080
 - 📚 API Documentation: http://localhost:8080/swagger
+- 🔐 Keycloak Admin: http://localhost:8180
 - 📊 Tracing UI: http://localhost:16686
 
 ### Local Development
@@ -44,6 +45,7 @@ npx ng serve
 ✅ PostgreSQL database with Entity Framework Core  
 ✅ Angular 20.1.0 frontend with Tailwind CSS  
 ✅ Multi-language support (German/English)  
+✅ Keycloak authentication and authorization  
 ✅ Docker deployment with Docker Compose  
 ✅ OpenTelemetry instrumentation with Jaeger tracing  
 ✅ Responsive design for mobile devices  
@@ -63,7 +65,8 @@ Comprehensive documentation is available in the **[docs/](docs/)** folder:
 
 - **Backend**: .NET 8.0, ASP.NET Core, Entity Framework Core
 - **Frontend**: Angular 20.1.0, TypeScript, Tailwind CSS
-- **Database**: PostgreSQL 16
+- **Database**: PostgreSQL 16 with PostGIS
+- **Authentication**: Keycloak 26.0.7 (OpenID Connect / OAuth2)
 - **API Documentation**: OpenAPI 3.0 / Swagger
 - **Observability**: OpenTelemetry, Jaeger
 - **Containerization**: Docker, Docker Compose
