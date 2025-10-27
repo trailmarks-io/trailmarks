@@ -181,20 +181,25 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
 
     const center = this.map.getCenter();
     const bounds = this.map.getBounds();
-    
+
     // Calculate radius based on map bounds (use the larger of the two distances)
     const northEast = bounds.getNorthEast();
     const southWest = bounds.getSouthWest();
     const latDiff = northEast.lat - southWest.lat;
     const lngDiff = northEast.lng - southWest.lng;
-    
+
     // Approximate km per degree (varies by latitude, but good enough for this purpose)
     const kmPerDegreeLat = 111;
     const kmPerDegreeLng = 111 * Math.cos(center.lat * Math.PI / 180);
-    
+
     const radiusLat = (latDiff * kmPerDegreeLat) / 2;
     const radiusLng = (lngDiff * kmPerDegreeLng) / 2;
     const radiusKm = Math.max(radiusLat, radiusLng);
+
+    // Update vignette to match current center and radius
+    this.vignetteCenter = { lat: center.lat, lng: center.lng };
+    this.vignetteRadiusKm = Math.ceil(radiusKm);
+    this.drawVignette();
 
     this.locationChange.emit({
       latitude: center.lat,
@@ -286,16 +291,27 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
     // Remove existing vignette layers first
     this.removeVignetteLayers();
 
-    // Only draw if we have a map and vignette center
-    if (!this.map || !this.vignetteCenter) {
-      return;
-    }
+    if (!this.map) return;
 
-    const centerLatLng = L.latLng(this.vignetteCenter.lat, this.vignetteCenter.lng);
-    const radiusMeters = this.vignetteRadiusKm * 1000;
+    // Use current map center and bounds to calculate radius
+    const center = this.map.getCenter();
+    const bounds = this.map.getBounds();
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
+
+    // Calculate minimum distance from center to each edge (in meters)
+    // Latitude: 1 deg ≈ 111320 meters
+    // Longitude: 1 deg ≈ 40075000 * cos(lat) / 360 meters
+    const latToNorth = (northEast.lat - center.lat) * 111320;
+    const latToSouth = (center.lat - southWest.lat) * 111320;
+    const lngMeterPerDeg = 40075000 * Math.cos(center.lat * Math.PI / 180) / 360;
+    const lngToEast = (northEast.lng - center.lng) * lngMeterPerDeg;
+    const lngToWest = (center.lng - southWest.lng) * lngMeterPerDeg;
+    const minDist = Math.min(latToNorth, latToSouth, lngToEast, lngToWest);
+    const radiusMeters = Math.max(minDist, 0); // Prevent negative radius
 
     // Draw vignette circle (outline showing the focus area)
-    this.vignetteCircle = L.circle(centerLatLng, {
+    this.vignetteCircle = L.circle(center, {
       radius: radiusMeters,
       color: '#3b82f6',
       fillColor: 'transparent',
@@ -306,10 +322,8 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
     this.vignetteCircle.addTo(this.map);
 
     // Draw vignette mask (grey out area outside the circle)
-    const bounds = this.map.getBounds();
     const sw = bounds.getSouthWest();
     const ne = bounds.getNorthEast();
-    
     // Create outer rectangle with padding
     const outerRing = [
       L.latLng(sw.lat - 10, sw.lng - 10),
@@ -325,12 +339,10 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
       const angle = (i / steps) * 2 * Math.PI;
       const dx = Math.cos(angle);
       const dy = Math.sin(angle);
-      
       // Convert meters to degrees (approximation)
       const latOffset = (dy * radiusMeters) / 111320;
-      const lngOffset = (dx * radiusMeters) / (40075000 * Math.cos(this.vignetteCenter.lat * Math.PI / 180) / 360);
-      
-      circleCoords.push(L.latLng(this.vignetteCenter.lat + latOffset, this.vignetteCenter.lng + lngOffset));
+      const lngOffset = (dx * radiusMeters) / (40075000 * Math.cos(center.lat * Math.PI / 180) / 360);
+      circleCoords.push(L.latLng(center.lat + latOffset, center.lng + lngOffset));
     }
 
     // Create polygon with hole (outer ring and inner circle)
