@@ -11,6 +11,12 @@ This is the backend API for the Trailmarks application, providing endpoints to m
 - **CORS** - Cross-origin resource sharing support
 - **Testcontainers** - PostgreSQL containers for testing
 
+### Package Management
+
+This project uses **Central Package Management** via `Directory.Packages.props` to manage all NuGet package versions in a single location. All package versions are defined centrally in `/backend/Directory.Packages.props`, ensuring consistency across all projects.
+
+To update package versions, edit the `Directory.Packages.props` file rather than individual `.csproj` files.
+
 ## Features
 
 - RESTful API endpoints for Wandersteine management
