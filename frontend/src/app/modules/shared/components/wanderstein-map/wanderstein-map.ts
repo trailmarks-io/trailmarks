@@ -54,10 +54,24 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Always refresh markers when wandersteine input changes
-    if (changes['wandersteine'] && this.map && this.markerClusterGroup) {
+    // Refresh markers when wandersteine input changes (but check if data actually changed)
+    if (changes['wandersteine'] && !changes['wandersteine'].firstChange) {
+      const current = changes['wandersteine'].currentValue;
+      const previous = changes['wandersteine'].previousValue;
+      
+      // Check if the data actually changed (comparing array references or lengths)
+      const hasChanged = current !== previous && 
+        (current?.length !== previous?.length || 
+         JSON.stringify(current) !== JSON.stringify(previous));
+      
+      if (hasChanged && this.map && this.markerClusterGroup) {
+        this.refreshMarkers();
+      }
+    } else if (changes['wandersteine']?.firstChange && this.map && this.markerClusterGroup) {
+      // On first change, always add markers
       this.refreshMarkers();
     }
+    
     // When vignette settings change, redraw vignette
     if ((changes['vignetteCenter'] || changes['vignetteRadiusKm']) && this.map) {
       this.drawVignette();
@@ -106,16 +120,19 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
 
     // Set up event listener for clustering completion
     this.clusteringEndListener = () => {
-      this.updateMapBounds();
+      // Do NOT update bounds after clustering
     };
     this.markerClusterGroup.on('animationend', this.clusteringEndListener);
 
     this.addMarkers();
-    
+
     if (this.markerClusterGroup) {
       map.addLayer(this.markerClusterGroup);
-      // Initial bounds update after markers are added
-      this.updateMapBounds();
+      // Only fit to marker bounds if NOT using dynamic loading
+      // (dynamic loading will set its own initial view)
+      if (!this.enableDynamicLoading && this.wandersteine && this.wandersteine.length > 0) {
+        this.updateMapBounds();
+      }
     }
 
     // Draw initial vignette if center is provided
@@ -181,21 +198,23 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
 
     const center = this.map.getCenter();
     const bounds = this.map.getBounds();
-
-    // Calculate radius based on map bounds (use the larger of the two distances)
     const northEast = bounds.getNorthEast();
     const southWest = bounds.getSouthWest();
-    const latDiff = northEast.lat - southWest.lat;
-    const lngDiff = northEast.lng - southWest.lng;
 
-    // Approximate km per degree (varies by latitude, but good enough for this purpose)
-    const kmPerDegreeLat = 111;
-    const kmPerDegreeLng = 111 * Math.cos(center.lat * Math.PI / 180);
-
-    const radiusLat = (latDiff * kmPerDegreeLat) / 2;
-    const radiusLng = (lngDiff * kmPerDegreeLng) / 2;
-      let radiusKm = Math.max(radiusLat, radiusLng);
-      radiusKm = Math.min(radiusKm, 400); // Clamp to max 400 km
+    // Calculate minimum distance from center to each edge (in meters)
+    // This ensures the search radius matches what's visible in the vignette
+    const latToNorth = (northEast.lat - center.lat) * 111320;
+    const latToSouth = (center.lat - southWest.lat) * 111320;
+    const lngMeterPerDeg = 40075000 * Math.cos(center.lat * Math.PI / 180) / 360;
+    const lngToEast = (northEast.lng - center.lng) * lngMeterPerDeg;
+    const lngToWest = (center.lng - southWest.lng) * lngMeterPerDeg;
+    
+    // Use minimum distance to ensure we only search within visible area
+    const minDistMeters = Math.min(latToNorth, latToSouth, lngToEast, lngToWest);
+    
+    // Convert to km and clamp to max 400 km
+    let radiusKm = minDistMeters / 1000;
+    radiusKm = Math.min(radiusKm, 400);
 
     // Update vignette to match current center and radius
     this.vignetteCenter = { lat: center.lat, lng: center.lng };
@@ -212,10 +231,7 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   private addMarkers(): void {
     if (!this.markerClusterGroup) return;
 
-    // Clear existing markers to make this idempotent
-    this.markerClusterGroup.clearLayers();
-
-    this.wandersteine.forEach(wanderstein => {
+    for (const wanderstein of this.wandersteine) {
       if (wanderstein.latitude && wanderstein.longitude) {
         const marker = L.marker([wanderstein.latitude, wanderstein.longitude]);
         
@@ -249,16 +265,32 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
         
         this.markerClusterGroup.addLayer(marker);
       }
-    });
+    }
   }
 
   private refreshMarkers(): void {
-    // Remove all previous markers before adding new ones
+    // Remove all previous markers from cluster group
     if (this.markerClusterGroup) {
       this.markerClusterGroup.clearLayers();
     }
+    
+    // Add markers
     this.addMarkers();
-    this.updateMapBounds();
+    
+    // Ensure cluster group is on the map
+    if (this.map && this.markerClusterGroup) {
+      if (!this.map.hasLayer(this.markerClusterGroup)) {
+        this.map.addLayer(this.markerClusterGroup);
+      }
+      
+      // Force cluster group to refresh
+      this.markerClusterGroup.refreshClusters();
+    }
+    
+    // Force Leaflet to re-render the map and layers
+    if (this.map) {
+      this.map.invalidateSize();
+    }
   }
 
   private updateMapBounds(): void {
