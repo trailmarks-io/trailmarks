@@ -23,6 +23,8 @@ declare global {
 export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   @Input() wandersteine: WandersteinResponse[] = [];
   @Input() enableDynamicLoading: boolean = false;
+  @Input() vignetteCenter?: { lat: number, lng: number };
+  @Input() vignetteRadiusKm: number = 50; // Default 50km radius
   @Output() markerClick = new EventEmitter<string>();
   @Output() locationChange = new EventEmitter<{latitude: number, longitude: number, radiusKm: number}>();
 
@@ -39,6 +41,8 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
 
   markerClusterGroup: any = null;
   map: L.Map | null = null;
+  vignetteCircle: L.Circle | null = null;
+  vignetteMask: L.Polygon | null = null;
   private clusteringEndListener: (() => void) | null = null;
   private userLocation: L.LatLng | null = null;
 
@@ -54,6 +58,10 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
     if (changes['wandersteine'] && !changes['wandersteine'].firstChange && this.map && this.markerClusterGroup) {
       this.refreshMarkers();
     }
+    // When vignette settings change, redraw vignette
+    if ((changes['vignetteCenter'] || changes['vignetteRadiusKm']) && this.map) {
+      this.drawVignette();
+    }
   }
 
   ngOnDestroy(): void {
@@ -67,6 +75,9 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
       this.map.removeLayer(this.markerClusterGroup);
       this.markerClusterGroup = null;
     }
+
+    // Clean up vignette layers
+    this.removeVignetteLayers();
   }
 
   onMapReady(map: L.Map): void {
@@ -106,6 +117,9 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
       // Initial bounds update after markers are added
       this.updateMapBounds();
     }
+
+    // Draw initial vignette if center is provided
+    this.drawVignette();
 
     // If dynamic loading is enabled, set up event handlers
     if (this.enableDynamicLoading) {
@@ -255,5 +269,83 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  private removeVignetteLayers(): void {
+    if (this.vignetteCircle && this.map) {
+      this.map.removeLayer(this.vignetteCircle);
+      this.vignetteCircle = null;
+    }
+    if (this.vignetteMask && this.map) {
+      this.map.removeLayer(this.vignetteMask);
+      this.vignetteMask = null;
+    }
+  }
+
+  private drawVignette(): void {
+    // Remove existing vignette layers first
+    this.removeVignetteLayers();
+
+    // Only draw if we have a map and vignette center
+    if (!this.map || !this.vignetteCenter) {
+      return;
+    }
+
+    const centerLatLng = L.latLng(this.vignetteCenter.lat, this.vignetteCenter.lng);
+    const radiusMeters = this.vignetteRadiusKm * 1000;
+
+    // Draw vignette circle (outline showing the focus area)
+    this.vignetteCircle = L.circle(centerLatLng, {
+      radius: radiusMeters,
+      color: '#3b82f6',
+      fillColor: 'transparent',
+      fillOpacity: 0,
+      weight: 2,
+      interactive: false
+    });
+    this.vignetteCircle.addTo(this.map);
+
+    // Draw vignette mask (grey out area outside the circle)
+    const bounds = this.map.getBounds();
+    const sw = bounds.getSouthWest();
+    const ne = bounds.getNorthEast();
+    
+    // Create outer rectangle with padding
+    const outerRing = [
+      L.latLng(sw.lat - 10, sw.lng - 10),
+      L.latLng(sw.lat - 10, ne.lng + 10),
+      L.latLng(ne.lat + 10, ne.lng + 10),
+      L.latLng(ne.lat + 10, sw.lng - 10)
+    ];
+
+    // Create circle approximation as inner ring (hole in the mask)
+    const steps = 64;
+    const circleCoords: L.LatLng[] = [];
+    for (let i = 0; i < steps; i++) {
+      const angle = (i / steps) * 2 * Math.PI;
+      const dx = Math.cos(angle);
+      const dy = Math.sin(angle);
+      
+      // Convert meters to degrees (approximation)
+      const latOffset = (dy * radiusMeters) / 111320;
+      const lngOffset = (dx * radiusMeters) / (40075000 * Math.cos(this.vignetteCenter.lat * Math.PI / 180) / 360);
+      
+      circleCoords.push(L.latLng(this.vignetteCenter.lat + latOffset, this.vignetteCenter.lng + lngOffset));
+    }
+
+    // Create polygon with hole (outer ring and inner circle)
+    this.vignetteMask = L.polygon([outerRing, circleCoords], {
+      color: 'transparent',
+      fillColor: '#000',
+      fillOpacity: 0.3,
+      weight: 0,
+      interactive: false
+    });
+    this.vignetteMask.addTo(this.map);
+
+    // Bring vignette circle to front so it's visible above the mask
+    if (this.vignetteCircle) {
+      this.vignetteCircle.bringToFront();
+    }
   }
 }

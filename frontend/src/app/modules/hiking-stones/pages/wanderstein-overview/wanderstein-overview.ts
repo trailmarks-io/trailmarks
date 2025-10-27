@@ -25,6 +25,8 @@ export class WandersteinOverviewPage implements OnInit {
   nearbyWandersteine: WandersteinResponse[] = [];
   loading = true;
   error: string | null = null;
+  currentMapCenter?: { lat: number, lng: number };
+  currentSearchRadius: number = 50;
 
   private _location$ = new Subject<LocationChange>();
 
@@ -86,6 +88,10 @@ export class WandersteinOverviewPage implements OnInit {
   }
 
   onMapLocationChange(location: LocationChange): void {
+    // Update vignette center and radius based on current map location
+    this.currentMapCenter = { lat: location.latitude, lng: location.longitude };
+    this.currentSearchRadius = location.radiusKm;
+    
     // Emit location change into Subject for debounced processing
     this._location$.next(location);
   }

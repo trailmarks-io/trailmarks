@@ -20,6 +20,8 @@
       <app-wanderstein-map 
         [wandersteine]="nearbyWandersteine" 
         [enableDynamicLoading]="true"
+        [vignetteCenter]="currentMapCenter"
+        [vignetteRadiusKm]="currentSearchRadius"
         (markerClick)="navigateToDetail($event)"
         (locationChange)="onMapLocationChange($event)"></app-wanderstein-map>
     </div>
