@@ -1,9 +1,10 @@
 # Build stage
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /app
 
 # Copy csproj files and restore dependencies
 COPY src/TrailmarksApi/*.csproj ./src/TrailmarksApi/
+COPY ./Directory.Packages.props ./
 RUN dotnet restore ./src/TrailmarksApi/TrailmarksApi.csproj
 
 # Copy everything else and build
@@ -12,7 +13,7 @@ WORKDIR /app/src/TrailmarksApi
 RUN dotnet publish -c Release -o /app/publish
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 
 # Copy the published application from build stage
