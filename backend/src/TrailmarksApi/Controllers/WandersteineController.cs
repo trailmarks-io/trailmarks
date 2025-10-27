@@ -98,12 +98,12 @@ namespace TrailmarksApi.Controllers
                 var searchRadius = radiusKm ?? (latitude.HasValue && longitude.HasValue ? 50.0 : 100.0);
 
                 // Validate radiusKm
-                if (searchRadius <= 0 || searchRadius > 200)
+                if (searchRadius <= 0 || searchRadius > 400)
                 {
                     return Problem(
                         title: "Invalid radius",
                         statusCode: StatusCodes.Status400BadRequest,
-                        detail: "Radius must be greater than 0 and less than or equal to 200 km"
+                        detail: "Radius must be greater than 0 and less than or equal to 400 km"
                     );
                 }
 

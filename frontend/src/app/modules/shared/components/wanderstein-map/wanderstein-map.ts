@@ -54,8 +54,8 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // When wandersteine input changes, refresh markers if map is ready
-    if (changes['wandersteine'] && !changes['wandersteine'].firstChange && this.map && this.markerClusterGroup) {
+    // Always refresh markers when wandersteine input changes
+    if (changes['wandersteine'] && this.map && this.markerClusterGroup) {
       this.refreshMarkers();
     }
     // When vignette settings change, redraw vignette
@@ -194,7 +194,8 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
 
     const radiusLat = (latDiff * kmPerDegreeLat) / 2;
     const radiusLng = (lngDiff * kmPerDegreeLng) / 2;
-    const radiusKm = Math.max(radiusLat, radiusLng);
+      let radiusKm = Math.max(radiusLat, radiusLng);
+      radiusKm = Math.min(radiusKm, 400); // Clamp to max 400 km
 
     // Update vignette to match current center and radius
     this.vignetteCenter = { lat: center.lat, lng: center.lng };
@@ -252,7 +253,10 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private refreshMarkers(): void {
-    // Refresh markers when input changes
+    // Remove all previous markers before adding new ones
+    if (this.markerClusterGroup) {
+      this.markerClusterGroup.clearLayers();
+    }
     this.addMarkers();
     this.updateMapBounds();
   }
@@ -308,7 +312,9 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
     const lngToEast = (northEast.lng - center.lng) * lngMeterPerDeg;
     const lngToWest = (center.lng - southWest.lng) * lngMeterPerDeg;
     const minDist = Math.min(latToNorth, latToSouth, lngToEast, lngToWest);
-    const radiusMeters = Math.max(minDist, 0); // Prevent negative radius
+    // Clamp to max 400 km
+    const maxRadiusMeters = 400_000;
+    const radiusMeters = Math.max(Math.min(minDist, maxRadiusMeters), 0); // Prevent negative radius
 
     // Draw vignette circle (outline showing the focus area)
     this.vignetteCircle = L.circle(center, {
