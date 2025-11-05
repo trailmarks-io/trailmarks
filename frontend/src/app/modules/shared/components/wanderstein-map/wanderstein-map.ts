@@ -25,8 +25,10 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
   @Input() enableDynamicLoading: boolean = false;
   @Input() vignetteCenter?: { lat: number, lng: number };
   @Input() vignetteRadiusKm: number = 50; // Default 50km radius
+  @Input() initialCenter?: { lat: number, lng: number }; // Initial map center
+  @Input() initialZoom?: number; // Initial map zoom level
   @Output() markerClick = new EventEmitter<string>();
-  @Output() locationChange = new EventEmitter<{latitude: number, longitude: number, radiusKm: number}>();
+  @Output() locationChange = new EventEmitter<{latitude: number, longitude: number, radiusKm: number, zoom: number}>();
 
   options: L.MapOptions = {
     layers: [
@@ -140,8 +142,12 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
 
     // If dynamic loading is enabled, set up event handlers
     if (this.enableDynamicLoading) {
-      // Set initial center based on user location or default to Bochum
-      if (this.userLocation) {
+      // Set initial center and zoom
+      if (this.initialCenter && this.initialZoom) {
+        // Restore saved position
+        map.setView(L.latLng(this.initialCenter.lat, this.initialCenter.lng), this.initialZoom);
+      } else if (this.userLocation) {
+        // Use user's geolocation
         map.setView(this.userLocation, 10);
       } else {
         // Default to Bochum, Germany
@@ -224,7 +230,8 @@ export class WandersteinMapComponent implements OnInit, OnDestroy, OnChanges {
     this.locationChange.emit({
       latitude: center.lat,
       longitude: center.lng,
-      radiusKm: Math.ceil(radiusKm)
+      radiusKm: Math.ceil(radiusKm),
+      zoom: this.map.getZoom()
     });
   }
 

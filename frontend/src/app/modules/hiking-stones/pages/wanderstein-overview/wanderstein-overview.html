@@ -22,6 +22,8 @@
         [enableDynamicLoading]="true"
         [vignetteCenter]="currentMapCenter"
         [vignetteRadiusKm]="currentSearchRadius"
+        [initialCenter]="savedMapCenter"
+        [initialZoom]="savedMapZoom"
         (markerClick)="navigateToDetail($event)"
         (locationChange)="onMapLocationChange($event)"></app-wanderstein-map>
     </div>

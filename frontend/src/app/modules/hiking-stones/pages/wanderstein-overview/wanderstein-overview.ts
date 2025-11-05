@@ -12,6 +12,7 @@ interface LocationChange {
   latitude: number;
   longitude: number;
   radiusKm: number;
+  zoom: number;
 }
 
 @Component({
@@ -27,6 +28,9 @@ export class WandersteinOverviewPage implements OnInit {
   error: string | null = null;
   currentMapCenter?: { lat: number, lng: number };
   currentSearchRadius: number = 50;
+  currentMapZoom?: number;
+  savedMapCenter?: { lat: number, lng: number };
+  savedMapZoom?: number;
 
   private _location$ = new Subject<LocationChange>();
 
@@ -63,6 +67,15 @@ export class WandersteinOverviewPage implements OnInit {
 
 
   ngOnInit(): void {
+    // Check if we have saved map state from navigation
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras?.state || history.state;
+    
+    if (state?.['mapCenter'] && state?.['mapZoom']) {
+      this.savedMapCenter = state['mapCenter'];
+      this.savedMapZoom = state['mapZoom'];
+    }
+    
     // Zeige den Ladeindikator für mindestens 500ms, damit E2E-Tests ihn sicher sehen
     this.loading = true;
     setTimeout(() => {
@@ -91,6 +104,7 @@ export class WandersteinOverviewPage implements OnInit {
     // Update vignette center and radius based on current map location
     this.currentMapCenter = { lat: location.latitude, lng: location.longitude };
     this.currentSearchRadius = location.radiusKm;
+    this.currentMapZoom = location.zoom;
     
     // Emit location change into Subject for debounced processing
     this._location$.next(location);
@@ -107,6 +121,12 @@ export class WandersteinOverviewPage implements OnInit {
   }
 
   navigateToDetail(uniqueId: string): void {
-    this.router.navigate(['/wandersteine', uniqueId]);
+    // Save current map state before navigation
+    this.router.navigate(['/wandersteine', uniqueId], {
+      state: {
+        mapCenter: this.currentMapCenter,
+        mapZoom: this.currentMapZoom
+      }
+    });
   }
 }
