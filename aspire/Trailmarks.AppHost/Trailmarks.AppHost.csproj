@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\backend\src\TrailmarksApi\TrailmarksApi.csproj" />
     <PackageReference Include="Aspire.Hosting.AppHost" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.NodeJs" />
   </ItemGroup>
 
 </Project>

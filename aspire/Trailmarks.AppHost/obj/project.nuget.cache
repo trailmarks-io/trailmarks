@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "VY1RQfKbtUM=",
+  "dgSpecHash": "CV31knDPlZg=",
   "success": true,
   "projectFilePath": "/home/runner/work/trailmarks/trailmarks/aspire/Trailmarks.AppHost/Trailmarks.AppHost.csproj",
   "expectedPackageFiles": [
     "/home/runner/.nuget/packages/aspire.dashboard.sdk.linux-x64/9.1.0/aspire.dashboard.sdk.linux-x64.9.1.0.nupkg.sha512",
     "/home/runner/.nuget/packages/aspire.hosting/9.1.0/aspire.hosting.9.1.0.nupkg.sha512",
     "/home/runner/.nuget/packages/aspire.hosting.apphost/9.1.0/aspire.hosting.apphost.9.1.0.nupkg.sha512",
+    "/home/runner/.nuget/packages/aspire.hosting.nodejs/9.1.0/aspire.hosting.nodejs.9.1.0.nupkg.sha512",
     "/home/runner/.nuget/packages/aspire.hosting.orchestration.linux-x64/9.1.0/aspire.hosting.orchestration.linux-x64.9.1.0.nupkg.sha512",
     "/home/runner/.nuget/packages/aspire.hosting.postgresql/9.1.0/aspire.hosting.postgresql.9.1.0.nupkg.sha512",
     "/home/runner/.nuget/packages/aspnetcore.healthchecks.npgsql/9.0.0/aspnetcore.healthchecks.npgsql.9.0.0.nupkg.sha512",
@@ -90,6 +91,18 @@
       "warningLevel": 1,
       "filePath": "/home/runner/work/trailmarks/trailmarks/aspire/Trailmarks.AppHost/Trailmarks.AppHost.csproj",
       "libraryId": "Aspire.Hosting.AppHost",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "message": "Trailmarks.AppHost depends on Aspire.Hosting.NodeJs (>= 9.0.1) but Aspire.Hosting.NodeJs 9.0.1 was not found. Aspire.Hosting.NodeJs 9.1.0 was resolved instead.",
+      "projectPath": "/home/runner/work/trailmarks/trailmarks/aspire/Trailmarks.AppHost/Trailmarks.AppHost.csproj",
+      "warningLevel": 1,
+      "filePath": "/home/runner/work/trailmarks/trailmarks/aspire/Trailmarks.AppHost/Trailmarks.AppHost.csproj",
+      "libraryId": "Aspire.Hosting.NodeJs",
       "targetGraphs": [
         "net9.0"
       ]

@@ -92,3 +92,4 @@
 /home/runner/work/trailmarks/trailmarks/aspire/Trailmarks.AppHost/obj/Debug/net9.0/Trailmarks.AppHost.pdb
 /home/runner/work/trailmarks/trailmarks/aspire/Trailmarks.AppHost/obj/Debug/net9.0/Trailmarks.AppHost.genruntimeconfig.cache
 /home/runner/work/trailmarks/trailmarks/aspire/Trailmarks.AppHost/obj/Debug/net9.0/ref/Trailmarks.AppHost.dll
+/home/runner/work/trailmarks/trailmarks/aspire/Trailmarks.AppHost/bin/Debug/net9.0/Aspire.Hosting.NodeJs.dll

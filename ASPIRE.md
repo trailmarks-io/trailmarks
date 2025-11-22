@@ -28,13 +28,14 @@ This command will:
 - Start PostgreSQL database with PostGIS
 - Start Keycloak authentication server
 - Build and run the backend API
+- Build and run the frontend (Angular)
 - Initialize the database with sample data (on first run)
 - Open the Aspire Dashboard in your browser
 
 ### 3. Access the Application
 
 - **Aspire Dashboard**: http://localhost:18888 (opens automatically)
-- **Frontend**: http://localhost:4200 (if integrated)
+- **Frontend**: http://localhost:4200
 - **Backend API**: http://localhost:8080
 - **API Documentation (Swagger)**: http://localhost:8080/swagger
 - **Keycloak Admin Console**: http://localhost:8180
@@ -67,9 +68,17 @@ The Aspire Dashboard provides a unified view of all your services:
 
 ## Services Overview
 
+### Frontend (Angular)
+
+- **Resource Name**: frontend
+- **Port**: 4200
+- **Technology**: Angular 20.1 with Node.js
+- **Features**: SPA, Tailwind CSS, OpenTelemetry, Multi-language support
+- **npm Command**: `start` (runs `ng serve`)
+
 ### Backend API (TrailmarksApi)
 
-- **Container Name**: TrailmarksApi
+- **Resource Name**: backend
 - **Port**: 8080
 - **Technology**: .NET 9.0 ASP.NET Core
 - **Features**: REST API, Entity Framework Core, OpenTelemetry

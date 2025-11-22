@@ -39,4 +39,10 @@ var backend = builder.AddProject<Projects.TrailmarksApi>("backend")
     .WaitFor(postgres)
     .WaitFor(keycloak);
 
+// Frontend (Angular)
+var frontend = builder.AddNpmApp("frontend", "../../frontend", "start")
+    .WithHttpEndpoint(port: 4200, env: "PORT")
+    .WithExternalHttpEndpoints()
+    .WaitFor(backend);
+
 builder.Build().Run();

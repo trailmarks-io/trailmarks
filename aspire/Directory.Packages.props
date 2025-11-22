@@ -7,5 +7,6 @@
     <!-- Aspire packages -->
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.0.1" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.0.1" />
+    <PackageVersion Include="Aspire.Hosting.NodeJs" Version="9.0.1" />
   </ItemGroup>
 </Project>

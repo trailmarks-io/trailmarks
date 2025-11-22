@@ -25,7 +25,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Trailmarks.AppHost")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee9e687c3a2fc4b37b4aedbc378bbc4c8ca27838")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+94c6d804014d1a84cd2423c2de6cd2bc1c147c00")]
 [assembly: System.Reflection.AssemblyProductAttribute("Trailmarks.AppHost")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Trailmarks.AppHost")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -55,6 +55,11 @@
               "version": "[9.0.1, )",
               "versionCentrallyManaged": true
             },
+            "Aspire.Hosting.NodeJs": {
+              "target": "Package",
+              "version": "[9.0.1, )",
+              "versionCentrallyManaged": true
+            },
             "Aspire.Hosting.Orchestration.linux-x64": {
               "target": "Package",
               "version": "[9.0.1, )",
@@ -68,6 +73,7 @@
           },
           "centralPackageVersions": {
             "Aspire.Hosting.AppHost": "9.0.1",
+            "Aspire.Hosting.NodeJs": "9.0.1",
             "Aspire.Hosting.PostgreSQL": "9.0.1"
           },
           "imports": [
