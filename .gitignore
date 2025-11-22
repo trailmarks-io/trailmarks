@@ -8,6 +8,8 @@ backend/src/bin/
 backend/src/obj/
 backend/test/bin/
 backend/test/obj/
+aspire/**/bin/
+aspire/**/obj/
 
 # Docker
 docker-compose.override.yml
