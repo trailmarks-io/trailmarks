@@ -27,6 +27,13 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.13.0" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.13.0-beta.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.13.0" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.13.0" />
+
+    <!-- Aspire packages -->
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.0.10" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.0.1" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.0.1" />
 
     <!-- Testing packages -->
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />

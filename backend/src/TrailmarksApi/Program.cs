@@ -2,11 +2,11 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using TrailmarksApi.Data;
 using TrailmarksApi.Services;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Metrics;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Aspire service defaults (includes OpenTelemetry, Service Discovery, Health Checks)
+builder.AddServiceDefaults();
 
 // Add services to the container
 builder.Services.AddControllers();
@@ -33,43 +33,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Register services
 builder.Services.AddScoped<DatabaseService>();
-
-// Configure OpenTelemetry
-var serviceName = "TrailmarksApi";
-var serviceVersion = "1.0.0";
-
-builder.Services.AddOpenTelemetry()
-    .ConfigureResource(resource => resource
-        .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
-    .WithTracing(tracing => tracing
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddEntityFrameworkCoreInstrumentation(options =>
-        {
-            options.EnrichWithIDbCommand = (activity, command) =>
-            {
-                activity.SetTag("db.statement", command.CommandText);
-            };
-        })
-        .AddOtlpExporter(options =>
-        {
-            var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://localhost:4318";
-            options.Endpoint = new Uri(otlpEndpoint);
-            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-            
-            Console.WriteLine($"OpenTelemetry Tracing Endpoint: {otlpEndpoint}");
-        }))
-    .WithMetrics(metrics => metrics
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddOtlpExporter(options =>
-        {
-            var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://localhost:4318";
-            options.Endpoint = new Uri(otlpEndpoint);
-            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-            
-            Console.WriteLine($"OpenTelemetry Metrics Endpoint: {otlpEndpoint}");
-        }));
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -145,7 +108,7 @@ app.UseRouting();
 
 app.MapControllers();
 
-// Get the configured URLs from environment or use default
-var urls = builder.Configuration["ASPNETCORE_URLS"] ?? "http://+:8080";
-Console.WriteLine($"Starting server on {urls}");
+// Map default health check endpoints provided by Aspire
+app.MapDefaultEndpoints();
+
 app.Run();

@@ -1,20 +1,20 @@
 # Trailmarks - Hiking Stones Overview
 
-![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)
+![.NET 9.0](https://img.shields.io/badge/.NET-9.0-512BD4?logo=dotnet)
 ![Angular 20.1](https://img.shields.io/badge/Angular-20.1-DD0031?logo=angular)
 ![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)
-![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
+![.NET Aspire](https://img.shields.io/badge/.NET-Aspire-512BD4?logo=dotnet)
 
 A modern web application for displaying and managing hiking stones (Wandersteine).
 
 ## 🚀 Quick Start
 
-### With Docker (Recommended)
+### With .NET Aspire (Recommended)
 
 ```bash
 git clone https://github.com/trailmarks-io/trailmarks.git
 cd trailmarks
-docker-compose up -d
+dotnet run --project aspire/Trailmarks.AppHost
 ```
 
 **Access the application:**
@@ -22,7 +22,7 @@ docker-compose up -d
 - 🔌 Backend API: http://localhost:8080
 - 📚 API Documentation: http://localhost:8080/swagger
 - 🔐 Keycloak Admin: http://localhost:8180
-- 📊 Tracing UI: http://localhost:16686
+- 📊 Aspire Dashboard: http://localhost:18888
 
 ### Local Development
 
@@ -41,13 +41,13 @@ npx ng serve
 
 ## ✨ Features
 
-✅ REST API with C# ASP.NET Core 8.0  
+✅ REST API with C# ASP.NET Core 9.0  
 ✅ PostgreSQL database with Entity Framework Core  
 ✅ Angular 20.1.0 frontend with Tailwind CSS  
 ✅ Multi-language support (German/English)  
 ✅ Keycloak authentication and authorization  
-✅ Docker deployment with Docker Compose  
-✅ OpenTelemetry instrumentation with Jaeger tracing  
+✅ .NET Aspire orchestration with integrated dashboard  
+✅ OpenTelemetry instrumentation with Aspire Dashboard  
 ✅ Responsive design for mobile devices  
 ✅ Comprehensive testing (xUnit, Jasmine/Karma, Playwright)
 
@@ -63,30 +63,33 @@ Comprehensive documentation is available in the **[docs/](docs/)** folder:
 
 ## 🛠️ Technology Stack
 
-- **Backend**: .NET 8.0, ASP.NET Core, Entity Framework Core
+- **Backend**: .NET 9.0, ASP.NET Core, Entity Framework Core
 - **Frontend**: Angular 20.1.0, TypeScript, Tailwind CSS
 - **Database**: PostgreSQL 16 with PostGIS
 - **Authentication**: Keycloak 26.0.7 (OpenID Connect / OAuth2)
 - **API Documentation**: OpenAPI 3.0 / Swagger
-- **Observability**: OpenTelemetry, Jaeger
-- **Containerization**: Docker, Docker Compose
+- **Observability**: OpenTelemetry, .NET Aspire Dashboard
+- **Orchestration**: .NET Aspire
 
 ## 📁 Project Structure
 
 ```
 trailmarks/
-├── backend/              # .NET 8.0 Backend API
+├── aspire/              # .NET Aspire Orchestration
+│   └── Trailmarks.AppHost/  # AppHost for service orchestration
+├── backend/             # .NET 9.0 Backend API
 │   ├── src/             # Application source code
+│   │   ├── TrailmarksApi/           # Main API project
+│   │   └── TrailmarksApi.ServiceDefaults/  # Aspire service defaults
 │   └── test/            # xUnit tests
 ├── frontend/            # Angular 20.1 Frontend
 │   ├── src/             # Application source code
 │   ├── e2e/             # Playwright E2E tests
 │   └── public/          # Static assets
-├── docs/                # Documentation (AsciiDoc)
-│   ├── architecture/    # ARC42 architecture docs
-│   ├── user-guide/      # End user guide
-│   └── admin-guide/     # Admin & moderator guide
-└── docker-compose.yml   # Docker deployment
+└── docs/                # Documentation (AsciiDoc)
+    ├── architecture/    # ARC42 architecture docs
+    ├── user-guide/      # End user guide
+    └── admin-guide/     # Admin & moderator guide
 ```
 
 ## 🧪 Testing
