@@ -49,3 +49,7 @@ logs/
 # Documentation build output
 _site/
 .asciidoctor/
+bin
+obj
+bin
+.vs
