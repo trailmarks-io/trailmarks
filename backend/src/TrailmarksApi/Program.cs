@@ -86,19 +86,19 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
     {
         Title = "Trailmarks API",
         Version = "v1.0",
         Description = "API for managing Wandersteine (hiking stones)",
         TermsOfService = new Uri("http://swagger.io/terms/"),
-        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        Contact = new Microsoft.OpenApi.OpenApiContact
         {
             Name = "API Support",
             Url = new Uri("http://www.trailmarks.io/support"),
             Email = "support@trailmarks.io"
         },
-        License = new Microsoft.OpenApi.Models.OpenApiLicense
+        License = new Microsoft.OpenApi.OpenApiLicense
         {
             Name = "MIT",
             Url = new Uri("https://opensource.org/licenses/MIT")
