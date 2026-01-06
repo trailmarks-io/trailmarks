@@ -4,7 +4,7 @@ This is the backend API for the Trailmarks application, providing endpoints to m
 
 ## Technology Stack
 
-- **C# ASP.NET Core 8.0** - Web framework
+- **C# ASP.NET Core 10.0** - Web framework
 - **Entity Framework Core** - ORM for database operations
 - **PostgreSQL 16** - Database
 - **Swagger/OpenAPI** - API documentation
@@ -59,7 +59,7 @@ Example configuration for **development**:
 
 ### Prerequisites
 
-- .NET 8.0 SDK
+- .NET 10.0 SDK
 - PostgreSQL 16 (or use Docker to run PostgreSQL)
 - Docker (optional, for running PostgreSQL in a container)
 

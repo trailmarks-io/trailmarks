@@ -61,7 +61,7 @@ docker-compose down -v
 ### Backend (ASP.NET Core)
 - **Container Name**: `trailmarks-backend`
 - **Port**: 8080
-- **Technology**: .NET 8.0 ASP.NET Core
+- **Technology**: .NET 10.0 ASP.NET Core
 - **Database**: PostgreSQL (only)
 - **Build**: Multi-stage build (.NET SDK for building, ASP.NET runtime for execution)
 

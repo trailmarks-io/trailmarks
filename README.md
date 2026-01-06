@@ -1,6 +1,6 @@
 # Trailmarks - Hiking Stones Overview
 
-![.NET 8.0](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)
+![.NET 10.0](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)
 ![Angular 20.1](https://img.shields.io/badge/Angular-20.1-DD0031?logo=angular)
 ![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
@@ -41,7 +41,7 @@ npx ng serve
 
 ## ✨ Features
 
-✅ REST API with C# ASP.NET Core 8.0  
+✅ REST API with C# ASP.NET Core 10.0  
 ✅ PostgreSQL database with Entity Framework Core  
 ✅ Angular 20.1.0 frontend with Tailwind CSS  
 ✅ Multi-language support (German/English)  
@@ -63,7 +63,7 @@ Comprehensive documentation is available in the **[docs/](docs/)** folder:
 
 ## 🛠️ Technology Stack
 
-- **Backend**: .NET 8.0, ASP.NET Core, Entity Framework Core
+- **Backend**: .NET 10.0, ASP.NET Core, Entity Framework Core
 - **Frontend**: Angular 20.1.0, TypeScript, Tailwind CSS
 - **Database**: PostgreSQL 16 with PostGIS
 - **Authentication**: Keycloak 26.0.7 (OpenID Connect / OAuth2)
@@ -75,7 +75,7 @@ Comprehensive documentation is available in the **[docs/](docs/)** folder:
 
 ```
 trailmarks/
-├── backend/              # .NET 8.0 Backend API
+├── backend/              # .NET 10.0 Backend API
 │   ├── src/             # Application source code
 │   └── test/            # xUnit tests
 ├── frontend/            # Angular 20.1 Frontend
