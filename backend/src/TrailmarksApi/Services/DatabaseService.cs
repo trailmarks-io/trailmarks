@@ -23,8 +23,6 @@ namespace TrailmarksApi.Services
         }
 
         /// <summary>
-        /// Initialize the database by applying pending migrations
-        /// <summary>
         /// Initializes the application's database by applying any pending Entity Framework Core migrations.
         /// </summary>
         /// <exception cref="Exception">Propagates any exception that occurs while checking or applying migrations.</exception>
