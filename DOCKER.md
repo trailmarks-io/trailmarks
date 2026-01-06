@@ -50,8 +50,6 @@ The Aspire Dashboard replaces Jaeger and provides:
 
 ## Docker Compose (Alternative/Production)
 
-## Docker Compose (Alternative/Production)
-
 ### 1. Clone the Repository
 
 ```bash
