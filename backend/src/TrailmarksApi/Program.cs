@@ -2,11 +2,12 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using TrailmarksApi.Data;
 using TrailmarksApi.Services;
-using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using OpenTelemetry.Metrics;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add service defaults (OpenTelemetry, health checks, service discovery)
+builder.AddServiceDefaults();
 
 // Add services to the container
 builder.Services.AddControllers();
@@ -34,42 +35,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register services
 builder.Services.AddScoped<DatabaseService>();
 
-// Configure OpenTelemetry
-var serviceName = "TrailmarksApi";
-var serviceVersion = "1.0.0";
-
-builder.Services.AddOpenTelemetry()
-    .ConfigureResource(resource => resource
-        .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
-    .WithTracing(tracing => tracing
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddEntityFrameworkCoreInstrumentation(options =>
+// Add Entity Framework Core instrumentation to OpenTelemetry
+builder.Services.ConfigureOpenTelemetryTracerProvider(tracing =>
+{
+    tracing.AddEntityFrameworkCoreInstrumentation(options =>
+    {
+        options.EnrichWithIDbCommand = (activity, command) =>
         {
-            options.EnrichWithIDbCommand = (activity, command) =>
-            {
-                activity.SetTag("db.statement", command.CommandText);
-            };
-        })
-        .AddOtlpExporter(options =>
-        {
-            var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://localhost:4318";
-            options.Endpoint = new Uri(otlpEndpoint);
-            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-            
-            Console.WriteLine($"OpenTelemetry Tracing Endpoint: {otlpEndpoint}");
-        }))
-    .WithMetrics(metrics => metrics
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddOtlpExporter(options =>
-        {
-            var otlpEndpoint = builder.Configuration["OpenTelemetry:OtlpEndpoint"] ?? "http://localhost:4318";
-            options.Endpoint = new Uri(otlpEndpoint);
-            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
-            
-            Console.WriteLine($"OpenTelemetry Metrics Endpoint: {otlpEndpoint}");
-        }));
+            activity.SetTag("db.statement", command.CommandText);
+        };
+    });
+});
 
 // Configure CORS
 builder.Services.AddCors(options =>
@@ -144,6 +120,9 @@ app.UseCors();
 app.UseRouting();
 
 app.MapControllers();
+
+// Map default health check endpoints
+app.MapDefaultEndpoints();
 
 // Get the configured URLs from environment or use default
 var urls = builder.Configuration["ASPNETCORE_URLS"] ?? "http://+:8080";

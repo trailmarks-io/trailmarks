@@ -4,5 +4,6 @@
 export const environment = {
   production: true,
   apiUrl: 'http://localhost:8080',
-  otlpEndpoint: 'http://localhost:6060/v1/traces'
+  // Aspire Dashboard OTLP HTTP endpoint for traces (port 4318 for HTTP protocol)
+  otlpEndpoint: 'http://localhost:4318/v1/traces'
 };
