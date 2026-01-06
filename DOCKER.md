@@ -1,14 +1,56 @@
 # Docker Deployment Guide
 
-This guide explains how to deploy the Trailmarks application using Docker and Docker Compose.
+This guide explains how to deploy the Trailmarks application using .NET Aspire for local development or Docker Compose for production deployment.
 
 ## Prerequisites
 
 - Docker Engine 20.10 or higher
 - Docker Compose V2 or higher
-- No local installation of .NET, Node.js, or PostgreSQL required
+- .NET SDK 9.0 or higher (for Aspire development)
 
-## Quick Start
+## .NET Aspire (Recommended for Development)
+
+.NET Aspire provides a modern orchestration experience with built-in observability, service discovery, and the Aspire Dashboard for traces, logs, and metrics.
+
+### Quick Start with Aspire
+
+1. **Navigate to the AppHost project**:
+   ```bash
+   cd backend/src/Trailmarks.AppHost
+   ```
+
+2. **Run the application**:
+   ```bash
+   dotnet run
+   ```
+
+3. **Access the services**:
+   - **Aspire Dashboard**: Opens automatically in browser (usually https://localhost:17110)
+   - **Frontend**: http://localhost:4200
+   - **Backend API**: http://localhost:8080
+   - **API Documentation (Swagger)**: http://localhost:8080/swagger
+   - **Keycloak Admin Console**: http://localhost:8180
+   - **PgAdmin**: Available through the dashboard
+
+### Aspire Dashboard Features
+
+The Aspire Dashboard replaces Jaeger and provides:
+- **Traces**: Distributed tracing across all services
+- **Metrics**: Runtime and HTTP metrics
+- **Logs**: Structured logging from all services
+- **Resources**: Health and status of all orchestrated services
+
+### Services Orchestrated by Aspire
+
+- **PostgreSQL with PostGIS**: Database with spatial data support
+- **Keycloak**: Authentication and authorization server
+- **Backend API**: ASP.NET Core Web API
+- **Frontend**: Angular application
+- **PgAdmin**: Database administration tool
+
+## Docker Compose (Alternative/Production)
+
+## Docker Compose (Alternative/Production)
 
 ### 1. Clone the Repository
 
@@ -36,7 +78,8 @@ This command will:
 - **Backend API**: http://localhost:8080
 - **API Documentation (Swagger)**: http://localhost:8080/swagger
 - **Keycloak Admin Console**: http://localhost:8180
-- **Jaeger UI (Tracing)**: http://localhost:16686
+
+> **Note**: The docker-compose setup uses the legacy Jaeger tracing. For the best development experience with modern observability features, use the .NET Aspire setup instead.
 
 ### 4. Stop All Services
 
@@ -103,16 +146,30 @@ docker-compose down -v
   - Password reset enabled
   - Brute force protection
 
-### Observability (Jaeger)
+### Observability (Aspire Dashboard)
+
+When using .NET Aspire, the Aspire Dashboard provides comprehensive observability:
+
+- **Dashboard URL**: Opens automatically when running `dotnet run` in AppHost
+- **Features**:
+  - Distributed tracing across all services
+  - Structured logging with search and filtering
+  - Runtime metrics and HTTP metrics
+  - Service health monitoring
+  - Resource status overview
+
+### Observability (Jaeger - Docker Compose only)
 - **Container Name**: `trailmarks-jaeger`
 - **Port**: 16686 (Jaeger UI), 4318 (internal OTLP receiver)
 - **Technology**: Jaeger all-in-one with OpenTelemetry support
-- **Purpose**: Distributed tracing and performance monitoring
+- **Purpose**: Distributed tracing and performance monitoring (legacy)
 - **Features**:
   - Trace visualization
   - Service dependency graph
   - Performance analysis
   - Request flow tracking
+
+> **Recommendation**: Use .NET Aspire for development as it provides a more integrated experience with modern observability features.
 
 ### OTLP Proxy (NGINX)
 - **Container Name**: `trailmarks-nginx-otlp`
