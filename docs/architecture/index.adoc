@@ -80,7 +80,7 @@ Trailmarks is a web application for displaying and managing hiking stones (Wande
 |Constraint |Description
 
 |Backend Technology
-|.NET 8.0 with ASP.NET Core
+|.NET 10.0 with ASP.NET Core
 
 |Frontend Technology
 |Angular 20.1.0 with TypeScript
@@ -165,7 +165,7 @@ Rel(trailmarks, jaeger, "Sends traces", "OTLP")
 Person(user, "User", "Application user")
 
 Container(frontend, "Frontend", "Angular 20.1, Nginx", "Provides UI for users")
-Container(backend, "Backend API", ".NET 8.0, ASP.NET Core", "Provides REST API")
+Container(backend, "Backend API", ".NET 10.0, ASP.NET Core", "Provides REST API")
 ContainerDb(database, "Database", "PostgreSQL", "Stores hiking stone data")
 Container(jaeger, "Jaeger", "OpenTelemetry", "Collects and visualizes traces")
 
@@ -187,7 +187,7 @@ Rel(backend, jaeger, "Sends traces", "OTLP/HTTP")
 |Decision |Technology |Rationale
 
 |Backend Framework
-|.NET 8.0 / ASP.NET Core
+|.NET 10.0 / ASP.NET Core
 |Modern, performant, cross-platform, excellent tooling
 
 |Frontend Framework
@@ -467,7 +467,7 @@ user --> jaeger_ui: port 16686
 |4200
 
 |Backend
-|.NET 8.0 runtime
+|.NET 10.0 runtime
 |REST API service
 |8080
 
