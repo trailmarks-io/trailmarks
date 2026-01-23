@@ -31,7 +31,7 @@ Diese Datei enthält Richtlinien und Vorgaben für die Entwicklung des Trailmark
 ## Technologievorgaben
 
 ### Backend
-- **Framework**: .NET 8.0 (neueste stabile Version)
+- **Framework**: .NET 10.0 (neueste stabile Version)
 - **Sprache**: C# mit ASP.NET Core
 - **ORM**: Entity Framework Core
 - **API-Dokumentation**: OpenAPI 3 / Swagger
